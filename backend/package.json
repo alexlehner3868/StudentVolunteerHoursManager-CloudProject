@@ -1,0 +1,14 @@
+{
+  "name": "student-volunteer-backend",
+  "version": "1.0.0",
+  "description": "Backend for Student Volunteer Manager",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.1",
+    "dotenv": "^16.3.1"
+  }
+}
