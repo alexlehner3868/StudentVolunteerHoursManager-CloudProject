@@ -1,2 +1,3 @@
 images/
 secrets/
+deploy_to_droplet.sh
