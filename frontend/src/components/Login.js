@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useNavigate,Link } from 'react-router-dom';
-import "../styles/Login.css";
+import "../styles/Page.css";
 import PopUp from "./PopUp"
 const Login=()=>{
     const [email, setEmail]=useState("");
@@ -46,8 +46,8 @@ const Login=()=>{
     }
 
     return(
-    <div className="loginPage">
-        <header className="loginPageHeader">
+    <div className="page">
+        <header className="pageHeader">
             <h1>Login</h1>
         </header>
         <form onSubmit={handleSubmit}>

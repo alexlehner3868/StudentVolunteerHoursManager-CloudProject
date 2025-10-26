@@ -1,5 +1,5 @@
 
-.loginPage {
+.page {
     min-height: 100vh;
     background-color: #f5f5f5;
     display: flex;
@@ -10,12 +10,12 @@
     padding: 20px;
 }
 
-.loginPageHeader{
+.pageHeader{
     text-align: center;
     margin-bottom: 15px;
 }
 
-.loginPageHeader h1{
+.pageHeader h1{
     font-size: 32px;
     color:#1e3a8a;
     margin: 0;
