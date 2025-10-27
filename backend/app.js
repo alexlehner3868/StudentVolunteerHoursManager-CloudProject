@@ -1,3 +1,6 @@
+// Import your feature module
+const app_j = require('./app_j');
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -9,7 +12,7 @@ const port = 3000;
 app.use(express.json());
 
 // Database connection
-const dbPasswordFile = process.env.DB_PASSWORD_FILE || './secrets/db_password.txt';
+const dbPasswordFile = process.env.DB_PASSWORD_FILE || path.join(__dirname, '..', 'secrets', 'db_password.txt');;
 const dbPassword = fs.readFileSync(dbPasswordFile, 'utf-8').trim();
 
 const pool = new Pool({
@@ -62,6 +65,8 @@ app.post('/api/submit-hours', async (req, res) => {
 // Serve React frontend
 const buildPath = path.join(__dirname, 'frontend', 'build');
 
+// Register your feature routes under /api
+app.use("/api", app_j);
 
 app.use(express.static(buildPath));
 
