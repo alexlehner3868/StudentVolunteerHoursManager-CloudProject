@@ -1,24 +1,15 @@
 const express = require('express');
-const fs = require('fs');
+const pool = require('./config/databse');
 const path = require('path');
-const { Pool } = require('pg');
+const routes = require('./router/routes');
 const app = express();
 const port = 3000;
 
 // Middleware
 app.use(express.json());
 
-// Database connection
-const dbPasswordFile = process.env.DB_PASSWORD_FILE || './secrets/db_password.txt';
-const dbPassword = fs.readFileSync(dbPasswordFile, 'utf-8').trim();
+app.use('/api',routes);
 
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'student_volunteer',
-  user: process.env.DB_USER || 'admin',
-  password: dbPassword,
-});
 
 // API endpoint
 app.post('/api/submit-hours', async (req, res) => {

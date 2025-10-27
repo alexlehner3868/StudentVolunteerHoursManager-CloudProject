@@ -63,7 +63,7 @@ const PasswordReset=()=>{
         else{
             const requestBody={email,verificationCode,newPassword};
             try {   
-                const response = await fetch("/password-reset",{
+                const response = await fetch("/api/password-reset",{
                     method: "POST",
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(requestBody)

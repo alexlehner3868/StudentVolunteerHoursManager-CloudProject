@@ -4,7 +4,7 @@ import "../styles/Page.css";
 import PopUp from "./PopUp"
 const Login=()=>{
     const [email, setEmail]=useState("");
-    const [password, setPassWord]=useState("");
+    const [password, setPassword]=useState("");
     const [submitting,setSubmitting]=useState(false);
     const [showPopUp, setShowPopUp]=useState(false);
     const [popUpMessage, setPopUpMessage]=useState("");
@@ -15,7 +15,7 @@ const Login=()=>{
             setEmail(value);
         }
         else if (name === 'password'){
-            setPassWord(value);
+            setPassword(value);
         }
     }
 
@@ -24,7 +24,7 @@ const Login=()=>{
         setSubmitting(true);
         const requestBody={email,password};
         try {   
-            const response = await fetch("/login",{
+            const response = await fetch("/api/login",{
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(requestBody)
@@ -34,6 +34,8 @@ const Login=()=>{
                 setShowPopUp(true);
             }
             else{
+                const data = await response.json();
+                localStorage.setItem('user', JSON.stringify(data.user));
                 navigate("/dashboard");
             }
             

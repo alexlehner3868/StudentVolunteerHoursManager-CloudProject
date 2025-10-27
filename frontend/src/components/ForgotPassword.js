@@ -18,11 +18,12 @@ const ForgotPassword=()=>{
     const handleSubmit = async (e) =>{
         e.preventDefault();
         setSubmitting(true);
-        try {   
-            const response = await fetch("/forgot-password",{
+        try {
+            const requestBody={email};   
+            const response = await fetch("/api/forgot-password",{
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(email)
+                body: JSON.stringify(requestBody)
             });
             if (!response.ok){
                 setPopUpMessage('Invalid Email. Please try again.');
