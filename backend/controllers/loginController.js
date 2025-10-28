@@ -149,8 +149,8 @@ const forgotPassword = async(req,res)=>{
 const passwordReset = async(req,res)=>{
     try {
         // get email and password from request and check that they  arent empty
-        const {email,verificationCode, newpassword}=req.body;
-        if(!email || !verificationCode || !password){
+        const {email,verificationCode,newPassword}=req.body;
+        if(!email || !verificationCode || !newPassword){
             return res.status(422).json({
                 success: false,
                 message: 'Email, verification code, and password are required.'
@@ -175,7 +175,7 @@ const passwordReset = async(req,res)=>{
 
         // hashing password
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newpassword, salt);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
 
         // update password
         // potentially UPDATE VERIFICATION CODE
