@@ -1,23 +1,21 @@
 import React from 'react';
 import NavBar from './NavBar';
-
+import StudentDashboard from './StudentDashboard';
 function Dashboard({ userType }) {
-  const isStudent = userType === 'student';
 
+  const isStudent = userType === 'student'; //Temp - set dynam ically based on user
+  const userId = 1; // Temp - set. dynamically 
   return (
     <div>
       <NavBar userType={userType} />
 
       <div style={{ padding: '20px' }}>
         {isStudent ? (
-          <>
-            <h1>Student Dashboard</h1>
-            <p>Welcome, student! Here you can track your volunteer hours and submit new ones.</p>
-          </>
+          <StudentDashboard studentId={userId} />
         ) : (
           <>
             <h1>Guidance Counsellor Dashboard</h1>
-            <p>Welcome, counsellor! Review student submissions and manage records here.</p>
+            <p>In progress</p>
           </>
         )}
       </div>

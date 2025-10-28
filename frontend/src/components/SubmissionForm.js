@@ -3,6 +3,8 @@ import NavBar from "./NavBar";
 import "./SubmissionForm.css";
 
 const VolunteerSubmissionForm = () => {
+
+  // Matches the fields on the form
   const [formData, setFormData] = useState({
     organization: "",
     date_volunteered: "",
@@ -13,6 +15,7 @@ const VolunteerSubmissionForm = () => {
     description: "",
   });
 
+  // Submission Status Messages
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,7 +38,7 @@ const VolunteerSubmissionForm = () => {
 
       const result = await res.json();
       if (result.success) {
-        setMessage("Submission successful!");
+        setMessage("Successfully Submitted!");
         setFormData({
           organization: "",
           date_volunteered: "",
@@ -46,11 +49,12 @@ const VolunteerSubmissionForm = () => {
           description: "",
         });
       } else {
-        setMessage("Error: " + result.error);
+        setMessage("Unable to Submit ... Please Try Again");
+        console.log("Error: "+ result.error);
       }
     } catch (err) {
       console.error(err);
-      setMessage("Network error submitting form.");
+      setMessage("Unable to Submit ... Please Try Again Later");
     } finally {
       setIsSubmitting(false);
     }
@@ -103,7 +107,7 @@ const VolunteerSubmissionForm = () => {
         </form>
 
         {message && (
-          <div className={`message ${message.startsWith("✅") ? "success" : "error"}`}>
+          <div className={`message ${message.startsWith("Successfully") ? "success" : "error"}`}>
             {message}
           </div>
         )}
