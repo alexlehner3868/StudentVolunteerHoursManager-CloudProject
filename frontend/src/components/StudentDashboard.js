@@ -6,16 +6,21 @@ function StudentDashboard({ studentId }) {
 
   const [data, setData] = useState([]); // Store Monthly hours 
   const [summary, setSummary] = useState({ approved_hours: 0, total_submitted: 0 }); // Store all up hours
+  const [username, setUsername] = useState("Student"); // Default name
 
-  const username = "Student"; //Temp -- Pull from database or token 
   // Get the data from the backend
   useEffect(() => {
     async function fetchData() {
       try {
-        const hoursRes = await fetch(`/api/volunteer-hours/${studentId}`);
+
+        const nameRes = await fetch(`/api/student-name/${studentId}`);
+        const nameData = await nameRes.json();
+        setUsername(nameData.name || "");
+
+        const hoursRes = await fetch(`/api/student-info/volunteer-hours/${studentId}`);
         const hoursData = await hoursRes.json();
 
-        const summaryRes = await fetch(`/api/volunteer-summary/${studentId}`);
+        const summaryRes = await fetch(`/api/student-info/volunteer-summary/${studentId}`);
         const summaryData = await summaryRes.json();
 
         setData(hoursData);
