@@ -3,7 +3,6 @@ import NavBar from "./NavBar";
 import "./SubmissionForm.css";
 
 const VolunteerSubmissionForm = () => {
-
   // Matches the fields on the form
   const [formData, setFormData] = useState({
     organization: "",
@@ -30,10 +29,21 @@ const VolunteerSubmissionForm = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/submit-hours", {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const studentId = user;
+
+      if (!studentId) {
+        setMessage("User not found. Please log in again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const submissionData = { ...formData, studentId };
+
+      const res = await fetch("/api/volunteer-hours/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submissionData),
       });
 
       const result = await res.json();
@@ -50,7 +60,7 @@ const VolunteerSubmissionForm = () => {
         });
       } else {
         setMessage("Unable to Submit ... Please Try Again");
-        console.log("Error: "+ result.error);
+        console.log("Error:", result.error);
       }
     } catch (err) {
       console.error(err);
@@ -70,34 +80,82 @@ const VolunteerSubmissionForm = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-section">
             <label>Date of Volunteering</label>
-            <input type="date" name="date_volunteered" value={formData.date_volunteered} onChange={handleChange} required/>
+            <input
+              type="date"
+              name="date_volunteered"
+              value={formData.date_volunteered}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-section">
             <label>Organization</label>
-            <input type="text" name="organization" value={formData.organization} onChange={handleChange} required/>
+            <input
+              type="text"
+              name="organization"
+              value={formData.organization}
+              onChange={handleChange}
+              required
+            />
           </div>
-    
+
           <div className="form-section flex-row">
             <div>
               <label>Hours</label>
-              <input type="number" name="hours" min="0" value={formData.hours} onChange={handleChange}required/>
+              <input
+                type="number"
+                name="hours"
+                min="0"
+                value={formData.hours}
+                onChange={handleChange}
+                required
+              />
             </div>
             <div>
               <label>Minutes</label>
-              <input type="number" name="minutes" min="0" max="59" value={formData.minutes}onChange={handleChange}required/>
+              <input
+                type="number"
+                name="minutes"
+                min="0"
+                max="59"
+                value={formData.minutes}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
 
           <div className="form-section">
             <label>Description</label>
-            <textarea name="description" value={formData.description} onChange={handleChange}rows={4} required/>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows={4}
+              required
+            />
           </div>
+
           <div className="form-section">
             <label>Supervisor Information</label>
             <div className="flex-row">
-              <input type="text" name="extern_sup_name" placeholder="Name" value={formData.extern_sup_name} onChange={handleChange}required/>
-              <input type="email" name="extern_sup_email" placeholder="Email" value={formData.extern_sup_email} onChange={handleChange} required/>
+              <input
+                type="text"
+                name="extern_sup_name"
+                placeholder="Name"
+                value={formData.extern_sup_name}
+                onChange={handleChange}
+                required
+              />
+              <input
+                type="email"
+                name="extern_sup_email"
+                placeholder="Email"
+                value={formData.extern_sup_email}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
 
@@ -107,7 +165,11 @@ const VolunteerSubmissionForm = () => {
         </form>
 
         {message && (
-          <div className={`message ${message.startsWith("Successfully") ? "success" : "error"}`}>
+          <div
+            className={`message ${
+              message.startsWith("Successfully") ? "success" : "error"
+            }`}
+          >
             {message}
           </div>
         )}
