@@ -1,4 +1,4 @@
-const pool = require('../config/databse');
+const pool = require('../config/database');
 const bcrypt = require('bcryptjs');
 
 // handle user login

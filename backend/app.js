@@ -1,5 +1,5 @@
 const express = require('express');
-const pool = require('./config/databse');
+const pool = require('./config/database');
 const path = require('path');
 const routes = require('./router/routes');
 const app = express();

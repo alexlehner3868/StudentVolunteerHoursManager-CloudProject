@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // <-- For redirecting (React Router)
+import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
-import "./SubmissionForm.css"; // reuse same styling
+import "../styles/Page.css"; // use same styling as Login
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ const RegisterForm = () => {
 
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate(); // <-- Used to programmatically navigate
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,10 +36,10 @@ const RegisterForm = () => {
       if (res.ok) {
         setMessage("✅ Registration successful!");
 
-        // TODO: When login page and endpoint exist, redirect like this:
-        // navigate("/login");
+        // Optionally redirect after success:
+        navigate("/");
 
-        // For now, just clear form
+        // Clear form
         setFormData({
           fullname: "",
           email: "",
@@ -58,93 +58,78 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="page-container">
-      <NavBar />
+    <div className="page">
+      
 
-      <div className="form-card">
-        <h2>User Registration</h2>
+      <header className="pageHeader">
+        <h1>Register</h1>
+      </header>
 
-        <form onSubmit={handleSubmit}>
-          {/* Full name */}
-          <div className="form-section">
-            <label>Full Name</label>
-            <input
-              type="text"
-              name="fullname"
-              placeholder="Enter full name"
-              value={formData.fullname}
-              onChange={handleChange}
-              required
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="form">
+        <input
+          className="input"
+          type="text"
+          name="fullname"
+          placeholder="Enter full name"
+          value={formData.fullname}
+          onChange={handleChange}
+          required
+        />
 
-          {/* Email */}
-          <div className="form-section">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        <input
+          className="input"
+          type="email"
+          name="email"
+          placeholder="Enter email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
 
-          {/* Password */}
-          <div className="form-section">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        <input
+          className="input"
+          type="password"
+          name="password"
+          placeholder="Enter password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
 
-          {/* Type dropdown */}
-          <div className="form-section">
-            <label>User Type</label>
-            <select
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              required
-            >
-              <option value="student">Student</option>
-              <option value="guidance_counsellor">Guidance Counsellor</option>
-            </select>
-          </div>
+        <select
+          className="input"
+          name="type"
+          value={formData.type}
+          onChange={handleChange}
+          required
+        >
+          <option value="student">Student</option>
+          <option value="guidance_counsellor">Guidance Counsellor</option>
+        </select>
 
-          {/* Submit button */}
-          <button type="submit" className="submit-btn" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Register"}
-          </button>
-        </form>
+        <button className="button" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Submitting..." : "Register"}
+        </button>
+      </form>
 
-        {message && (
-          <div
-            className={`message ${
-              message.startsWith("✅") ? "success" : "error"
-            }`}
-          >
-            {message}
-          </div>
-        )}
+      {message && (
+        <p
+          className={message.startsWith("✅") ? "success" : "error"}
+          style={{ marginTop: "1rem" }}
+        >
+          {message}
+        </p>
+      )}
 
-        <div className="form-footer">
-            <p>Already have an account?</p>
-            <button
-                type="button"
-                className="link-button"
-                onClick={() => navigate("/login")}
-            >
-                Go to Login
-            </button>
-            </div>
-        
+      <div style={{ marginTop: "1rem" }}>
+        <p>Already have an account?</p>
+        <button
+          className="link-button"
+          type="button"
+          onClick={() => navigate("/")}
+        >
+          Go to Login
+        </button>
       </div>
     </div>
   );
