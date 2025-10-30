@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "./NavBar";
 import "../styles/Page.css"; // use same styling as Login
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
-    fullname: "",
     email: "",
     password: "",
     type: "student",
@@ -36,16 +34,22 @@ const RegisterForm = () => {
       if (res.ok) {
         setMessage("✅ Registration successful!");
 
-        // Optionally redirect after success:
-        navigate("/");
+        // Redirect based on role to extra info page
+        if (result.type === "student") {
+          navigate("/student-info", { state: { email: result.email } });
+        } else if (result.type === "guidance_counsellor") {
+          navigate("/guidance-info", { state: { email: result.email } });
+        }
+       
 
-        // Clear form
-        setFormData({
-          fullname: "",
-          email: "",
-          password: "",
-          type: "student",
-        });
+          // Optionally clear form
+          setFormData({
+            email: "",
+            password: "",
+            type: "student",
+          });
+        
+
       } else {
         setMessage("❌ Error: " + (result.error || "Registration failed"));
       }
@@ -59,23 +63,12 @@ const RegisterForm = () => {
 
   return (
     <div className="page">
-      
-
       <header className="pageHeader">
         <h1>Register</h1>
       </header>
 
       <form onSubmit={handleSubmit} className="form">
-        <input
-          className="input"
-          type="text"
-          name="fullname"
-          placeholder="Enter full name"
-          value={formData.fullname}
-          onChange={handleChange}
-          required
-        />
-
+        {/* Email */}
         <input
           className="input"
           type="email"
@@ -86,6 +79,7 @@ const RegisterForm = () => {
           required
         />
 
+        {/* Password */}
         <input
           className="input"
           type="password"
@@ -96,6 +90,7 @@ const RegisterForm = () => {
           required
         />
 
+        {/* User Type */}
         <select
           className="input"
           name="type"
@@ -107,11 +102,13 @@ const RegisterForm = () => {
           <option value="guidance_counsellor">Guidance Counsellor</option>
         </select>
 
+        {/* Submit Button */}
         <button className="button" type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : "Register"}
         </button>
       </form>
 
+      {/* Feedback Message */}
       {message && (
         <p
           className={message.startsWith("✅") ? "success" : "error"}
@@ -121,16 +118,25 @@ const RegisterForm = () => {
         </p>
       )}
 
+      {/* Navigation to Login */}
       <div style={{ marginTop: "1rem" }}>
-        <p>Already have an account?</p>
-        <button
-          className="link-button"
-          type="button"
-          onClick={() => navigate("/")}
+        <p
+            onClick={() => navigate("/")}
+            style={{
+            color: "#007bff",
+            cursor: "pointer",
+            textDecoration: "underline",
+            background: "none",
+            border: "none",
+            font: "inherit",
+            padding: 0,
+            margin: 0,
+            display: "inline",
+            }}
         >
-          Go to Login
-        </button>
-      </div>
+            Back to Login
+        </p>
+        </div>
     </div>
   );
 };
