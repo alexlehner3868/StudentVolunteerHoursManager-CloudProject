@@ -5,5 +5,5 @@ const loginController = require('../controllers/loginController');
 router.post('/login', loginController.login);
 router.post('/forgot-password', loginController.forgotPassword);
 router.post('/password-reset', loginController.passwordReset);
-
+router.post("/register", registerUser);
 module.exports = router;

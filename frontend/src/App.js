@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import ForgotPassword from "./components/ForgotPassword";
 import SignUp from "./components/SignUp";
 import PasswordReset from "./components/PasswordReset";
+import RegisterForm from "./components/RegisterForm";
 // Hardcode user type for now
 const userType = 'student'; // or 'counsellor'
 
@@ -14,6 +15,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/register" element={<RegisterForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/signup" element={<SignUp />} />
