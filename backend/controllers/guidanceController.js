@@ -8,6 +8,14 @@ const addGuidanceInfo = async (req, res) => {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
+    // 🔹 Validate that name has letters only
+  const nameRegex = /^[A-Za-z\s'-]+$/;
+  if (!nameRegex.test(counsellorname)) {
+    return res.status(400).json({
+      error: "Invalid name. Counsellor name must contain only letters and spaces.",
+    });
+  }
+
   try {
     // --- 2️⃣ Retrieve user from Users table ---
     const userResult = await pool.query(

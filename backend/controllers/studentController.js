@@ -8,6 +8,14 @@ const addStudentInfo = async (req, res) => {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
+    // 🔹 Validate that name has letters only
+  const nameRegex = /^[A-Za-z\s'-]+$/;
+  if (!nameRegex.test(studentname)) {
+    return res.status(400).json({
+      error: "Invalid name. Student name must contain only letters and spaces.",
+    });
+  }
+
   try {
     // --- 2️⃣ Retrieve user from Users table ---
     const userResult = await pool.query(

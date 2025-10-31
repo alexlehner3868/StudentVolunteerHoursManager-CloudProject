@@ -104,6 +104,12 @@ const RegisterForm = () => {
       const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`;
       let endpoint, body;
 
+      const nameRegex = /^[A-Za-z\s'-]+$/;
+      if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
+        setMessage("❌ Invalid name. Only letters, spaces, hyphens, and apostrophes are allowed.");
+        return;
+      }
+
       if (formData.type === "student") {
         // Graduation date validation
         const today = new Date().toISOString().split("T")[0];
