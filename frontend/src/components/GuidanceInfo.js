@@ -1,3 +1,4 @@
+//StudentVolunteerHoursManager-CloudProject/frontend/src/components/GuidanceInfo.js
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/Page.css"; // match Register and StudentInfo styling
