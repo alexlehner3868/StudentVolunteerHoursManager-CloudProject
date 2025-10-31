@@ -3,7 +3,6 @@ import NavBar from "./NavBar";
 import "./SubmissionForm.css";
 
 const VolunteerSubmissionForm = () => {
-  // Matches the fields on the form
   const [formData, setFormData] = useState({
     organization: "",
     date_volunteered: "",
@@ -14,7 +13,6 @@ const VolunteerSubmissionForm = () => {
     description: "",
   });
 
-  // Submission Status Messages
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -29,8 +27,8 @@ const VolunteerSubmissionForm = () => {
     setIsSubmitting(true);
 
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const studentId = user;
+      const user = JSON.parse(localStorage.getItem("user")) || {};      
+      const studentId = (user && user.userId) || 0;  
 
       if (!studentId) {
         setMessage("User not found. Please log in again.");

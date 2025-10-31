@@ -6,6 +6,9 @@ import Login from "./components/Login";
 import ForgotPassword from "./components/ForgotPassword";
 import SignUp from "./components/SignUp";
 import PasswordReset from "./components/PasswordReset";
+import Profile from './components/Profile';
+
+
 // Hardcode user type for now
 const userType = 'student'; // or 'counsellor'
 
@@ -19,6 +22,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/dashboard" element={<Dashboard userType={userType} />} />
         <Route path="/submit-hours" element={<SubmissionForm />} />
+        <Route path="/profile" element={<Profile userType={userType} />} />
       </Routes>
     </Router>
   );
