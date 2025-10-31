@@ -1,13 +1,13 @@
-//StudentVolunteerHoursManager-CloudProject/frontend/src/components/GuidanceInfo.js
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import "../styles/Page.css"; // match Register and StudentInfo styling
+import { useNavigate } from "react-router-dom";
+import "../styles/Page.css";
 
 const GuidanceInfo = () => {
-  const { state } = useLocation();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
+    email: "",
+    password: "",
     counsellorname: "",
     schoolid: "",
     schoolname: "",
@@ -27,23 +27,40 @@ const GuidanceInfo = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/guidance-info", {
+      // Step 1: Activate user
+      const registerRes = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, email: state?.email }),
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+          type: "guidance_counsellor",
+        }),
       });
 
-      const result = await res.json();
+      const registerResult = await registerRes.json();
+      if (!registerRes.ok) throw new Error(registerResult.error);
 
-      if (res.ok) {
-        setMessage("✅ Guidance counsellor information saved successfully!");
-        navigate("/"); // redirect to login or main page
-      } else {
-        setMessage("❌ " + (result.error || "Failed to save counsellor info."));
-      }
+      // Step 2: Save guidance info
+      const infoRes = await fetch("/api/guidance-info", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email,
+          counsellorname: form.counsellorname,
+          schoolid: form.schoolid,
+          schoolname: form.schoolname,
+        }),
+      });
+
+      const infoResult = await infoRes.json();
+      if (!infoRes.ok) throw new Error(infoResult.error);
+
+      setMessage("✅ Account activated and guidance info saved!");
+      navigate("/");
     } catch (err) {
-      console.error("Network error:", err);
-      setMessage("❌ Network error. Please try again.");
+      setMessage("❌ " + err.message);
+      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
@@ -52,10 +69,29 @@ const GuidanceInfo = () => {
   return (
     <div className="page">
       <header className="pageHeader">
-        <h1>Guidance Counsellor Information</h1>
+        <h1>Activate Guidance Counsellor Account</h1>
       </header>
 
       <form onSubmit={handleSubmit} className="form">
+        <input
+          className="input"
+          name="email"
+          placeholder="School Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          className="input"
+          type="password"
+          name="password"
+          placeholder="Create Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
+
         <input
           className="input"
           name="counsellorname"
@@ -84,20 +120,15 @@ const GuidanceInfo = () => {
         />
 
         <button className="button" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Save Info"}
+          {isSubmitting ? "Submitting..." : "Activate Account"}
         </button>
       </form>
 
       {message && (
-        <p
-          className={message.startsWith("✅") ? "success" : "error"}
-          style={{ marginTop: "1rem" }}
-        >
+        <p className={message.startsWith("✅") ? "success" : "error"} style={{ marginTop: "1rem" }}>
           {message}
         </p>
       )}
-
-      
     </div>
   );
 };

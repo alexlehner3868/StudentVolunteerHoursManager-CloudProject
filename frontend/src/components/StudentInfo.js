@@ -1,14 +1,13 @@
-// StudentVolunteerHoursManager-CloudProject/frontend/src/components/StudentInfo.js
-
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import "../styles/Page.css"; // match RegisterForm + Login styling
+import { useNavigate } from "react-router-dom";
+import "../styles/Page.css";
 
 const StudentInfo = () => {
-  const { state } = useLocation();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
+    email: "",
+    password: "",
     studentname: "",
     schoolid: "",
     schoolname: "",
@@ -29,23 +28,41 @@ const StudentInfo = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/student-info", {
+      // --- Step 1: Activate preloaded user account ---
+      const registerRes = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, email: state?.email }),
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+          type: "student",
+        }),
       });
 
-      const result = await res.json();
+      const registerResult = await registerRes.json();
+      if (!registerRes.ok) throw new Error(registerResult.error);
 
-      if (res.ok) {
-        setMessage("✅ Student information saved successfully!");
-        navigate("/"); // redirect to login or main
-      } else {
-        setMessage("❌ " + (result.error || "Failed to save student info."));
-      }
+      // --- Step 2: Add student profile info ---
+      const infoRes = await fetch("/api/student-info", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email,
+          studentname: form.studentname,
+          schoolid: form.schoolid,
+          schoolname: form.schoolname,
+          graduationdate: form.graduationdate,
+        }),
+      });
+
+      const infoResult = await infoRes.json();
+      if (!infoRes.ok) throw new Error(infoResult.error);
+
+      setMessage("✅ Account activated and student info saved!");
+      navigate("/"); // redirect to login
     } catch (err) {
-      console.error("Network error:", err);
-      setMessage("❌ Network error. Please try again.");
+      setMessage("❌ " + err.message);
+      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
@@ -54,10 +71,29 @@ const StudentInfo = () => {
   return (
     <div className="page">
       <header className="pageHeader">
-        <h1>Student Information</h1>
+        <h1>Activate Student Account</h1>
       </header>
 
       <form onSubmit={handleSubmit} className="form">
+        <input
+          className="input"
+          name="email"
+          placeholder="School Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          className="input"
+          type="password"
+          name="password"
+          placeholder="Create Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
+
         <input
           className="input"
           name="studentname"
@@ -85,32 +121,23 @@ const StudentInfo = () => {
           required
         />
 
-        {/* 🔹 Label for Graduation Date */}
-        <label
-          htmlFor="graduationdate"
-          style={{ alignSelf: "flex-start", marginBottom: "0.25rem", fontWeight: "500" }}
-        >
-          Graduation Date
-        </label>
+        <label htmlFor="graduationdate">Graduation Date</label>
         <input
           id="graduationdate"
           className="input"
-          name="graduationdate"
           type="date"
+          name="graduationdate"
           value={form.graduationdate}
           onChange={handleChange}
         />
 
         <button className="button" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Save Info"}
+          {isSubmitting ? "Submitting..." : "Activate Account"}
         </button>
       </form>
 
       {message && (
-        <p
-          className={message.startsWith("✅") ? "success" : "error"}
-          style={{ marginTop: "1rem" }}
-        >
+        <p className={message.startsWith("✅") ? "success" : "error"} style={{ marginTop: "1rem" }}>
           {message}
         </p>
       )}
