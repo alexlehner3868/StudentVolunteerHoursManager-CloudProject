@@ -5,6 +5,7 @@ const { registerUser } = require('../controllers/registerController');
 const { addStudentInfo } = require("../controllers/studentController");
 const { addGuidanceInfo } = require("../controllers/guidanceController");
 const { checkEmail } = require('../controllers/checkEmailController');
+const { getSystemMetrics } = require("../controllers/metricsController");
 
 router.post('/login', loginController.login);
 router.post('/forgot-password', loginController.forgotPassword);
@@ -13,4 +14,5 @@ router.post('/check-email', checkEmail);
 router.post("/register", registerUser);
 router.post("/student-info", addStudentInfo);
 router.post("/guidance-info", addGuidanceInfo);
+router.get("/system-metrics", getSystemMetrics);
 module.exports = router;

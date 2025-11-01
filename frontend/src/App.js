@@ -9,6 +9,7 @@ import PasswordReset from "./components/PasswordReset";
 import RegisterForm from "./components/RegisterForm";
 import StudentInfo from "./components/StudentInfo";
 import GuidanceInfo from "./components/GuidanceInfo";
+import SystemMetrics from "./components/SystemMetrics";
 
 // Hardcode user type for now
 const userType = 'student'; // or 'counsellor'
@@ -26,6 +27,7 @@ function App() {
         <Route path="/submit-hours" element={<SubmissionForm />} />
         <Route path="/student-info" element={<StudentInfo />} />
         <Route path="/guidance-info" element={<GuidanceInfo />} />
+        <Route path="/system-metrics" element={<SystemMetrics />} />
       </Routes>
     </Router>
   );
