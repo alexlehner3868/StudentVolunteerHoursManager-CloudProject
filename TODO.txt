@@ -4,12 +4,8 @@ TODO:
     - User Registration 
     - Sign in 
     - Signed in user information can be used to toggle dashboard and can be used in queries 
+        - User type
     - Sign out page / functionality 
-    - Profile Page 
-        - Students (see name, school name, expected graduation date, Assigned guidance counsellor)
-        - Guidance Counsellor (see name, school name)
-    - Guidance Counsellor Profile 
-        - TBD how to work out who is their Students
     - List of student submissions which they can click on to edit and see details and delete and resend sendGrid
     - Guidance Counsellor dashboard 
         - Graph for a particular student 

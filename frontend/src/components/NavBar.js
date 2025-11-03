@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function NavBar({ userType }) {
+function NavBar({ userType, userId }) {
   const isStudent = userType === 'student';
 
   const navStyle = {
@@ -24,7 +24,7 @@ function NavBar({ userType }) {
       ];
 
   const rightLinks = [
-    { label: 'Profile', path: '/profile' },
+    { label: 'Profile', path: `/profile` },
     { label: 'Logout', path: '/logout' },
   ];
 

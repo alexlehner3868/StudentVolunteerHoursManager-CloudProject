@@ -4,7 +4,8 @@ import StudentDashboard from './StudentDashboard';
 function Dashboard({ userType }) {
 
   const isStudent = userType === 'student'; //Temp - set dynam ically based on user
-  const userId = 1; // Temp - set. dynamically 
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const userId = (user && user.userId) || 0;
   return (
     <div>
       <NavBar userType={userType} />
