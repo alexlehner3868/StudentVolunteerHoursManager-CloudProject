@@ -1,17 +1,14 @@
 TODO: 
     - Docker Swarm 
     - Set up Digital Ocean Monotoring
-    - User Registration 
-    - Sign in 
-    - Signed in user information can be used to toggle dashboard and can be used in queries 
-        - User type
     - Sign out page / functionality 
     - List of student submissions which they can click on to edit and see details and delete and resend sendGrid
     - Guidance Counsellor dashboard 
         - Graph for a particular student 
         - List of all submissions that is filterable by status or by student
-        - Can click on submission to see details anad give their approval / reject /flag / comment
     - SendGrid for registration 
     - Getting supervisor approval (email template + SendGrid + frontend)
     - SendGrid to notify student that they have final status on their submission
+    - SendGrid Forgot Password
+    - Standardized formattign and colors across all pages (use login blue)
     

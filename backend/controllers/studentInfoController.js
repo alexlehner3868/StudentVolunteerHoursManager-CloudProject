@@ -103,18 +103,37 @@ const updateGraduationDate = async (req, res) => {
   const { GraduationDate } = req.body;
 
   try {
+    console.log("Updating GraduationDate:", GraduationDate, "for studentId:", studentId);
+
     const query = `
       UPDATE Student
-      SET "GraduationDate" = $1
-      WHERE UserID = $2
-      RETURNING StudentName, SchoolName, GraduationDate, Email;
+      SET graduationdate = $1
+      WHERE userid = $2
+      RETURNING studentname, schoolname, graduationdate;
     `;
+
     const result = await pool.query(query, [GraduationDate, studentId]);
-    res.json(result.rows[0]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    const userResult = await pool.query('SELECT email FROM Users WHERE userid = $1', [studentId]);
+
+    const profile = {
+      name: result.rows[0].studentname,
+      SchoolName: result.rows[0].schoolname,
+      GraduationDate: result.rows[0].graduationdate,
+      email: userResult.rows[0]?.email || ''
+    };
+
+    res.json(profile);
   } catch (err) {
     console.error('Error updating graduation date:', err);
     res.status(500).json({ error: err.message });
   }
 };
+
+
 
 module.exports = { getMonthlyHours, getSummary, getStudentName, getProfile, updateGraduationDate };

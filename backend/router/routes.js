@@ -18,7 +18,6 @@ router.post("/register", registerUser);
 router.post("/student-info", addStudentInfo);
 router.post("/guidance-info", addGuidanceInfo);
 router.get("/system-metrics", getSystemMetrics);
-module.exports = router;
 
 router.post('/volunteer-hours/submit', volunteerHourSubmissionController.submitHours);
 

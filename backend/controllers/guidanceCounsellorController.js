@@ -1,4 +1,5 @@
 const pool = require('../config/database');
+
 const getProfile = async (req, res) => {
   const { gcId } = req.params;
 

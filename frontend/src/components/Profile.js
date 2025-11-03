@@ -59,7 +59,7 @@ function Profile() {
       console.log("Updated profile data:", updatedData);
       setProfileData(updatedData);
       setIsEditing(false);
-      alert("Graduation date updated!");
+
     } catch (err) {
       console.error("Error updating graduation date:", err);
     }
