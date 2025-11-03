@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const loginController = require('../controllers/loginController');
+const { registerUser } = require('../controllers/registerController');
+const { addStudentInfo } = require("../controllers/studentController");
+const { addGuidanceInfo } = require("../controllers/guidanceController");
+const { checkEmail } = require('../controllers/checkEmailController');
+const { getSystemMetrics } = require("../controllers/metricsController");
 const volunteerHourSubmissionController = require('../controllers/volunteerHourSubmissionController');
 const studentController = require('../controllers/studentInfoController');
 const guidanceCounsellorController = require('../controllers/guidanceCounsellorController');
@@ -8,6 +13,12 @@ const guidanceCounsellorController = require('../controllers/guidanceCounsellorC
 router.post('/login', loginController.login);
 router.post('/forgot-password', loginController.forgotPassword);
 router.post('/password-reset', loginController.passwordReset);
+router.post('/check-email', checkEmail);
+router.post("/register", registerUser);
+router.post("/student-info", addStudentInfo);
+router.post("/guidance-info", addGuidanceInfo);
+router.get("/system-metrics", getSystemMetrics);
+module.exports = router;
 
 router.post('/volunteer-hours/submit', volunteerHourSubmissionController.submitHours);
 

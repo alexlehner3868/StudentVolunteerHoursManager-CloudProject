@@ -80,6 +80,53 @@
     opacity: 0.6;
 }
 
+/* ===== System Metrics Dashboard (light theme consistent with Register) ===== */
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+
+.metric-card {
+  background-color: #f0f8ff; /* same as input background */
+  border: 1px solid #e0e0e0;
+  border-radius: 15px;
+  padding: 1.2rem;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+}
+
+.metric-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.metric-card h3 {
+  color: #1e3a8a;
+  font-size: 18px;
+  margin-bottom: 0.5rem;
+}
+
+.metric-card p {
+  font-size: 20px;
+  font-weight: bold;
+  color: #111827;
+  margin: 0;
+}
+
+.timestamp {
+  display: block;
+  margin-top: 1rem;
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+}
+
+
+
 form > div{
     text-align:center;
     margin-top: 10px;
