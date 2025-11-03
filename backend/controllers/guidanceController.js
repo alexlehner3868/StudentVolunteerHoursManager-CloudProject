@@ -1,14 +1,12 @@
 const pool = require("../config/database");
 
 const addGuidanceInfo = async (req, res) => {
-  const { email, counsellorname } = req.body;
+  const { email, counsellorname, schoolid, schoolname } = req.body;
 
-  // --- 1️⃣ Input validation ---
   if (!email || !counsellorname) {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
-    // 🔹 Validate that name has letters only
   const nameRegex = /^[A-Za-z\s'-]+$/;
   if (!nameRegex.test(counsellorname)) {
     return res.status(400).json({
@@ -17,62 +15,56 @@ const addGuidanceInfo = async (req, res) => {
   }
 
   try {
-    // --- 2️⃣ Retrieve user from Users table ---
     const userResult = await pool.query(
-      "SELECT UserID, Type FROM Users WHERE Email = $1",
+      "SELECT userid, type FROM users WHERE email = $1",
       [email]
     );
 
     if (userResult.rowCount === 0) {
       return res.status(404).json({
-        error:
-          "No user found with that email. Please contact your school administrator.",
+        error: "No user found with that email. Please contact your school administrator.",
       });
     }
 
     const user = userResult.rows[0];
-    const userId = user.userid;
+    const userId = user.userid || user.UserID;
 
-    // --- 3️⃣ Ensure correct user type ---
-    if (user.type.toLowerCase() !== "guidance_counsellor") {
+    // ✅ Normalize both DB and expected type
+    const normalizeType = (t) =>
+      t ? t.toLowerCase().replace(/[\s_]+/g, "").trim() : "";
+
+    const dbType = normalizeType(user.type);
+    if (dbType !== "guidancecounsellor") {
       return res.status(403).json({
-        error:
-          "User type mismatch. Only Guidance Counsellor accounts can update this information.",
+        error: "User type mismatch. Only Guidance Counsellor accounts can update this information.",
       });
     }
 
-    // --- 4️⃣ Check if GuidanceCounsellor entry exists ---
     const existing = await pool.query(
-      "SELECT * FROM GuidanceCounsellor WHERE UserID = $1",
+      "SELECT * FROM guidancecounsellor WHERE userid = $1",
       [userId]
     );
 
     if (existing.rowCount === 0) {
-      // Case A: No record yet → insert only CounsellorName
       await pool.query(
-        `INSERT INTO GuidanceCounsellor (UserID, CounsellorName)
-         VALUES ($1, $2)`,
-        [userId, counsellorname]
+        "INSERT INTO guidancecounsellor (userid, counsellorname, schoolid, schoolname) VALUES ($1, $2, $3, $4)",
+        [userId, counsellorname, schoolid || null, schoolname || null]
       );
       console.log(`✅ Inserted new counsellor for ${email}`);
     } else {
-      // Case B: Prepopulated → update only CounsellorName, keep SchoolID/SchoolName intact
       await pool.query(
-        `UPDATE GuidanceCounsellor
-         SET CounsellorName = $1
-         WHERE UserID = $2`,
-        [counsellorname, userId]
+        "UPDATE guidancecounsellor SET counsellorname = $1, schoolid = $2, schoolname = $3 WHERE userid = $4",
+        [counsellorname, schoolid || null, schoolname || null, userId]
       );
-      console.log(`✅ Updated counsellor name for ${email}`);
+      console.log(`✅ Updated counsellor info for ${email}`);
     }
 
-    // --- 5️⃣ Success response ---
     return res
       .status(200)
       .json({ message: "✅ Guidance counsellor information saved successfully." });
   } catch (err) {
-    console.error("❌ Error saving guidance info:", err);
-    return res.status(500).json({ error: "Database error occurred." });
+    console.error("❌ Error saving guidance info:", err.message);
+    return res.status(500).json({ error: err.message });
   }
 };
 

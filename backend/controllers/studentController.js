@@ -8,7 +8,7 @@ const addStudentInfo = async (req, res) => {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
-    // 🔹 Validate that name has letters only
+  // --- 2️⃣ Validate name ---
   const nameRegex = /^[A-Za-z\s'-]+$/;
   if (!nameRegex.test(studentname)) {
     return res.status(400).json({
@@ -17,70 +17,72 @@ const addStudentInfo = async (req, res) => {
   }
 
   try {
-    // --- 2️⃣ Retrieve user from Users table ---
+    // --- 3️⃣ Retrieve user ---
     const userResult = await pool.query(
-      "SELECT UserID, Type FROM Users WHERE Email = $1",
+      'SELECT "UserID", "Type" FROM "Users" WHERE "Email" = $1',
       [email]
     );
 
     if (userResult.rowCount === 0) {
       return res.status(404).json({
-        error:
-          "No user found with that email. Please contact your school administrator.",
+        error: "No user found with that email. Please contact your school administrator.",
       });
     }
 
     const user = userResult.rows[0];
-    const userId = user.userid;
+    const userId = user.userid || user.UserID;
 
-    // --- 3️⃣ Ensure correct user type ---
-    if (user.type.toLowerCase() !== "student") {
+    // --- 4️⃣ Normalize Type for tolerance (spaces, underscores, case) ---
+    const normalizeType = (t) =>
+      t ? t.toLowerCase().replace(/[\s_]+/g, "").trim() : "";
+
+    const dbType = normalizeType(user.type);
+    if (dbType !== "student") {
       return res.status(403).json({
-        error:
-          "User type mismatch. Only Student accounts can update this information.",
+        error: "User type mismatch. Only Student accounts can update this information.",
       });
     }
 
-    // --- 4️⃣ Validate graduation date (cannot be in the past) ---
+    // --- 5️⃣ Validate graduation date (cannot be in the past) ---
     if (graduationdate) {
       const today = new Date().toISOString().split("T")[0];
-      if (graduationdate < today) {
-        return res.status(400).json({
-          error: "Graduation date cannot be in the past.",
-        });
+      if (new Date(graduationdate) < new Date(today)) {
+        return res
+          .status(400)
+          .json({ error: "Graduation date cannot be in the past." });
       }
     }
 
-    // --- 5️⃣ Check if Student entry exists ---
-    const existing = await pool.query("SELECT * FROM Student WHERE UserID = $1", [userId]);
+    // --- 6️⃣ Prepare graduation date safely ---
+    const gradDate =
+      graduationdate && graduationdate.trim() !== "" ? graduationdate : null;
+
+    // --- 7️⃣ Check if Student record exists ---
+    const existing = await pool.query("SELECT * FROM student WHERE userid = $1", [userId]);
 
     if (existing.rowCount === 0) {
-      // Case A: Not prepopulated → insert minimal record
+      // Insert new record
       await pool.query(
-        `INSERT INTO Student (UserID, StudentName, GraduationDate)
-         VALUES ($1, $2, $3)`,
-        [userId, studentname, graduationdate || null]
+        "INSERT INTO student (userid, studentname, graduationdate) VALUES ($1, $2, $3)",
+        [userId, studentname, gradDate]
       );
       console.log(`✅ Inserted new student record for ${email}`);
     } else {
-      // Case B: Prepopulated → only update name/date
+      // Update existing record
       await pool.query(
-        `UPDATE Student
-         SET StudentName = $1,
-             GraduationDate = $2
-         WHERE UserID = $3`,
-        [studentname, graduationdate || null, userId]
+        "UPDATE student SET studentname = $1, graduationdate = $2 WHERE userid = $3",
+        [studentname, gradDate, userId]
       );
       console.log(`✅ Updated student info for ${email}`);
     }
 
-    // --- 6️⃣ Send success response ---
+    // --- 8️⃣ Success ---
     return res
       .status(200)
       .json({ message: "✅ Student information saved successfully." });
   } catch (err) {
-    console.error("❌ Error saving student info:", err);
-    return res.status(500).json({ error: "Database error occurred." });
+    console.error("❌ Error saving student info:", err.message);
+    return res.status(500).json({ error: err.message });
   }
 };
 
