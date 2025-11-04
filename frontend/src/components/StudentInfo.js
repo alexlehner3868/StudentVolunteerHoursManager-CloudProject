@@ -5,6 +5,12 @@ import "../styles/Page.css";
 const StudentInfo = () => {
   const navigate = useNavigate();
 
+  // ✅ Auto-detect backend base URL
+  const BASE_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:3000" // for local dev
+      : window.location.origin; // for production (e.g., http://178.128.232.57)
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -28,41 +34,48 @@ const StudentInfo = () => {
     setIsSubmitting(true);
 
     try {
-      // --- Step 1: Activate preloaded user account ---
-      const registerRes = await fetch("/api/register", {
+      // --- Step 1️⃣ Activate preloaded user account ---
+      const registerRes = await fetch(`${BASE_URL}/api/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: form.email,
-          password: form.password,
+          email: form.email.trim(),
+          password: form.password.trim(),
           type: "student",
         }),
       });
 
-      const registerResult = await registerRes.json();
-      if (!registerRes.ok) throw new Error(registerResult.error);
+      if (!registerRes.ok) {
+        const err = await registerRes.json();
+        throw new Error(err.error || "Failed to register user.");
+      }
 
-      // --- Step 2: Add student profile info ---
-      const infoRes = await fetch("/api/student-info", {
+      console.log("✅ Register successful");
+
+      // --- Step 2️⃣ Add student info ---
+      const infoRes = await fetch(`${BASE_URL}/api/student-info`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: form.email,
-          studentname: form.studentname,
-          schoolid: form.schoolid,
-          schoolname: form.schoolname,
-          graduationdate: form.graduationdate,
+          email: form.email.trim(),
+          studentname: form.studentname.trim(),
+          schoolid: form.schoolid.trim(),
+          schoolname: form.schoolname.trim(),
+          graduationdate: form.graduationdate || null,
         }),
       });
 
-      const infoResult = await infoRes.json();
-      if (!infoRes.ok) throw new Error(infoResult.error);
+      if (!infoRes.ok) {
+        const err = await infoRes.json();
+        throw new Error(err.error || "Failed to save student information.");
+      }
 
       setMessage("✅ Account activated and student info saved!");
-      navigate("/"); // redirect to login
+      console.log("✅ Student info saved");
+      setTimeout(() => navigate("/"), 1500);
     } catch (err) {
-      setMessage("❌ " + err.message);
-      console.error(err);
+      console.error("❌ Registration error:", err);
+      setMessage("❌ " + (err.message || "Network error during registration."));
     } finally {
       setIsSubmitting(false);
     }
@@ -121,7 +134,9 @@ const StudentInfo = () => {
           required
         />
 
-        <label htmlFor="graduationdate">Graduation Date</label>
+        <label htmlFor="graduationdate" style={{ fontWeight: 500 }}>
+          Graduation Date
+        </label>
         <input
           id="graduationdate"
           className="input"
@@ -129,6 +144,7 @@ const StudentInfo = () => {
           name="graduationdate"
           value={form.graduationdate}
           onChange={handleChange}
+          required
         />
 
         <button className="button" type="submit" disabled={isSubmitting}>
@@ -137,7 +153,10 @@ const StudentInfo = () => {
       </form>
 
       {message && (
-        <p className={message.startsWith("✅") ? "success" : "error"} style={{ marginTop: "1rem" }}>
+        <p
+          className={message.startsWith("✅") ? "success" : "error"}
+          style={{ marginTop: "1rem" }}
+        >
           {message}
         </p>
       )}

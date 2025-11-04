@@ -12,9 +12,15 @@ services:
       DB_NAME: student_volunteer
       DB_USER: admin
       DB_PASSWORD_FILE: /run/secrets/db_password.txt
+      DO_API_TOKEN_FILE: /run/secrets/do_api_token.txt
+      DROPLET_ID_FILE: /run/secrets/droplet_id.txt
     depends_on:
       db:
         condition: service_healthy
+    secrets:
+      - db_password
+      - do_api_token
+      - droplet_id
     volumes:
       - ./secrets/db_password.txt:/run/secrets/db_password.txt:ro
     networks:
@@ -50,3 +56,7 @@ volumes:
 secrets:
   db_password:
     file: ./secrets/db_password.txt
+  do_api_token:
+    file: ./secrets/do_api_token.txt
+  droplet_id:
+    file: ./secrets/droplet_id.txt
