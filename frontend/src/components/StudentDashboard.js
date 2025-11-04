@@ -6,27 +6,49 @@ function StudentDashboard({ studentId }) {
 
   const [data, setData] = useState([]); // Store Monthly hours 
   const [summary, setSummary] = useState({ approved_hours: 0, total_submitted: 0 }); // Store all up hours
+  const [username, setUsername] = useState("Student"); // Default name
 
-  const username = "Student"; //Temp -- Pull from database or token 
   // Get the data from the backend
-  useEffect(() => {
-    async function fetchData() {
+
+useEffect(() => {
+  async function fetchData() {
+    try {
+      console.log("Fetching student dashboard for ID:", studentId);
+
+      // --- Debugging lines ---
+      const nameRes = await fetch(`/api/student-name/${studentId}`);
+      console.log("Name fetch status:", nameRes.status);
+      const nameText = await nameRes.text();
+      console.log("Name fetch text:", nameText.slice(0, 200)); // show first 200 chars
+
+      // Try parsing JSON only if it’s actually JSON
+      let nameData;
       try {
-        const hoursRes = await fetch(`/api/volunteer-hours/${studentId}`);
-        const hoursData = await hoursRes.json();
-
-        const summaryRes = await fetch(`/api/volunteer-summary/${studentId}`);
-        const summaryData = await summaryRes.json();
-
-        setData(hoursData);
-        setSummary(summaryData);
-      } catch (err) {
-        console.error("Error getting student dashboard info:", err);
+        nameData = JSON.parse(nameText);
+      } catch {
+        console.error("⚠️ Name endpoint did not return JSON!");
+        return; // stop here to avoid the other fetches failing
       }
-    }
 
-    fetchData();
-  }, [studentId]);
+      setUsername(nameData.name || "");
+
+      // Continue with the others only if the first worked
+      const hoursRes = await fetch(`/api/volunteer-hours/${studentId}`);
+      const hoursData = await hoursRes.json();
+
+      const summaryRes = await fetch(`/api/volunteer-summary/${studentId}`);
+      const summaryData = await summaryRes.json();
+
+      setData(hoursData);
+      setSummary(summaryData);
+    } catch (err) {
+      console.error("Error getting student dashboard info:", err);
+    }
+  }
+
+  fetchData();
+}, [studentId]);
+
 
   // Calculate the percent complete for the progress bar
   const hoursApproved = summary.approved_hours || 0;

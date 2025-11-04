@@ -1,21 +1,26 @@
 TODO: 
     - Docker Swarm 
     - Set up Digital Ocean Monotoring
-    - User Registration 
-    - Sign in 
-    - Signed in user information can be used to toggle dashboard and can be used in queries 
+    - Attach DB to external Volumes 
+    - Guidance counsellor approval - List of all submissions that is filterable by status or by student
+    - Presentation
+        - Prefill databases (users, students and hours) for a good demo 
+        - Written Intro (Nov 19th)
+        - Run throughs, pre-recorded stuff etc
+        - Slides (Nov 19th)
     - Sign out page / functionality 
-    - Profile Page 
-        - Students (see name, school name, expected graduation date, Assigned guidance counsellor)
-        - Guidance Counsellor (see name, school name)
-    - Guidance Counsellor Profile 
-        - TBD how to work out who is their Students
     - List of student submissions which they can click on to edit and see details and delete and resend sendGrid
-    - Guidance Counsellor dashboard 
-        - Graph for a particular student 
-        - List of all submissions that is filterable by status or by student
-        - Can click on submission to see details anad give their approval / reject /flag / comment
+    - Guidance Counsellor dashboard - Graph/metrics for a particular student 
     - SendGrid for registration 
     - Getting supervisor approval (email template + SendGrid + frontend)
     - SendGrid to notify student that they have final status on their submission
+    - SendGrid Forgot Password
+    - Validate secrets are done right 
+    - Figure out HTTPS (or tokens) whichever is easier
+    - Standardized formattign and colors across all pages (use login blue)
+    - Bonus marks? 
+    - Final Report (Dec 8th)
+        - Write up
+        - Commented Code 
+        - Video Demo 
     
