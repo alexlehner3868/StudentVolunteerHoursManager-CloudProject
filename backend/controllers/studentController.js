@@ -2,87 +2,117 @@ const pool = require("../config/database");
 
 const addStudentInfo = async (req, res) => {
   const { email, studentname, graduationdate } = req.body;
+  console.log("📩 Incoming request /api/student-info:", req.body);
 
-  // --- 1️⃣ Input validation ---
   if (!email || !studentname) {
+    console.warn("⚠️ Missing email or studentname");
     return res.status(400).json({ error: "Missing required fields." });
   }
 
-  // --- 2️⃣ Validate name ---
   const nameRegex = /^[A-Za-z\s'-]+$/;
   if (!nameRegex.test(studentname)) {
+    console.warn("⚠️ Invalid name format:", studentname);
     return res.status(400).json({
-      error: "Invalid name. Student name must contain only letters and spaces.",
+      error:
+        "Invalid name. Student name must contain only letters, spaces, hyphens, or apostrophes.",
     });
   }
 
   try {
-    // --- 3️⃣ Retrieve user ---
-    const userResult = await pool.query(
-      'SELECT "UserID", "Type" FROM "Users" WHERE "Email" = $1',
-      [email]
-    );
+    // ✅ Verify DB connection
+    await pool.query("SELECT 1");
+    console.log("🟢 Database connection confirmed.");
 
-    if (userResult.rowCount === 0) {
-      return res.status(404).json({
-        error: "No user found with that email. Please contact your school administrator.",
-      });
+    // ✅ Check if user exists
+    let userRes;
+    try {
+      userRes = await pool.query(
+        "SELECT userid, type FROM users WHERE email = $1",
+        [email]
+      );
+    } catch (dbErr) {
+      console.error("❌ Query error [users lookup]:", dbErr.message);
+      return res.status(500).json({ error: "Database lookup failed (users)." });
     }
 
-    const user = userResult.rows[0];
-    const userId = user.userid || user.UserID;
-
-    // --- 4️⃣ Normalize Type for tolerance (spaces, underscores, case) ---
-    const normalizeType = (t) =>
-      t ? t.toLowerCase().replace(/[\s_]+/g, "").trim() : "";
-
-    const dbType = normalizeType(user.type);
-    if (dbType !== "student") {
-      return res.status(403).json({
-        error: "User type mismatch. Only Student accounts can update this information.",
-      });
+    if (userRes.rowCount === 0) {
+      console.warn("⚠️ No user found for:", email);
+      return res
+        .status(404)
+        .json({ error: "User not found. Please contact your administrator." });
     }
 
-    // --- 5️⃣ Validate graduation date (cannot be in the past) ---
+    const user = userRes.rows[0];
+    const userId = user.userid;
+    const type = (user.type || "").toLowerCase();
+
+    console.log("🧠 User found:", { userId, type, email });
+
+    if (type !== "student") {
+      console.warn("🚫 Non-student type attempted student-info:", type);
+      return res
+        .status(403)
+        .json({ error: "Only student accounts can add student info." });
+    }
+
+    // ✅ Graduation date validation
     if (graduationdate) {
       const today = new Date().toISOString().split("T")[0];
       if (new Date(graduationdate) < new Date(today)) {
+        console.warn("⚠️ Invalid graduation date:", graduationdate);
         return res
           .status(400)
           .json({ error: "Graduation date cannot be in the past." });
       }
     }
 
-    // --- 6️⃣ Prepare graduation date safely ---
     const gradDate =
       graduationdate && graduationdate.trim() !== "" ? graduationdate : null;
 
-    // --- 7️⃣ Check if Student record exists ---
-    const existing = await pool.query("SELECT * FROM student WHERE userid = $1", [userId]);
-
-    if (existing.rowCount === 0) {
-      // Insert new record
-      await pool.query(
-        "INSERT INTO student (userid, studentname, graduationdate) VALUES ($1, $2, $3)",
-        [userId, studentname, gradDate]
+    // ✅ Check if student already exists
+    let existing;
+    try {
+      existing = await pool.query(
+        "SELECT userid FROM student WHERE userid = $1",
+        [userId]
       );
-      console.log(`✅ Inserted new student record for ${email}`);
-    } else {
-      // Update existing record
-      await pool.query(
-        "UPDATE student SET studentname = $1, graduationdate = $2 WHERE userid = $3",
-        [studentname, gradDate, userId]
-      );
-      console.log(`✅ Updated student info for ${email}`);
+    } catch (dbErr) {
+      console.error("❌ Query error [student lookup]:", dbErr.message);
+      return res.status(500).json({ error: "Database lookup failed (student)." });
     }
 
-    // --- 8️⃣ Success ---
+    if (existing.rowCount === 0) {
+      console.log("🆕 Inserting new student record:", { userId, studentname, gradDate });
+      try {
+        await pool.query(
+          "INSERT INTO student (userid, studentname, graduationdate) VALUES ($1, $2, $3)",
+          [userId, studentname, gradDate]
+        );
+      } catch (dbErr) {
+        console.error("❌ Insert failed:", dbErr.message);
+        return res.status(500).json({ error: "Failed to insert student record." });
+      }
+      console.log(`✅ Inserted new student record for ${email}`);
+    } else {
+      console.log("✏️ Updating existing student record:", { userId, studentname, gradDate });
+      try {
+        await pool.query(
+          "UPDATE student SET studentname = $1, graduationdate = $2 WHERE userid = $3",
+          [studentname, gradDate, userId]
+        );
+      } catch (dbErr) {
+        console.error("❌ Update failed:", dbErr.message);
+        return res.status(500).json({ error: "Failed to update student record." });
+      }
+      console.log(`✅ Updated student record for ${email}`);
+    }
+
     return res
       .status(200)
       .json({ message: "✅ Student information saved successfully." });
   } catch (err) {
-    console.error("❌ Error saving student info:", err.message);
-    return res.status(500).json({ error: err.message });
+    console.error("💥 Unhandled error in addStudentInfo:", err);
+    return res.status(500).json({ error: "Internal server error." });
   }
 };
 

@@ -104,14 +104,15 @@ const RegisterForm = () => {
       const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`;
       let endpoint, body;
 
+      // ✅ Define regex before using it
       const nameRegex = /^[A-Za-z\s'-]+$/;
-      if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
+      if (!nameRegex.test(formData.firstName) || !nameRegex.test(formData.lastName)) {
         setMessage("❌ Invalid name. Only letters, spaces, hyphens, and apostrophes are allowed.");
+        setIsSubmitting(false);
         return;
       }
 
       if (formData.type === "student") {
-        // Graduation date validation
         const today = new Date().toISOString().split("T")[0];
         if (formData.graduationDate < today) {
           setMessage("❌ Graduation date cannot be in the past.");
@@ -147,11 +148,13 @@ const RegisterForm = () => {
         setMessage("❌ " + (result.error || "Failed to save information."));
       }
     } catch (err) {
+      console.error("❌ Error:", err);
       setMessage("❌ Network error during registration.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   // Dynamic form rendering by step
   return (
