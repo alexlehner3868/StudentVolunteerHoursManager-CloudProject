@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import NavBar from "./NavBar";
-import "./SubmissionForm.css";
+import "../styles/SubmissionForm.css";
 
 const VolunteerSubmissionForm = () => {
   const [formData, setFormData] = useState({

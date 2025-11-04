@@ -1,33 +1,39 @@
-.page-container {
+.page {
   min-height: 100vh;
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
+  align-items: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
 }
 
-.profile-card {
+.pageHeader {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.pageHeader h1 {
+  font-size: 32px;
+  color: #1e3a8a;
+  margin: 0;
+}
+
+.form {
   max-width: 700px;
+  width: 100%;
   background-color: #fff;
-  margin: 50px auto;
-  padding: 40px;
+  padding: 30px;
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   border: 1px solid #e0e0e0;
-}
-
-.profile-card h2 {
-  text-align: center;
-  font-size: 28px;
-  color: #1e3a8a;
-  margin-bottom: 30px;
 }
 
 .profile-section {
   margin-bottom: 20px;
   padding: 20px;
   border-radius: 12px;
-  background-color: #f0f8ff; /* light blue */
+  background-color: #f0f8ff;
   box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
 }
 
@@ -43,9 +49,7 @@
   color: #1a202c;
 }
 
-.profile-section input[type="date"],
-.profile-section input[type="text"],
-.profile-section textarea {
+.input {
   width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
@@ -53,18 +57,16 @@
   font-size: 16px;
   box-sizing: border-box;
   margin-top: 5px;
+  background-color: #f0f8ff;
 }
 
-.flex-row {
-  display: flex;
-  gap: 15px;
+.input:focus {
+  outline: none;
+  border-color: #1e3a8a;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
 }
 
-.flex-row input {
-  flex: 1;
-}
-
-.btn {
+.button {
   padding: 12px 20px;
   font-size: 16px;
   font-weight: 600;
@@ -72,26 +74,14 @@
   border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.3s;
-}
-
-.btn-primary {
+  margin-left: 10px;
   background-color: #1e3a8a;
   color: white;
 }
 
-.btn-primary:hover {
+.button:hover:not(:disabled) {
   background-color: #1b2f70;
 }
-
-.btn-secondary {
-  background-color: #e0e0e0;
-  color: #333;
-}
-
-.btn-secondary:hover {
-  background-color: #cfcfcf;
-}
-
 
 .gc-list {
   list-style-type: none;
@@ -103,22 +93,4 @@
   padding: 10px;
   border-bottom: 1px solid #ccc;
   font-size: 16px;
-}
-
-.message {
-  text-align: center;
-  margin-top: 20px;
-  padding: 12px;
-  border-radius: 10px;
-  font-weight: 600;
-}
-
-.message.success {
-  background-color: #d1fae5;
-  color: #065f46;
-}
-
-.message.error {
-  background-color: #fee2e2;
-  color: #b91c1c;
 }

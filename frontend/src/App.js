@@ -13,9 +13,6 @@ import SystemMetrics from "./components/SystemMetrics";
 import Profile from './components/Profile';
 
 
-// Hardcode user type for now
-const userType = 'student'; // or 'counsellor'
-
 function App() {
   return (
     <Router>
@@ -29,7 +26,7 @@ function App() {
         <Route path="/student-info" element={<StudentInfo />} />
         <Route path="/guidance-info" element={<GuidanceInfo />} />
         <Route path="/system-metrics" element={<SystemMetrics />} />
-        <Route path="/profile" element={<Profile userType={userType} />} />
+        <Route path="/profile" element={<Profile/>} />
       </Routes>
     </Router>
   );

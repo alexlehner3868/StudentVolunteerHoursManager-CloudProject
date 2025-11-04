@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  app:
+    image: malkahil/student-volunteer-app:latest
+    ports:
+      - "80:3000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: student_volunteer
+      DB_USER: admin
+      DB_PASSWORD_FILE: /run/secrets/db_password
+    depends_on:
+      - db
+    secrets:
+      - db_password
+    networks:
+      - app-network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: student_volunteer
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    secrets:
+      - db_password
+    networks:
+      - app-network
+    deploy:
+      placement:
+        constraints: [node.role == manager]  # keep DB on manager node
+      restart_policy:
+        condition: on-failure
+
+networks:
+  app-network:
+    driver: overlay
+
+volumes:
+  db-data:
+
+secrets:
+  db_password:
+    external: true

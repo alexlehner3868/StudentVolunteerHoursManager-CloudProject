@@ -1,17 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/NavBar.css'; 
 
-function NavBar({ userType, userId }) {
-  const isStudent = userType === 'student';
-
-  const navStyle = {
-    backgroundColor: isStudent ? '#007bff' : '#6f42c1',
-    color: 'white',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px 20px',
-  };
+function NavBar({ userType }) {
+  const isStudent = userType.toLowerCase() === 'student';
 
   const leftLinks = isStudent
     ? [
@@ -29,26 +21,18 @@ function NavBar({ userType, userId }) {
   ];
 
   return (
-    <nav style={navStyle}>
-      <div style={{ display: 'flex', gap: '20px' }}>
+    <nav className="navbar">
+      <div className="nav-left">
         {leftLinks.map(link => (
-          <Link
-            key={link.path}
-            to={link.path}
-            style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}
-          >
+          <Link key={link.path} to={link.path} className="nav-link">
             {link.label}
           </Link>
         ))}
       </div>
 
-      <div style={{ display: 'flex', gap: '20px' }}>
+      <div className="nav-right">
         {rightLinks.map(link => (
-          <Link
-            key={link.path}
-            to={link.path}
-            style={{ color: 'white', textDecoration: 'none' }}
-          >
+          <Link key={link.path} to={link.path} className="nav-link">
             {link.label}
           </Link>
         ))}

@@ -1,4 +1,4 @@
-const pool = require('../config/databse');
+const pool = require('../config/database');
 
 const getSubmissions = async(req,res)=>{
     try {

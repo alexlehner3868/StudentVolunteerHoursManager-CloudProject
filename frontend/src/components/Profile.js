@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/NavBar";
-import "./Profile.css";
+import "../styles/Profile.css";
 
 function Profile() {
-  const userType = "student"; // Hardcoded for now
+  
 
   const [profileData, setProfileData] = useState(null);
   const [graduationDate, setGraduationDate] = useState("");
@@ -13,6 +13,7 @@ function Profile() {
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : {};
   const userId = user.userId || 0;
+  const userType = user?.type || "Student";
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -25,11 +26,11 @@ function Profile() {
         console.log("Profile data fetched:", data);
         setProfileData(data);
 
-        if (userType === "student" && data.GraduationDate) {
+        if (userType === "Student" && data.GraduationDate) {
           setGraduationDate(data.GraduationDate.slice(0, 10));
         }
 
-        if (userType === "student") {
+        if (userType === "Student") {
           const gcRes = await fetch(`/api/student/${userId}/guidance-counsellors`);
           if (!gcRes.ok) throw new Error("Failed to fetch guidance counsellors");
           const gcData = await gcRes.json();
@@ -72,7 +73,7 @@ function Profile() {
       <Navbar userType={userType} />
 
       <div className="form-card">
-        <h2>{userType === "student" ? "Student Profile" : "Guidance Counsellor Profile"}</h2>
+        <h2>{userType === "Student" ? "Student Profile" : "Guidance Counsellor Profile"}</h2>
 
         <div className="form-section">
           <label>Name:</label>
@@ -89,7 +90,7 @@ function Profile() {
           <div>{profileData.SchoolName || "N/A"}</div>
         </div>
 
-        {userType === "student" && (
+        {userType === "Student" && (
           <div className="form-section">
             <label>Graduation Date:</label>
             <div className="flex-row" style={{ alignItems: "center" }}>
@@ -127,7 +128,7 @@ function Profile() {
           </div>
         )}
 
-        {userType === "student" && (
+        {userType === "Student" && (
           <div className="form-section">
             <h3>Guidance Counsellors at {profileData.SchoolName || "N/A"}</h3>
             {counsellors.length === 0 ? (
