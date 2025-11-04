@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.select {
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: white;
+  cursor: pointer;
+  font-family: inherit;
+  outline: none;
+  min-width: 180px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.clear {
+  padding: 10px 16px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  white-space: nowrap;
+}
+
+.clear:hover {
+  background-color: #dc2626;
+}

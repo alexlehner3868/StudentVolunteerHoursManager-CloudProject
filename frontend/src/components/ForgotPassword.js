@@ -8,6 +8,8 @@ const ForgotPassword=()=>{
     const [showPopUp, setShowPopUp]=useState(false);
     const [popUpMessage, setPopUpMessage]=useState("");
     const navigate = useNavigate();
+
+    // set the value passed in as email 
     const handleChange=(e)=>{
         const {name, value} = e.target;
         if (name === 'email'){
@@ -15,6 +17,7 @@ const ForgotPassword=()=>{
         }
     }
 
+    // the http request to send verification code to email
     const handleSubmit = async (e) =>{
         e.preventDefault();
         setSubmitting(true);

@@ -4,10 +4,9 @@ import Dashboard from './components/Dashboard';
 import SubmissionForm from './components/SubmissionForm';
 import Login from "./components/Login";
 import ForgotPassword from "./components/ForgotPassword";
-import SignUp from "./components/SignUp";
 import PasswordReset from "./components/PasswordReset";
-// Hardcode user type for now
-const userType = 'student'; // or 'counsellor'
+import CounsellorDashboard from "./components/CounsellorDash/CounsellorDashboard";
+
 
 function App() {
   return (
@@ -16,8 +15,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/password-reset" element={<PasswordReset />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/dashboard" element={<Dashboard userType={userType} />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/submit-hours" element={<SubmissionForm />} />
       </Routes>
     </Router>

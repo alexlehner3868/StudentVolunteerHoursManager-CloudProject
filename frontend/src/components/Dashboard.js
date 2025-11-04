@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavBar from './NavBar';
 import StudentDashboard from './StudentDashboard';
-function Dashboard({ userType }) {
+import CounsellorDashboard from '../components/CounsellorDash/CounsellorDashboard'
+function Dashboard() {
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
+  
+  useEffect(() => {
+    if (!user){
+      navigate('/login');
+    }
+  },[user, navigate]);
 
-  const isStudent = userType === 'student'; //Temp - set dynam ically based on user
-  const userId = 1; // Temp - set. dynamically 
+  const userType = user?.type;
+  const userId =user?.userId;
+
+  const isStudent = (userType === 'Student'); 
+
   return (
     <div>
       <NavBar userType={userType} />
@@ -13,10 +26,7 @@ function Dashboard({ userType }) {
         {isStudent ? (
           <StudentDashboard studentId={userId} />
         ) : (
-          <>
-            <h1>Guidance Counsellor Dashboard</h1>
-            <p>In progress</p>
-          </>
+          <CounsellorDashboard />
         )}
       </div>
     </div>
