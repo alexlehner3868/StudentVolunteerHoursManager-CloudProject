@@ -12,6 +12,7 @@ const PasswordReset=()=>{
     const [popUpMessage, setPopUpMessage]=useState("");
     const navigate = useNavigate();
 
+    // set the values passed in as email  or passwords or verification code
     const handleChange=(e)=>{
         const {name, value} = e.target;
         if (name === 'email'){
@@ -28,6 +29,7 @@ const PasswordReset=()=>{
         }
     }
 
+    // check that the password matches the password policy
     const validatePassword =()=>{
         if(newPassword.length<8){
             return {isValid:false, message:"Password must be at least 8 characters long. Please try again."};
@@ -48,6 +50,7 @@ const PasswordReset=()=>{
 
     }
 
+    //  the http request to update the password for a user
     const handleSubmit = async (e) =>{
         e.preventDefault();
         setSubmitting(true);

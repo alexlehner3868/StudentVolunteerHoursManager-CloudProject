@@ -9,6 +9,7 @@ const Login=()=>{
     const [showPopUp, setShowPopUp]=useState(false);
     const [popUpMessage, setPopUpMessage]=useState("");
     const navigate = useNavigate();
+    // set the values passed in as email or password
     const handleChange=(e)=>{
         const {name, value} = e.target;
         if (name === 'email'){
@@ -19,6 +20,7 @@ const Login=()=>{
         }
     }
 
+    // the http request to login with the specified email and password
     const handleSubmit = async (e) =>{
         e.preventDefault();
         setSubmitting(true);
@@ -89,7 +91,7 @@ const Login=()=>{
             </div>
             <div>
                 Don't have an account?{" "}
-                <Link to="/signup">
+                <Link to="/register">
                     Sign Up
                 </Link>
             </div>
