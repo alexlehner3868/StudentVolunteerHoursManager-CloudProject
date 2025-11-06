@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
 import '../styles/NavBar.css'; 
 
 function NavBar({ userType }) {
   const isStudent = userType.toLowerCase() === 'student';
+  const navigate = useNavigate();
 
   const leftLinks = isStudent
     ? [
@@ -17,8 +18,12 @@ function NavBar({ userType }) {
 
   const rightLinks = [
     { label: 'Profile', path: `/profile` },
-    { label: 'Logout', path: '/logout' },
   ];
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    navigate('/')
+  };
 
   return (
     <nav className="navbar">
@@ -36,6 +41,9 @@ function NavBar({ userType }) {
             {link.label}
           </Link>
         ))}
+        <button onClick={handleLogout} className="nav-link logout-button">
+          Logout
+        </button>
       </div>
     </nav>
   );

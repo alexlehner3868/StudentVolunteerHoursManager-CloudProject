@@ -9,6 +9,7 @@ TODO:
         - Run throughs, pre-recorded stuff etc
         - Slides (Nov 19th)
     - Sign out page / functionality 
+    - On any page if not loged in, should send you back to the signin page 
     - List of student submissions which they can click on to edit and see details and delete and resend sendGrid
     - Guidance Counsellor dashboard - Graph/metrics for a particular student 
     - SendGrid for registration 
