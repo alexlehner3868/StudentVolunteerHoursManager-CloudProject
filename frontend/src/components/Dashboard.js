@@ -9,9 +9,13 @@ function Dashboard() {
   
   useEffect(() => {
     if (!user){
-      navigate('/login');
+      navigate('/');
     }
   },[user, navigate]);
+   
+  if (!user) {
+    return null; 
+  }
 
   const userType = user?.type;
   const userId =user?.userId;

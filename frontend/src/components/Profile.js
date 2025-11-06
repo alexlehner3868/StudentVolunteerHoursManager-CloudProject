@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/NavBar";
 import "../styles/Profile.css";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
-  
+  const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState(null);
   const [graduationDate, setGraduationDate] = useState("");
@@ -14,6 +15,17 @@ function Profile() {
   const user = storedUser ? JSON.parse(storedUser) : {};
   const userId = user.userId || 0;
   const userType = user?.type || "Student";
+
+  useEffect(() => {
+    if (!user || Object.keys(user).length === 0) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+   if (!user) {
+    return null; 
+  }
+
 
   useEffect(() => {
     const fetchProfile = async () => {

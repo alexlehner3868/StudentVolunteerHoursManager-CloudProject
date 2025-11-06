@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "./NavBar";
 import "../styles/SubmissionForm.css";
+import { useNavigate } from "react-router-dom";
 
 const VolunteerSubmissionForm = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     organization: "",
     date_volunteered: "",
@@ -15,6 +18,19 @@ const VolunteerSubmissionForm = () => {
 
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+
+  useEffect(() => {
+    if (!user || Object.keys(user).length === 0) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+   if (!user) {
+    return null; 
+  }
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;

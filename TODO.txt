@@ -2,14 +2,12 @@ TODO:
     - Docker Swarm 
     - Set up Digital Ocean Monotoring
     - Attach DB to external Volumes 
-    - Guidance counsellor approval - List of all submissions that is filterable by status or by student
     - Presentation
         - Prefill databases (users, students and hours) for a good demo 
         - Written Intro (Nov 19th)
         - Run throughs, pre-recorded stuff etc
         - Slides (Nov 19th)
-    - Sign out page / functionality 
-    - On any page if not loged in, should send you back to the signin page 
+    - On any page if not loged in, should send you back to the signin page (most of them done - just do new pages)
     - List of student submissions which they can click on to edit and see details and delete and resend sendGrid
     - Guidance Counsellor dashboard - Graph/metrics for a particular student 
     - SendGrid for registration 
