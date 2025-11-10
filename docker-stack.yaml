@@ -35,7 +35,7 @@ services:
     secrets:
       - db_password
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - /mnt/volume_tor1_01/postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
@@ -48,9 +48,6 @@ services:
 networks:
   app-network:
     driver: overlay
-
-volumes:
-  db-data:
 
 secrets:
   db_password:

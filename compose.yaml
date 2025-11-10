@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   app:
-    image: student-volunteer-app   # Use the prebuilt image
+    image: student-volunteer-app
     container_name: student-volunteer-app
     ports:
       - "80:3000"
@@ -34,7 +34,7 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password.txt
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - /mnt/volume_tor1_01/postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./secrets/db_password.txt:/run/secrets/db_password.txt:ro
     networks:
@@ -49,9 +49,6 @@ services:
 networks:
   app-network:
     driver: bridge
-
-volumes:
-  db-data:
 
 secrets:
   db_password:
