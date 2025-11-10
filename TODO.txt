@@ -1,13 +1,10 @@
 TODO: 
     - Docker Swarm 
-    - Set up Digital Ocean Monotoring
-    - Attach DB to external Volumes 
     - Presentation
         - Prefill databases (users, students and hours) for a good demo 
         - Written Intro (Nov 19th)
         - Run throughs, pre-recorded stuff etc
         - Slides (Nov 19th)
-    - On any page if not loged in, should send you back to the signin page (most of them done - just do new pages)
     - For pages that are only for guidence counsellors or students, check hte usertype and if wrong type, send them back to dashboard
     - List of student submissions which they can click on to edit and see details and delete and resend sendGrid
     - Guidance Counsellor dashboard - Graph/metrics for a particular student 
