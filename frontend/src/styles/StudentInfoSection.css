@@ -1,22 +1,22 @@
-.container {
+.sis-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
     margin-bottom: 16px;
 }
 
-.content {
+.sis-content {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.content.full-width {
+.sis-content.full-width {
     grid-column: 1 / -1;
     margin-top: 8px;
 }
 
-.content label {
+.sis-content label {
     font-size: 13px;
     font-weight: 600;
     color: #6b7280;
@@ -24,14 +24,14 @@
     letter-spacing: 0.5px;
 }
 
-.content p {
+.sis-content p {
     font-size: 15px;
     color: #1f2937;
     line-height: 1.5;
 }
 
 @media (max-width: 768px) {
-    .container {
+    .sis-container {
         grid-template-columns: 1fr;
     }
 }

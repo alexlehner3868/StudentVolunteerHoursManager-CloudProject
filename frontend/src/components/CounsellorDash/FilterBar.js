@@ -3,12 +3,12 @@ import "../../styles/FilterBar.css";
 
 const FilterBar = ({ status, onStatusChange }) => {
   return (
-    <div className="container">
-      <label className="label">Filter by Status:</label>
+    <div className="fb-button">
+      <label className="fb-label">Filter by Status:</label>
       <select
         value={status}
         onChange={(e) => onStatusChange(e.target.value)}
-        className="select"
+        className="fb-select"
       >
         <option value="All">All Statuses</option>
         <option value="Pending">Pending</option>
@@ -20,7 +20,7 @@ const FilterBar = ({ status, onStatusChange }) => {
       {status !== 'All' && (
         <button
           onClick={() => onStatusChange('All')}
-          className="clear"
+          className="fb-clear"
           aria-label="Clear status filter"
         >
           Clear

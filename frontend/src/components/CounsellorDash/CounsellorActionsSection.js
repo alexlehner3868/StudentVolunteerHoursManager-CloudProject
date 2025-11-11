@@ -19,10 +19,10 @@ const CounsellorActionsSection = ({
   };
 
   return (
-    <section className="container">
-      <h4 className="header">Counsellor Actions</h4>
+    <section className="cas-container">
+      <h4 className="cas-header">Counsellor Actions</h4>
 
-      <div className="content">
+      <div className="cas-content">
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -73,9 +73,9 @@ const CounsellorActionsSection = ({
         ></textarea>
       </div>
 
-      <div className="button-container">
+      <div className="button-cas-container">
         <button
-          className="button"
+          className="cas-button"
           onClick={handleApply}
           disabled={isSubmitting || !counsellorStatus}
         >

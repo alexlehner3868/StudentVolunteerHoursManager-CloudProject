@@ -1,11 +1,11 @@
-.container {
+.sss-container {
     background-color: #f0f8ff;
     padding: 20px;
     border-radius: 12px;
     border: 1px solid #bfdbfe;
 }
 
-.supervisor-comment {
+.sss-supervisor-comment {
     background-color: white;
     padding: 12px;
     border-radius: 8px;
@@ -14,7 +14,7 @@
     color: #374151;
 }
 
-.status-badge {
+.sss-status-badge {
     display: inline-block;
     width: fit-content;
     padding: 4px 10px;
@@ -24,17 +24,17 @@
     text-transform: capitalize;
 }
 
-.status-Pending {
+.sss-status-Pending {
     background-color: #fef3c7;
     color: #92400e;
 }
 
-.status-Approved {
+.sss-status-Approved {
     background-color: #d1fae5;
     color: #065f46;
 }
 
-.status-Denied {
+.sss-status-Denied {
     background-color: #fee2e2;
     color: #991b1b;
 }

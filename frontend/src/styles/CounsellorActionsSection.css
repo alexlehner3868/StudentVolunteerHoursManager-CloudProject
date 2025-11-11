@@ -1,17 +1,17 @@
-.container {
+.cas-container {
     background-color: #f9fafb;
     padding: 20px;
     border-radius: 12px;
 }
 
-.header {
+.cas-header {
     font-size: 18px;
     font-weight: 600;
     color: #1e3a8a;
     margin-bottom: 16px;
 }
 
-.content {
+.cas-content {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -94,13 +94,13 @@
     opacity: 0.6;
 }
 
-.button-container {
+.button-cas-container {
     display: flex;
-    justify-content: center;
+    justify-cas-content: center;
     margin-top: 20px;
 }
 
-.button {
+.cas-button {
     padding: 14px 40px;
     background-color: #1e3a8a;
     color: white;
@@ -113,27 +113,23 @@
     min-width: 200px;
 }
 
-.button:hover:not(:disabled) {
+.cas-button:hover:not(:disabled) {
     background-color: #1b2f70;
     transform: translateY(-1px);
 }
 
-.button:active:not(:disabled) {
+.cas-button:active:not(:disabled) {
     transform: translateY(0);
 }
 
-.button:disabled {
+.cas-button:disabled {
     background-color: #9ca3af;
     cursor: not-allowed;
     opacity: 0.6;
 }
 
 @media (max-width: 768px) {
-    .action-buttons {
-        grid-template-columns: 1fr;
-    }
-
-    .content {
+    .cas-content {
         padding: 12px;
     }
 
@@ -141,7 +137,7 @@
         padding: 10px;
     }
 
-    .button {
+    .cas-button {
         min-width: 100%;
     }
 }

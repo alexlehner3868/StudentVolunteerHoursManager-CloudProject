@@ -1,18 +1,18 @@
-.container {
+.fb-button {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: nowrap;
 }
 
-.label {
+.fb-label {
   font-size: 15px;
   font-weight: 600;
   color: #374151;
   white-space: nowrap;
 }
 
-.select {
+.fb-select {
   padding: 12px 16px;
   border: 2px solid #e0e0e0;
   border-radius: 10px;
@@ -25,12 +25,12 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.select:focus {
+.fb-select:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.clear {
+.fb-clear {
   padding: 10px 16px;
   background-color: #ef4444;
   color: white;
@@ -43,6 +43,6 @@
   white-space: nowrap;
 }
 
-.clear:hover {
+.fb-clear:hover {
   background-color: #dc2626;
 }

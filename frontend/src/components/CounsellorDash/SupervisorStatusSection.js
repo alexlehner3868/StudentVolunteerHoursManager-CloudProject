@@ -12,12 +12,12 @@ const formatDate = (dateString) => {
 
 const SupervisorStatusSection = ({ submission}) => {
   return (
-    <section className="container">
+    <section className="sss-container">
       <h4>Supervisor Verification</h4>
       <div>
         <div>
           <label>Status</label>
-          <span className={`status-badge status-${submission.externsupstatus}`}>
+          <span className={`sss-status-badge sss-status-${submission.externsupstatus}`}>
             {submission.externsupstatus}
           </span>
         </div>
@@ -28,7 +28,7 @@ const SupervisorStatusSection = ({ submission}) => {
       </div>
       <div>
         <label>Supervisor Comments</label>
-        <p className="supervisor-comment">
+        <p className="sss-supervisor-comment">
           {submission.externsupcomments || 'No comments left by the supervisor.'}
         </p>
       </div>

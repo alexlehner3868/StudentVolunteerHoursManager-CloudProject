@@ -1,4 +1,4 @@
-.container{
+.sub-container{
     display: flex; 
     position: fixed;
     top: 0;
@@ -13,7 +13,7 @@
     overflow-y: auto;
 }
 
-.content {
+.sub-content {
     background-color: white;
     border-radius: 16px;
     max-width: 800px;
@@ -23,7 +23,7 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-.header {
+.sub-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -33,14 +33,14 @@
     border-radius: 16px 16px 0 0;
 }
 
-.header h3 {
+.sub-header h3 {
     font-size: 24px;
     color: #1e3a8a;
     font-weight: 600;
     margin: 0;
 }
 
-.close {
+.sub-close {
     background: none;
     border: none;
     font-size: 32px;
@@ -56,12 +56,12 @@
     transition: background-color 0.2s, color 0.2s;
 }
 
-.close:hover {
+.sub-close:hover {
     background-color: #e5e7eb;
     color: #1f2937;
 }
 
-.inner-content {
+.sub-inner-content {
     padding: 28px;
 }
 
