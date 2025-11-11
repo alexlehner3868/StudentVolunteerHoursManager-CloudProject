@@ -26,7 +26,7 @@ useEffect(() => {
       try {
         nameData = JSON.parse(nameText);
       } catch {
-        console.error("⚠️ Name endpoint did not return JSON!");
+        console.error("Name endpoint did not return JSON!");
         return; // stop here to avoid the other fetches failing
       }
 
@@ -94,9 +94,68 @@ useEffect(() => {
           <StudentMonthlyView data={data} />
         </div>
       </div>
+      {/* Submissions Section */}
+      <div style={{ marginTop: "40px" }}>
+        <h3>Your Submissions</h3>
 
+        {data.length === 0 ? (
+          <p style={{ color: "#777" }}>No submissions yet.</p>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {data.map((submission) => {
+              const isApproved =
+                submission.guidancecounsellorapproved === "approved";
+
+              return (
+                <button
+                  key={submission.submissionid}
+                  style={{
+                    width: "100%",
+                    textAlign: "left",
+                    padding: "15px",
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    background: isApproved ? "#e8f5e9" : "#fffde7",
+                    cursor: isApproved ? "default" : "pointer",
+                    transition: "background 0.3s",
+                  }}
+                  onClick={() => {
+                    if (!isApproved) {
+                      console.log("Update submission:", submission.submissionid);
+                      // Later: navigate(`/update-submission/${submission.submissionid}`);
+                    }
+                  }}
+                >
+                  <div style={{ fontWeight: "bold", fontSize: "16px" }}>
+                    {submission.organization}
+                  </div>
+
+                  <div style={{ fontSize: "14px", color: "#555" }}>
+                    {submission.datevolunteered
+                      ? new Date(submission.datevolunteered).toLocaleDateString()
+                      : "N/A"}{" "}
+                    — {submission.hours || 0} hrs
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: "5px",
+                      color: isApproved ? "#388e3c" : "#f57c00",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {isApproved ? "Approved" : "Pending Approval"}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
+
 
 export default StudentDashboard;

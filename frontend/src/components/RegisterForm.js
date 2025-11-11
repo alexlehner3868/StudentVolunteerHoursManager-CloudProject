@@ -4,7 +4,7 @@ import "../styles/Page.css";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
-    type: "student",
+    type: "Student",
     email: "",
     password: "",
     firstName: "",
@@ -48,10 +48,10 @@ const RegisterForm = () => {
         setMessage("✅ Email verified. Please create a password.");
         setStep("password");
       } else {
-        setMessage("❌ " + (result.error || "Email not found in system."));
+        setMessage((result.error || "Email not found in system."));
       }
     } catch (err) {
-      setMessage("❌ Network error while verifying email.");
+      setMessage("Network error while verifying email.");
     } finally {
       setIsSubmitting(false);
     }
@@ -64,7 +64,7 @@ const RegisterForm = () => {
 
     if (!validatePassword(formData.password)) {
       return setMessage(
-        "❌ Password must be 8+ chars with uppercase, lowercase, number, and special character."
+        "Password must be 8+ chars with uppercase, lowercase, number, and special character."
       );
     }
 
@@ -82,13 +82,13 @@ const RegisterForm = () => {
 
       const result = await res.json();
       if (res.ok) {
-        setMessage("✅ Password set. Please enter your details.");
+        setMessage("Password set. Please enter your details.");
         setStep("details");
       } else {
-        setMessage("❌ " + (result.error || "Error setting password."));
+        setMessage((result.error || "Error setting password."));
       }
     } catch (err) {
-      setMessage("❌ Network error while setting password.");
+      setMessage("Network error while setting password.");
     } finally {
       setIsSubmitting(false);
     }
@@ -107,15 +107,15 @@ const RegisterForm = () => {
       // ✅ Define regex before using it
       const nameRegex = /^[A-Za-z\s'-]+$/;
       if (!nameRegex.test(formData.firstName) || !nameRegex.test(formData.lastName)) {
-        setMessage("❌ Invalid name. Only letters, spaces, hyphens, and apostrophes are allowed.");
+        setMessage("Invalid name. Only letters, spaces, hyphens, and apostrophes are allowed.");
         setIsSubmitting(false);
         return;
       }
 
-      if (formData.type === "student") {
+      if (formData.type === "Student") {
         const today = new Date().toISOString().split("T")[0];
         if (formData.graduationDate < today) {
-          setMessage("❌ Graduation date cannot be in the past.");
+          setMessage("Graduation date cannot be in the past.");
           setIsSubmitting(false);
           return;
         }
@@ -142,14 +142,14 @@ const RegisterForm = () => {
 
       const result = await res.json();
       if (res.ok) {
-        setMessage("✅ Account activated successfully!");
+        setMessage("Account activated successfully!");
         setTimeout(() => navigate("/"), 1500);
       } else {
-        setMessage("❌ " + (result.error || "Failed to save information."));
+        setMessage((result.error || "Failed to save information."));
       }
     } catch (err) {
-      console.error("❌ Error:", err);
-      setMessage("❌ Network error during registration.");
+      console.error("Error:", err);
+      setMessage("Network error during registration.");
     } finally {
       setIsSubmitting(false);
     }
@@ -173,8 +173,8 @@ const RegisterForm = () => {
             onChange={handleChange}
             required
           >
-            <option value="student">Student</option>
-            <option value="guidance_counsellor">Guidance Counsellor</option>
+            <option value="Student">Student</option>
+            <option value="GuidanceCounsellor">Guidance Counsellor</option>
           </select>
 
           <input
@@ -232,7 +232,7 @@ const RegisterForm = () => {
             required
           />
 
-          {formData.type === "student" && (
+          {formData.type === "Student" && (
             <>
               <label htmlFor="graduationDate" style={{ fontWeight: 500 }}>
                 Graduation Date
@@ -258,7 +258,7 @@ const RegisterForm = () => {
       {/* Feedback */}
       {message && (
         <p
-          className={message.startsWith("✅") ? "success" : "error"}
+          className={message.toLowerCase().includes("success") ? "success" : "error"}
           style={{ marginTop: "1rem" }}
         >
           {message}

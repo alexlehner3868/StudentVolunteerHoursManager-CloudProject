@@ -16,9 +16,9 @@ exports.getSystemMetrics = async (req, res) => {
 
     const metrics = {};
 
-    // =====================================================
-    // ✅ 1. CPU Usage via DigitalOcean API
-    // =====================================================
+   
+    //CPU Usage via DigitalOcean API
+    
     try {
       const cpuUrl = `https://api.digitalocean.com/v2/monitoring/metrics/droplet/cpu?host_id=${DROPLET_ID}&start=${start}&end=${end}`;
       const cpuResp = await axios.get(cpuUrl, { headers });
@@ -44,7 +44,7 @@ exports.getSystemMetrics = async (req, res) => {
         metrics.cpu = total > 0 ? ((user + system) / total) * 100 : null;
       }
     } catch (err) {
-      console.warn("⚠️ DigitalOcean CPU metric unavailable, falling back to local:", err.message);
+      console.warn("DigitalOcean CPU metric unavailable, falling back to local:", err.message);
 
       // Fallback CPU calculation (inside droplet)
       try {
@@ -66,9 +66,9 @@ exports.getSystemMetrics = async (req, res) => {
       }
     }
 
-    // =====================================================
-    // ✅ 2. Memory Metrics (DigitalOcean API)
-    // =====================================================
+    
+    //2. Memory Metrics (DigitalOcean API)
+    
     const memTypes = ["memory_total", "memory_free"];
     for (const type of memTypes) {
       const url = `https://api.digitalocean.com/v2/monitoring/metrics/droplet/${type}?host_id=${DROPLET_ID}&start=${start}&end=${end}`;
@@ -85,9 +85,9 @@ exports.getSystemMetrics = async (req, res) => {
     const used = total - (metrics.memory_free || 0);
     const memUsage = (used / total) * 100;
 
-    // =====================================================
-    // ✅ 3. Disk Usage (Local df)
-    // =====================================================
+    
+    //3. Disk Usage (Local df)
+    
     const getDiskUsage = (mountPath = "/") => {
       try {
         const output = execSync(`df -h ${mountPath} | tail -1`).toString().split(/\s+/);
@@ -101,9 +101,9 @@ exports.getSystemMetrics = async (req, res) => {
     const systemDisk = getDiskUsage("/");
     const volumeDisk = getDiskUsage("/mnt/volume_tor1");
 
-    // =====================================================
-    // ✅ 4. Network Usage (Local /proc/net/dev)
-    // =====================================================
+    
+    //4. Network Usage (Local /proc/net/dev)
+    
     const getNetworkUsage = () => {
       try {
         const output = execSync("cat /proc/net/dev | grep eth0").toString().trim().split(/\s+/);
@@ -116,9 +116,9 @@ exports.getSystemMetrics = async (req, res) => {
     };
     const net = getNetworkUsage();
 
-    // =====================================================
-    // ✅ 5. Send JSON Response
-    // =====================================================
+    
+    //5. Send JSON Response
+    
     res.json({
       cpu: metrics.cpu ? parseFloat(metrics.cpu).toFixed(2) : "N/A",
       memory: memUsage.toFixed(2),
@@ -129,7 +129,7 @@ exports.getSystemMetrics = async (req, res) => {
       timestamp: end,
     });
   } catch (error) {
-    console.error("❌ Error fetching metrics:", error.message);
+    console.error("Error fetching metrics:", error.message);
     res.status(500).json({ error: "Failed to retrieve metrics" });
   }
 };

@@ -5,11 +5,11 @@ import "../styles/Page.css";
 const StudentInfo = () => {
   const navigate = useNavigate();
 
-  // ✅ Auto-detect backend base URL
+  // Auto-detect backend base URL
   const BASE_URL =
     window.location.hostname === "localhost"
-      ? "http://localhost:3000" // for local dev
-      : window.location.origin; // for production (e.g., http://178.128.232.57)
+      ? "http://localhost:3000"
+      : window.location.origin;
 
   const [form, setForm] = useState({
     email: "",
@@ -21,6 +21,7 @@ const StudentInfo = () => {
   });
 
   const [message, setMessage] = useState("");
+  const [status, setStatus] = useState(null); // ✅ added
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
@@ -31,10 +32,11 @@ const StudentInfo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+    setStatus(null);
     setIsSubmitting(true);
 
     try {
-      // --- Step 1️⃣ Activate preloaded user account ---
+      //Activate preloaded user account
       const registerRes = await fetch(`${BASE_URL}/api/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,9 +52,9 @@ const StudentInfo = () => {
         throw new Error(err.error || "Failed to register user.");
       }
 
-      console.log("✅ Register successful");
+      console.log("Register successful");
 
-      // --- Step 2️⃣ Add student info ---
+      //Add student info
       const infoRes = await fetch(`${BASE_URL}/api/student-info`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -70,12 +72,15 @@ const StudentInfo = () => {
         throw new Error(err.error || "Failed to save student information.");
       }
 
-      setMessage("✅ Account activated and student info saved!");
-      console.log("✅ Student info saved");
+      console.log("Student info saved");
+      setMessage("Account activated and student info saved.");
+      setStatus("success");
+
       setTimeout(() => navigate("/"), 1500);
     } catch (err) {
-      console.error("❌ Registration error:", err);
-      setMessage("❌ " + (err.message || "Network error during registration."));
+      console.error("Registration error:", err);
+      setMessage(err.message || "Network error during registration.");
+      setStatus("error");
     } finally {
       setIsSubmitting(false);
     }
@@ -154,7 +159,7 @@ const StudentInfo = () => {
 
       {message && (
         <p
-          className={message.startsWith("✅") ? "success" : "error"}
+          className={status === "success" ? "success" : "error"}
           style={{ marginTop: "1rem" }}
         >
           {message}
