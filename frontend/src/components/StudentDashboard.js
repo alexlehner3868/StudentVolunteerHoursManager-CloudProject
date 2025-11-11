@@ -94,63 +94,63 @@ useEffect(() => {
           <StudentMonthlyView data={data} />
         </div>
       </div>
-      {/* Submissions Section */}
+      {/* Submissions Section (Text Only) */}
       <div style={{ marginTop: "40px" }}>
-        <h3>Your Submissions</h3>
+          <h3>Your Submissions</h3>
 
-        {data.length === 0 ? (
-          <p style={{ color: "#777" }}>No submissions yet.</p>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            {data.map((submission) => {
-              const isApproved =
-                submission.guidancecounsellorapproved === "approved";
+          {data.length === 0 ? (
+            <p style={{ color: "#777" }}>No submissions yet.</p>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              {data.map((submission) => {
+                const status = submission.guidancecounsellorapproved || "Pending";
 
-              return (
-                <button
-                  key={submission.submissionid}
-                  style={{
-                    width: "100%",
-                    textAlign: "left",
-                    padding: "15px",
-                    border: "1px solid #ccc",
-                    borderRadius: "8px",
-                    background: isApproved ? "#e8f5e9" : "#fffde7",
-                    cursor: isApproved ? "default" : "pointer",
-                    transition: "background 0.3s",
-                  }}
-                  onClick={() => {
-                    if (!isApproved) {
-                      console.log("Update submission:", submission.submissionid);
-                      // Later: navigate(`/update-submission/${submission.submissionid}`);
-                    }
-                  }}
-                >
-                  <div style={{ fontWeight: "bold", fontSize: "16px" }}>
-                    {submission.organization}
-                  </div>
-
-                  <div style={{ fontSize: "14px", color: "#555" }}>
-                    {submission.datevolunteered
-                      ? new Date(submission.datevolunteered).toLocaleDateString()
-                      : "N/A"}{" "}
-                    — {submission.hours || 0} hrs
-                  </div>
-
-                  <div
+                return (
+                  <button
+                    key={submission.submissionid}
                     style={{
-                      marginTop: "5px",
-                      color: isApproved ? "#388e3c" : "#f57c00",
-                      fontWeight: 600,
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "15px",
+                      border: "1px solid #ccc",
+                      borderRadius: "8px",
+                      background: "white",
+                      cursor:
+                        status.toLowerCase() === "approved" ? "default" : "pointer",
+                      transition: "background 0.3s",
+                    }}
+                    onClick={() => {
+                      if (status.toLowerCase() !== "approved") {
+                        console.log("Update submission:", submission.submissionid);
+                        // Later: navigate(`/update-submission/${submission.submissionid}`);
+                      }
                     }}
                   >
-                    {isApproved ? "Approved" : "Pending Approval"}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        )}
+                    <div style={{ fontWeight: "bold", fontSize: "16px" }}>
+                      {submission.organization}
+                    </div>
+
+                    <div style={{ fontSize: "14px", color: "#555" }}>
+                      {submission.datevolunteered
+                        ? new Date(submission.datevolunteered).toLocaleDateString()
+                        : "N/A"}{" "}
+                      — {submission.hours || 0} hrs
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "5px",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Status: {status}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        
       </div>
     </div>
   );
