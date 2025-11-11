@@ -111,17 +111,17 @@ const CounsellorDashboard = () => {
   };
 
   return (
-    <div className="container">
-      <main className="content">
-        <div className="header">
+    <div className="cd-container">
+      <main className="cd-content">
+        <div className="cd-header">
           <h2>Student Submissions</h2>
           <p>Review and manage volunteer hour submissions from your students</p>
         </div>
         {loading ? (
-          <div className="loading">Loading submissions...</div>
+          <div className="cd-loading">Loading submissions...</div>
         ) : (
           <>
-            <div className="filter">
+            <div className="cd-filter">
               <SearchBar 
                 nameSearched={nameSearched}
                 onSearchChange={setNameSearched}

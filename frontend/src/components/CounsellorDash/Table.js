@@ -16,7 +16,7 @@ const Table = ({ submissions, onRowClick }) => {
   // to be displayed when there are no submissions
   if (submissions.length === 0) {
     return (
-      <div className="container">
+      <div className="tb-container">
         <div className="no-submissions">
           <p>No submissions found matching your criteria.</p>
         </div>
@@ -25,7 +25,7 @@ const Table = ({ submissions, onRowClick }) => {
   }
 
   return (
-    <div className="container">
+    <div className="tb-container">
       <table className="table">
         <thead>
           <tr>
@@ -45,7 +45,7 @@ const Table = ({ submissions, onRowClick }) => {
               <td>{submission.hours}</td>
               <td>{formatDate(submission.datevolunteered)}</td>
               <td>
-                <span className={`status-badge status-${submission.guidancecounsellorapproved}`}>
+                <span className={`tb-status-badge tb-status-${submission.guidancecounsellorapproved}`}>
                   {submission.guidancecounsellorapproved}
                 </span>
               </td>

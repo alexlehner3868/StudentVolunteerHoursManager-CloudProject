@@ -1,4 +1,4 @@
-.container {
+.tb-container {
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -41,7 +41,7 @@
     font-size: 15px;
 }
 
-.status-badge {
+.tb-status-badge {
     display: inline-block;
     padding: 6px 12px;
     border-radius: 20px;
@@ -50,22 +50,22 @@
     text-transform: capitalize;
 }
 
-.status-Pending {
+.tb-status-Pending {
     background-color: #fef3c7;
     color: #92400e;
 }
 
-.status-Approved {
+.tb-status-Approved {
     background-color: #d1fae5;
     color: #065f46;
 }
 
-.status-Denied {
+.tb-status-Denied {
     background-color: #fee2e2;
     color: #991b1b;
 }
 
-.status-Flagged {
+.tb-status-Flagged {
     background-color: #ede9fe;
     color: #5b21b6;
 }

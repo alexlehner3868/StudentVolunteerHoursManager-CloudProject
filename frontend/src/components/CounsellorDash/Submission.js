@@ -78,15 +78,15 @@ const Submission = ({ isOpen, onClose, submissionData, onUpdateSubmission, couns
 
   return (
     <>
-      <div className="container" onClick={onClose}>
-        <div className="content" onClick={handleInsideClick}>
-          <div className="header">
+      <div className="sub-container" onClick={onClose}>
+        <div className="sub-content" onClick={handleInsideClick}>
+          <div className="sub-header">
             <h3>Submission Details</h3>
             {/* &times used to create a centered X inside*/}
-            <button className="close" onClick={onClose}>&times;</button>
+            <button className="sub-close" onClick={onClose}>&times;</button>
           </div>
 
-          <div className="inner-content">
+          <div className="sub-inner-content">
             <StudentInfoSection submission={submissionData} />
             <SupervisorStatusSection submission={submissionData} />
             <CounsellorActionsSection

@@ -1,11 +1,11 @@
-.container {
+.sb-container {
   position: relative;
   width: 100%;
   flex: 1;
   min-width: 250px;
 }
 
-.searchInput {
+.sb-searchInput {
   width: 100%;
   padding: 12px 40px 12px 16px;
   border: 2px solid #e0e0e0;
@@ -17,12 +17,12 @@
   outline: none;
 }
 
-.searchInput:focus {
+.sb-searchInput:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.clearButton {
+.sb-clearButton {
   position: absolute;
   right: 12px;
   top: 50%;
@@ -40,7 +40,7 @@
   transition: color 0.2s, background-color 0.2s;
 }
 
-.clearButton:hover {
+.sb-clearButton:hover {
   color: #374151;
   background-color: #f3f4f6;
 }
