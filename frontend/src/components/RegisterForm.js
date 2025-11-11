@@ -45,7 +45,7 @@ const RegisterForm = () => {
 
       const result = await res.json();
       if (res.ok) {
-        setMessage("✅ Email verified. Please create a password.");
+        setMessage("Email verified. Please create a password.");
         setStep("password");
       } else {
         setMessage((result.error || "Email not found in system."));
@@ -104,7 +104,7 @@ const RegisterForm = () => {
       const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`;
       let endpoint, body;
 
-      // ✅ Define regex before using it
+      // Define regex before using it
       const nameRegex = /^[A-Za-z\s'-]+$/;
       if (!nameRegex.test(formData.firstName) || !nameRegex.test(formData.lastName)) {
         setMessage("Invalid name. Only letters, spaces, hyphens, and apostrophes are allowed.");
