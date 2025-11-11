@@ -42,8 +42,9 @@ const getSubmissions = async(req,res)=>{
                 v.GuidanceCounsellorComments
             FROM VolunteerHourSubmission v
             INNER JOIN Student s ON v.StudentID = s.UserID    
-            WHERE s.SchoolID=$1 AND v.ExternSupStatus='Approved'
+            WHERE s.SchoolID=$1
             ORDER BY v.DateVolunteered DESC`;
+            // later when sendgrid is implemented implement AND v.ExternSupStatus='Approved'
         const submissionsResult = await pool.query(submissionsQuery, [schoolId]);
 
         // return valid response with submissions
