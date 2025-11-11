@@ -28,6 +28,8 @@ router.put('/update-submission', counsellorController.updateSubmission);
 router.post('/volunteer-hours/submit', volunteerHourSubmissionController.submitHours);
 
 router.get('/volunteer-hours/:studentId', studentController.getMonthlyHours);
+router.get('/student/:studentId/submissions', studentController.getStudentSubmissions);
+
 router.get('/volunteer-summary/:studentId', studentController.getSummary);
 router.get('/student-name/:studentId', studentController.getStudentName);
 router.get('/student/:studentId/profile', studentController.getProfile);

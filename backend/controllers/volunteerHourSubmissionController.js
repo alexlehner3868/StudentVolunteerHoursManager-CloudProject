@@ -26,13 +26,14 @@ const submitHours = async (req, res) => {
 
     const query = `
       INSERT INTO volunteerhoursubmission
-      (StudentID, Hours, DateVolunteered, ExternSupEmail, ExternSupStatus, Description, GuidanceCounsellorFlag)
-      VALUES ($1, $2, $3, $4, 'Pending', $5, FALSE)
+      (StudentID, Organization, Hours, DateVolunteered, ExternSupEmail, ExternSupStatus, Description, GuidanceCounsellorFlag)
+      VALUES ($1, $2, $3, $4, $5, 'Pending', $6, FALSE)
       RETURNING *;
     `;
 
     const result = await pool.query(query, [
       studentId,
+      organization,
       totalTime,
       date_volunteered,
       extern_sup_email,
