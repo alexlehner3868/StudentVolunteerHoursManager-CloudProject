@@ -10,8 +10,8 @@ const getSubmissions = async(req,res)=>{
             });
         }
 
-        // get the submissions data from db based on email
-        const counsellorQuery ='SELECT UserID FROM GuidanceCounsellor WHERE UserID=$1';
+        // get the which school the counsellor is associated with
+        const counsellorQuery ='SELECT SchoolID FROM GuidanceCounsellor WHERE UserID=$1';
         const counsellorResult = await pool.query(counsellorQuery, [counsellorId]);
 
         // check if counsellor exists
@@ -22,7 +22,10 @@ const getSubmissions = async(req,res)=>{
 
         }
 
-        // get the submission data from db based on counsellorId and joining with student table to get student name
+        // the schoolID for the counsellor
+        const schoolId = counsellorResult.rows[0].schoolid;
+
+        // get the submission data from db based on schoolId and joining with student table to get student name
         const submissionsQuery =`
             SELECT 
                 v.SubmissionID,
@@ -39,9 +42,9 @@ const getSubmissions = async(req,res)=>{
                 v.GuidanceCounsellorComments
             FROM VolunteerHourSubmission v
             INNER JOIN Student s ON v.StudentID = s.UserID    
-            WHERE GuidanceCounsellorID=$1 AND ExternSupStatus='Approved'
+            WHERE s.SchoolID=$1 AND v.ExternSupStatus='Approved'
             ORDER BY v.DateVolunteered DESC`;
-        const submissionsResult = await pool.query(submissionsQuery, [counsellorId]);
+        const submissionsResult = await pool.query(submissionsQuery, [schoolId]);
 
         // return valid response with submissions
         return res.status(200).json({
