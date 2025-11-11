@@ -36,7 +36,7 @@ const registerUser = async (req, res) => {
 
     const user = userResult.rows[0];
 
-    // ✅ Normalize both DB type and request type
+    // Normalize both DB type and request type
     const normalizeType = (t) =>
       t ? t.toLowerCase().replace(/[\s_]+/g, "").trim() : "";
 
@@ -61,15 +61,15 @@ const registerUser = async (req, res) => {
       email,
     ]);
 
-    console.log(`✅ User activated: ${email} (${dbType})`);
+    console.log(`User activated: ${email} (${dbType})`);
 
     return res.status(200).json({
-      message: "✅ Account activated successfully.",
+      message: "Account activated successfully.",
       email,
       type: dbType,
     });
   } catch (err) {
-    console.error("❌ Database error in registerUser:", err.message);
+    console.error("Database error in registerUser:", err.message);
     return res.status(500).json({ error: err.message });
   }
 };

@@ -29,12 +29,11 @@ const addGuidanceInfo = async (req, res) => {
     const user = userResult.rows[0];
     const userId = user.userid || user.UserID;
 
-    // ✅ Normalize both DB and expected type
-    const normalizeType = (t) =>
-      t ? t.toLowerCase().replace(/[\s_]+/g, "").trim() : "";
+    
+    
 
-    const dbType = normalizeType(user.type);
-    if (dbType !== "guidancecounsellor") {
+    const dbType = user.type;
+    if (dbType !== "GuidanceCounsellor") {
       return res.status(403).json({
         error: "User type mismatch. Only Guidance Counsellor accounts can update this information.",
       });
@@ -50,20 +49,20 @@ const addGuidanceInfo = async (req, res) => {
         "INSERT INTO guidancecounsellor (userid, counsellorname, schoolid, schoolname) VALUES ($1, $2, $3, $4)",
         [userId, counsellorname, schoolid || null, schoolname || null]
       );
-      console.log(`✅ Inserted new counsellor for ${email}`);
+      console.log(`Inserted new counsellor for ${email}`);
     } else {
       await pool.query(
         "UPDATE guidancecounsellor SET counsellorname = $1, schoolid = $2, schoolname = $3 WHERE userid = $4",
         [counsellorname, schoolid || null, schoolname || null, userId]
       );
-      console.log(`✅ Updated counsellor info for ${email}`);
+      console.log(`Updated counsellor info for ${email}`);
     }
 
     return res
       .status(200)
-      .json({ message: "✅ Guidance counsellor information saved successfully." });
+      .json({ message: "Guidance counsellor information saved successfully." });
   } catch (err) {
-    console.error("❌ Error saving guidance info:", err.message);
+    console.error("Error saving guidance info:", err.message);
     return res.status(500).json({ error: err.message });
   }
 };

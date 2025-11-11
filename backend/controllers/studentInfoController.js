@@ -134,6 +134,35 @@ const updateGraduationDate = async (req, res) => {
   }
 };
 
+// Get individual volunteer submissions for StudentDashboard list
+const getStudentSubmissions = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const query = `
+      SELECT 
+        submissionid,
+        organization,
+        datevolunteered,
+        hours,
+        externsupstatus,
+        guidancecounsellorapproved
+      FROM volunteerhoursubmission
+      WHERE studentid = $1
+      ORDER BY datevolunteered DESC;
+    `;
+
+    const result = await pool.query(query, [studentId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error getting student submissions:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
 
 
-module.exports = { getMonthlyHours, getSummary, getStudentName, getProfile, updateGraduationDate };
+
+
+
+
+module.exports = { getMonthlyHours, getSummary, getStudentName, getProfile, updateGraduationDate, getStudentSubmissions };

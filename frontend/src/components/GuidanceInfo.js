@@ -14,6 +14,7 @@ const GuidanceInfo = () => {
   });
 
   const [message, setMessage] = useState("");
+  const [status, setStatus] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
@@ -24,10 +25,11 @@ const GuidanceInfo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+    setStatus(null);
     setIsSubmitting(true);
 
     try {
-      // Step 1: Activate user
+      // Step 1: Activate the user
       const registerRes = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,10 +58,12 @@ const GuidanceInfo = () => {
       const infoResult = await infoRes.json();
       if (!infoRes.ok) throw new Error(infoResult.error);
 
-      setMessage("✅ Account activated and guidance info saved!");
+      setMessage("Account activated and guidance info saved.");
+      setStatus("success");
       navigate("/");
     } catch (err) {
-      setMessage("❌ " + err.message);
+      setMessage(err.message);
+      setStatus("error");
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -125,7 +129,10 @@ const GuidanceInfo = () => {
       </form>
 
       {message && (
-        <p className={message.startsWith("✅") ? "success" : "error"} style={{ marginTop: "1rem" }}>
+        <p
+          className={status === "success" ? "success" : "error"}
+          style={{ marginTop: "1rem" }}
+        >
           {message}
         </p>
       )}
