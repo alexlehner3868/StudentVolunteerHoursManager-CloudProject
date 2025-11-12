@@ -24,13 +24,14 @@ const VolunteerSubmissionForm = () => {
   useEffect(() => {
     if (!user || Object.keys(user).length === 0) {
       navigate("/");
+    } else if (user.type !== "Student") {
+      navigate("/dashboard");
     }
-  }, [navigate]);
+  }, [navigate, user]); 
 
-   if (!user) {
-    return null; 
+  if (!user || Object.keys(user).length === 0) {
+    return null;
   }
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
