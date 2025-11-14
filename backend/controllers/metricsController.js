@@ -99,7 +99,7 @@ exports.getSystemMetrics = async (req, res) => {
     };
 
     const systemDisk = getDiskUsage("/");
-    const volumeDisk = getDiskUsage("/mnt/volume_tor1");
+    const volumeDisk = getDiskUsage("/mnt/volume_tor1-01");
 
     
     //4. Network Usage (Local /proc/net/dev)

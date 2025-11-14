@@ -14,6 +14,12 @@ const buildPath = path.join(__dirname, 'frontend', 'build');
 
 
 app.use(express.static(buildPath));
+app.get("/api/whoami", (req, res) => {
+  res.json({
+    hostname: require("os").hostname(),
+    time: new Date().toISOString(),
+  });
+});
 
 // React Router catch-all
 app.get('*', (req, res) => {
