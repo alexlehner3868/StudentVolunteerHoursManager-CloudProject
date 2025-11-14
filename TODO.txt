@@ -5,9 +5,10 @@ TODO:
         - Written Intro (Nov 19th)
         - Run throughs, pre-recorded stuff etc
         - Slides (Nov 19th)
-    - For pages that are only for guidence counsellors or students, check hte usertype and if wrong type, send them back to dashboard
     - List of student submissions which they can click on to edit and see details and delete and resend sendGrid
-    - Guidance Counsellor dashboard - Graph/metrics for a particular student 
+    - Guidance Counsellor dashboard 
+        - Graph/metrics for a particular student
+        - Graph comparing average hours per student to other schools (by grade? overall?)
     - SendGrid for registration 
     - Getting supervisor approval (email template + SendGrid + frontend)
     - SendGrid to notify student that they have final status on their submission
