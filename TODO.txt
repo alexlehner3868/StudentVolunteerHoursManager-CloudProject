@@ -13,7 +13,7 @@ TODO:
     - Getting supervisor approval (email template + SendGrid + frontend)
     - SendGrid to notify student that they have final status on their submission
     - SendGrid Forgot Password
-    - Validate secrets are done right 
+    - Password protect monitoring webpage (system admin only)
     - Figure out HTTPS (or tokens) whichever is easier
     - Standardized formattign and colors across all pages (use login blue)
     - Bonus marks? 
