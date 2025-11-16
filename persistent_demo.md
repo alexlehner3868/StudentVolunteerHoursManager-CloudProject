@@ -14,6 +14,12 @@ docker exec $(docker ps -q -f name=studentvolunteer_db) \
 ```
 docker service update --force studentvolunteer_db
 ```
+
+# Check Database Container Status
+```
+docker service ps studentvolunteer_db
+```
+
 # Verify User Existence
 ```
 docker exec $(docker ps -q -f name=studentvolunteer_db) \
