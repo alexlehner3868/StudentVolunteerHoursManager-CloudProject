@@ -26,8 +26,8 @@ const submitHours = async (req, res) => {
 
     const query = `
       INSERT INTO volunteerhoursubmission
-      (StudentID, Organization, Hours, DateVolunteered, ExternSupEmail, ExternSupStatus, Description, GuidanceCounsellorFlag)
-      VALUES ($1, $2, $3, $4, $5, 'Pending', $6, FALSE)
+      (StudentID, Organization, Hours, DateVolunteered, ExternSupEmail, ExternSupStatus, Description, GuidanceCounsellorFlag, GuidanceCounsellorID)
+      VALUES ($1, $2, $3, $4, $5, 'Pending', $6, FALSE, S101)
       RETURNING *;
     `;
 
