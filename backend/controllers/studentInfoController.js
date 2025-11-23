@@ -11,9 +11,9 @@ const getMonthlyHours = async (req, res) => {
           WHEN externsupstatus = 'Pending' THEN 'waiting_supervisor'
           WHEN externsupstatus = 'Approved' AND (guidancecounsellorapproved IS NULL OR guidancecounsellorapproved = 'Pending')
             THEN 'waiting_gc'
-          WHEN externsupstatus = 'Approved' AND guidancecounsellorapproved = 'Accepted'
+          WHEN externsupstatus = 'Approved' AND guidancecounsellorapproved = 'Approved'
             THEN 'approved'
-          WHEN externsupstatus = 'Rejected' OR guidancecounsellorapproved = 'Rejected'
+          WHEN externsupstatus = 'Rejected' OR guidancecounsellorapproved = 'Denied'
             THEN 'rejected'
         END AS status,
         SUM(hours) AS hours

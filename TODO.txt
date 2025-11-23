@@ -1,10 +1,5 @@
 TODO: 
-    - Docker Swarm 
-    - Presentation
-        - Prefill databases (users, students and hours) for a good demo 
-        - Written Intro (Nov 19th)
-        - Run throughs, pre-recorded stuff etc
-        - Slides (Nov 19th)
+
     - List of student submissions which they can click on to edit and see details and delete and resend sendGrid
     - Guidance Counsellor dashboard 
         - Graph/metrics for a particular student
@@ -13,9 +8,10 @@ TODO:
     - Getting supervisor approval (email template + SendGrid + frontend)
     - SendGrid to notify student that they have final status on their submission
     - SendGrid Forgot Password
+    - Comment code
     - Password protect monitoring webpage (system admin only)
     - Figure out HTTPS (or tokens) whichever is easier
-    - Standardized formattign and colors across all pages (use login blue)
+    - Swarm
     - Bonus marks? 
     - Final Report (Dec 8th)
         - Write up
