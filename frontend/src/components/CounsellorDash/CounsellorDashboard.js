@@ -5,6 +5,7 @@ import Table from "./Table";
 import Submission from "./Submission";
 import PopUp from "../../components/PopUp";
 import CounsellorWeeklyChart from "./CounsellorWeeklyChart";
+import CounsellorStatsPanel from './CounsellorStatsPanel';
 
 const CounsellorDashboard = () => {
   const [submissions, setSubmissions] = useState([]);
@@ -196,7 +197,11 @@ const CounsellorDashboard = () => {
 
         <div className="cd-split">
           <div className="cd-left-panel">
-            {/* Reserved for future stats / info */}
+              <CounsellorStatsPanel
+                selectedStudentId={selectedStudentId}
+                students={students}
+                submissions={filteredSubmissions}
+              />
           </div>
 
           <div className="cd-right-panel">

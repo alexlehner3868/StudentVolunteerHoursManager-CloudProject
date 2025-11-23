@@ -1,0 +1,39 @@
+.csp-container {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.csp-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.csp-entry {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  padding: 6px 0;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.csp-entry:last-child {
+  border-bottom: none;
+}
+
+.csp-key {
+  font-weight: 600;
+  color: #444;
+}
+
+.csp-value {
+  font-weight: 500;
+  color: #222;
+}
+
