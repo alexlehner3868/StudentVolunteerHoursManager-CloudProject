@@ -2,8 +2,8 @@ TODO:
     - List of student submissions which they can click on to edit and see details and delete and resend sendGrid
     - Guidance Counsellor dashboard 
         - Graph/metrics for a particular student
-        - Get guidance dashboard to be able to accept or reject properly
         - Be able to flag and filter by flag
+        - Stat sections
         - Graph comparing average hours per student to other schools (by grade? overall?)
     - SendGrid for registration 
     - Getting supervisor approval (email template + SendGrid + frontend)

@@ -11,12 +11,15 @@ const Submission = ({ isOpen, onClose, submissionData, onUpdateSubmission, couns
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPopUp, setShowPopUp]=useState(false);
   const [popUpMessage, setPopUpMessage]=useState("");
+  const [isFlagged, setIsFlagged] = useState(false);
+
 
   // Reset state when submission is opened or closed
   useEffect(() => {
     if (submissionData) {
       setCounsellorStatus(submissionData.guidancecounsellorapproved); 
       setCounsellorComment(submissionData.guidancecounsellorcomments || '');
+      setIsFlagged(submissionData.guidancecounsellorflag === true);
     }
   }, [submissionData]);
 
@@ -28,8 +31,8 @@ const Submission = ({ isOpen, onClose, submissionData, onUpdateSubmission, couns
       return;
     }
 
-    if (!counsellorStatus) {
-      setPopUpMessage('Please select an action (Flag, Approve, or Deny)');
+    if (!isFlagged && !counsellorStatus) {
+      setPopUpMessage('Please select Approve, Deny, or Flag the submission.');
       setShowPopUp(true);
       return;
     }
@@ -42,7 +45,8 @@ const Submission = ({ isOpen, onClose, submissionData, onUpdateSubmission, couns
         submissionid: submissionData.submissionid,
         guidancecounsellorid: counsellorId,
         guidancecounsellorcomments: counsellorComment,
-        guidancecounsellorapproved: counsellorStatus 
+        guidancecounsellorapproved: counsellorStatus,
+        guidancecounsellorflag: isFlagged
       };
 
       const response = await fetch("/api/update-submission", {
@@ -57,7 +61,7 @@ const Submission = ({ isOpen, onClose, submissionData, onUpdateSubmission, couns
       }
       else {
         const data = await response.json();
-        onUpdateSubmission(submissionId, counsellorStatus, counsellorComment);
+        onUpdateSubmission(submissionId, counsellorStatus, counsellorComment, isFlagged);
       }
       onClose();
     } catch (error) {
@@ -92,6 +96,8 @@ const Submission = ({ isOpen, onClose, submissionData, onUpdateSubmission, couns
             <CounsellorActionsSection
               counsellorStatus={counsellorStatus}
               setCounsellorStatus={setCounsellorStatus}
+              isFlagged={isFlagged}
+              setIsFlagged={setIsFlagged}
               counsellorComment={counsellorComment}
               setCounsellorComment={setCounsellorComment}
               handleApply={handleApply}

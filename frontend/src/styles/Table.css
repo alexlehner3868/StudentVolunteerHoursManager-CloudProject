@@ -90,3 +90,9 @@
         padding: 12px 8px;
     }
 }
+
+.tb-flag-icon {
+  margin-right: 6px;
+  font-size: 16px;
+  vertical-align: middle;
+}

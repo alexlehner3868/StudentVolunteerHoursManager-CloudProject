@@ -4,59 +4,57 @@ import '../../styles/CounsellorActionsSection.css';
 const CounsellorActionsSection = ({
   counsellorStatus,
   setCounsellorStatus,
+  isFlagged,
+  setIsFlagged,
   counsellorComment,
   setCounsellorComment,
   handleApply,
   isSubmitting,
 }) => {
-  // switch status on and off
-  const handleCheckboxChange = (type) => {
-    if (counsellorStatus === type) {
-      setCounsellorStatus(null);
-    } else {
-      setCounsellorStatus(type);
-    }
-  };
 
   return (
     <section className="cas-container">
       <h4 className="cas-header">Counsellor Actions</h4>
 
-      <div className="cas-content">
-        <label className="checkbox-label">
+      <div className="cas-content cas-row">
+        <label className="checkbox-label horizontal-flag">
           <input
             type="checkbox"
-            checked={counsellorStatus === 'Flagged'}
-            onChange={() => handleCheckboxChange('Flagged')}
+            checked={isFlagged}
+            onChange={() => setIsFlagged(!isFlagged)}
             disabled={isSubmitting}
           />
-          <span className="checkbox-text">
-            Flag for review
-          </span>
+          <span className="checkbox-text">Flag for review 🚩</span>
         </label>
+      </div>
 
+      <div className="cas-content vertical-approval">
         <label className="checkbox-label">
           <input
             type="checkbox"
             checked={counsellorStatus === 'Approved'}
-            onChange={() => handleCheckboxChange('Approved')}
+            onChange={() =>
+              setCounsellorStatus(
+                counsellorStatus === 'Approved' ? null : 'Approved'
+              )
+            }
             disabled={isSubmitting}
           />
-          <span className="checkbox-text">
-            Approve submission
-          </span>
+          <span className="checkbox-text">Approve submission</span>
         </label>
 
         <label className="checkbox-label">
           <input
             type="checkbox"
             checked={counsellorStatus === 'Denied'}
-            onChange={() => handleCheckboxChange('Denied')}
+            onChange={() =>
+              setCounsellorStatus(
+                counsellorStatus === 'Denied' ? null : 'Denied'
+              )
+            }
             disabled={isSubmitting}
           />
-          <span className="checkbox-text">
-            Deny submission
-          </span>
+          <span className="checkbox-text">Deny submission</span>
         </label>
       </div>
 
@@ -70,14 +68,14 @@ const CounsellorActionsSection = ({
           value={counsellorComment}
           onChange={(e) => setCounsellorComment(e.target.value)}
           disabled={isSubmitting}
-        ></textarea>
+        />
       </div>
 
       <div className="button-cas-container">
         <button
           className="cas-button"
           onClick={handleApply}
-          disabled={isSubmitting || !counsellorStatus}
+          disabled={isSubmitting}
         >
           {isSubmitting ? 'Applying...' : 'Apply'}
         </button>

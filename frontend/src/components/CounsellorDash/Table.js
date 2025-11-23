@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import "../../styles/Table.css";
 
-
 const Table = ({ submissions, onRowClick }) => {
-  // format date to be displayed as MMM(short-hand ex: Oct) DD, YYYY
+
+  // Format date (MMM DD, YYYY)
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -13,7 +13,7 @@ const Table = ({ submissions, onRowClick }) => {
     });
   };
 
-  // to be displayed when there are no submissions
+  // Empty state
   if (submissions.length === 0) {
     return (
       <div className="tb-container">
@@ -44,11 +44,17 @@ const Table = ({ submissions, onRowClick }) => {
               <td>{submission.studentname}</td>
               <td>{submission.hours}</td>
               <td>{formatDate(submission.datevolunteered)}</td>
+
               <td>
+                {submission.guidancecounsellorflag && (
+                  <span className="tb-flag-icon">🚩</span>
+                )}
+
                 <span className={`tb-status-badge tb-status-${submission.guidancecounsellorapproved}`}>
                   {submission.guidancecounsellorapproved}
                 </span>
               </td>
+
             </tr>
           ))}
         </tbody>

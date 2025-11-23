@@ -123,19 +123,22 @@ const CounsellorDashboard = () => {
     return result;
   };
 
-  const handleUpdateSubmission = (submissionId, newStatus, newComment) => {
+  const handleUpdateSubmission = (
+    submissionId, newStatus, newComment, newFlag) => {
     setSubmissions(prev =>
       prev.map(sub =>
         sub.submissionid === submissionId
           ? {
               ...sub,
               guidancecounsellorapproved: newStatus,
-              guidancecounsellorcomments: newComment
+              guidancecounsellorcomments: newComment,
+              guidancecounsellorflag: newFlag
             }
           : sub
       )
     );
   };
+
 
 
   const filteredSubmissions = getFilteredSubmissions();

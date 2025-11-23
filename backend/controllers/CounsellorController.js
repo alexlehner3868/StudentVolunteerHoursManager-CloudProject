@@ -39,7 +39,8 @@ const getSubmissions = async(req,res)=>{
                 v.ExternSupDate,
                 v.ExternSupComments,
                 v.GuidanceCounsellorApproved, 
-                v.GuidanceCounsellorComments
+                v.GuidanceCounsellorComments,
+                v.GuidanceCounsellorFlag
             FROM VolunteerHourSubmission v
             INNER JOIN Student s ON v.StudentID = s.UserID    
             WHERE s.SchoolID=$1
@@ -61,69 +62,73 @@ const getSubmissions = async(req,res)=>{
     }
 }
 
-const updateSubmission = async(req,res)=>{
-    try {
-        // check counsellorId is not empty
-        const { submissionid, guidancecounsellorid, guidancecounsellorcomments, guidancecounsellorapproved}=req.body;
-        if(!submissionid){
-            return res.status(422).json({
-                message: 'submissionid is required.'
-            });
-        }
-        else if(!guidancecounsellorapproved){
-            return res.status(422).json({
-                message: 'guidancecounsellorapproved status is required.'
-            });
-        }
+const updateSubmission = async (req, res) => {
+  try {
+    const {
+      submissionid,
+      guidancecounsellorid,
+      guidancecounsellorcomments,
+      guidancecounsellorapproved,
+      guidancecounsellorflag
+    } = req.body;
 
-        // get the submission data 
-        const submissionQuery ='SELECT SubmissionID FROM VolunteerHourSubmission WHERE SubmissionID=$1';
-        const submissionResult = await pool.query(submissionQuery, [submissionid]);
-
-        // check if submission exists
-        if (submissionResult.rowCount === 0){
-            return res.status(404).json({
-                message: 'Submission does not exist.'
-            });
-
-        }
-
-        // update submission data 
-        const subUpdateQuery =`
-            UPDATE VolunteerHourSubmission
-            SET
-                GuidanceCounsellorApproved=$1,
-                GuidanceCounsellorComments=$2,
-                VerdictDate=$3
-            WHERE SubmissionID=$4
-            RETURNING GuidanceCounsellorApproved`;
-            const verdictdate = new Date();
-        const subUpdateResult = await pool.query(subUpdateQuery, [ guidancecounsellorapproved, guidancecounsellorcomments, verdictdate, submissionid]);
-
-        // check if submission was updated
-        if (subUpdateResult.rowCount === 0){
-            return res.status(404).json({
-                message: 'Submission was not updated'
-            });
-
-        }
-        // TO DO: Implment SendGrid email to student
-        const status = subUpdateResult.rows[0].guidancecounsellorapproved;
-        if (status === 'Approved' || status === 'Denied'){
-            console.log("student needs an email")
-        }
-
-        // return valid response with submissions
-        return res.status(200).json({
-            message: 'Submission Update Sucessful'
-        }); 
-
-    } catch (error) {
-        console.error("Error updating submissions:",error);
-        return res.status(500).json({
-            message: 'Internal server error'
-        });   
+    if (!submissionid) {
+      return res.status(422).json({
+        message: 'submissionid is required.'
+      });
     }
-}
+
+    // Check submission exists
+    const submissionQuery = `
+      SELECT SubmissionID
+      FROM VolunteerHourSubmission
+      WHERE SubmissionID=$1
+    `;
+    const submissionResult = await pool.query(submissionQuery, [submissionid]);
+
+    if (submissionResult.rowCount === 0) {
+      return res.status(404).json({
+        message: 'Submission does not exist.'
+      });
+    }
+
+    // Normalize values
+    const newStatus = guidancecounsellorapproved || null;
+    const newFlag = guidancecounsellorflag === true;
+    const verdictdate = new Date();
+
+    const updateQuery = `
+      UPDATE VolunteerHourSubmission
+      SET 
+        GuidanceCounsellorApproved = $1,
+        GuidanceCounsellorComments = $2,
+        GuidanceCounsellorFlag = $3,
+        VerdictDate = $4,
+        GuidanceCounsellorID = $5
+      WHERE SubmissionID = $6
+      RETURNING *
+    `;
+
+    const updateResult = await pool.query(updateQuery, [
+      newStatus,
+      guidancecounsellorcomments,
+      newFlag,
+      verdictdate,
+      guidancecounsellorid,
+      submissionid
+    ]);
+
+    return res.status(200).json({
+      message: "Submission Update Successful",
+      updated: updateResult.rows[0]
+    });
+
+  } catch (error) {
+    console.error("Error updating submission:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
 
 module.exports = {getSubmissions, updateSubmission};
