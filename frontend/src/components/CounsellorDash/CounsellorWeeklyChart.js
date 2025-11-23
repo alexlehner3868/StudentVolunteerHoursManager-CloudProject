@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -6,88 +6,54 @@ import {
   YAxis,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from "recharts";
-
-const mapStatus = (sub) => {
-  if (sub.externsupstatus === "Pending") return "Waiting on Supervisor";
-
-  if (
-    sub.externsupstatus === "Approved" &&
-    (!sub.guidancecounsellorapproved ||
-      sub.guidancecounsellorapproved === "Pending")
-  ) {
-    return "Pending";
-  }
-
-  if (
-    sub.externsupstatus === "Approved" &&
-    sub.guidancecounsellorapproved === "Approved"
-  ) {
-    return "Approved";
-  }
-
-  if (
-    sub.externsupstatus === "Rejected" ||
-    sub.guidancecounsellorapproved === "Denied"
-  ) {
-    return "Rejected";
-  }
-
-  return "Pending";
-};
-
-
-const getISOWeek = (dateStr) => {
-  const date = new Date(dateStr);
-  const temp = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = temp.getUTCDay() || 7; 
-  temp.setUTCDate(temp.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(temp.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil((((temp - yearStart) / 86400000) + 1) / 7);
-  return `${temp.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
-};
+import { startOfWeek, format } from "date-fns";
 
 const CounsellorWeeklyChart = ({ submissions }) => {
-  const weeklyData = useMemo(() => {
-    const weeks = {};
+  // Group by week
+  const weeklyGroups = {};
 
-    submissions.forEach((sub) => {
-      const week = getISOWeek(sub.datevolunteered);
-      const status = mapStatus(sub);
+  submissions.forEach((sub) => {
+    const date = new Date(sub.datevolunteered);
 
-      if (!weeks[week]) {
-        weeks[week] = {
-          week,
-          Approved: 0,
-          Pending: 0,
-          "Waiting on Supervisor": 0,
-          Rejected: 0
-        };
-      }
+    // Always group Monday–Sunday
+    const weekStart = startOfWeek(date, { weekStartsOn: 1 }); // Monday
+    const weekKey = format(weekStart, "MMM dd");
 
-      weeks[week][status] += 1;
-    });
+    if (!weeklyGroups[weekKey]) {
+      weeklyGroups[weekKey] = {
+        week: weekKey,
+        Pending: 0,
+        Approved: 0,
+        Rejected: 0,
+      };
+    }
 
-    return Object.values(weeks).sort((a, b) => (a.week > b.week ? 1 : -1));
-  }, [submissions]);
+    // Each submission already has unifiedStatus added in parent component
+    const status = sub.unifiedStatus;
+
+    if (weeklyGroups[weekKey][status] !== undefined) {
+      weeklyGroups[weekKey][status] += parseFloat(sub.hours || 0);
+    }
+  });
+
+  const chartData = Object.values(weeklyGroups);
 
   return (
-    <div style={{ width: "100%", height: "280px" }}>
-      <ResponsiveContainer>
-        <BarChart data={weeklyData}>
-          <XAxis dataKey="week" />
-          <YAxis allowDecimals={false} />
-          <Tooltip />
-          <Legend />
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={chartData}>
+        <XAxis dataKey="week" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
 
-            <Bar dataKey="Approved" stackId="a" fill="#4caf50" />
-            <Bar dataKey="Pending" stackId="a" fill="#ff9900" />
-            <Bar dataKey="Waiting on Supervisor" stackId="a" fill="#ffcc00" />
-            <Bar dataKey="Rejected" stackId="a" fill="#f44336" />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+        {/* Only these 4 statuses remain */}
+        <Bar dataKey="Pending" stackId="a" fill="#ffcc00" />
+        <Bar dataKey="Approved" stackId="a" fill="#4caf50" />
+        <Bar dataKey="Rejected" stackId="a" fill="#f44336" />
+      </BarChart>
+    </ResponsiveContainer>
   );
 };
 

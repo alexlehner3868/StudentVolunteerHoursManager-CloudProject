@@ -87,19 +87,26 @@ const CounsellorDashboard = () => {
     return "Pending";
   };
 
+  // Filtering logic
   const getFilteredSubmissions = () => {
-    let result = submissions.map((sub) => ({
+    // First REMOVE all submissions NOT approved by supervisor
+    let result = submissions.filter(
+      (sub) => sub.externsupstatus === "Approved"
+    );
+
+    // Now map the remaining approved ones into unified statuses
+    result = result.map((sub) => ({
       ...sub,
       unifiedStatus: normalizeStatus(sub),
     }));
 
-
+    // Filter by student
     if (selectedStudentId !== "all") {
       const selectedStudent = students.find(
         (s) => Number(s.userid) === Number(selectedStudentId)
       );
 
-      if (selectedStudent && selectedStudent.studentname) {
+      if (selectedStudent) {
         result = result.filter(
           (sub) => sub.studentname === selectedStudent.studentname
         );
@@ -115,6 +122,7 @@ const CounsellorDashboard = () => {
 
     return result;
   };
+
 
   const filteredSubmissions = getFilteredSubmissions();
 
