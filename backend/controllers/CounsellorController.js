@@ -95,10 +95,10 @@ const updateSubmission = async(req,res)=>{
                 GuidanceCounsellorApproved=$1,
                 GuidanceCounsellorComments=$2,
                 VerdictDate=$3
-            WHERE SubmissionID=$4 AND GuidanceCounsellorID=$5
+            WHERE SubmissionID=$4
             RETURNING GuidanceCounsellorApproved`;
             const verdictdate = new Date();
-        const subUpdateResult = await pool.query(subUpdateQuery, [ guidancecounsellorapproved, guidancecounsellorcomments, verdictdate, submissionid, guidancecounsellorid]);
+        const subUpdateResult = await pool.query(subUpdateQuery, [ guidancecounsellorapproved, guidancecounsellorcomments, verdictdate, submissionid]);
 
         // check if submission was updated
         if (subUpdateResult.rowCount === 0){

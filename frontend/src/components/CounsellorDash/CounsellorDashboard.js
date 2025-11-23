@@ -123,6 +123,20 @@ const CounsellorDashboard = () => {
     return result;
   };
 
+  const handleUpdateSubmission = (submissionId, newStatus, newComment) => {
+    setSubmissions(prev =>
+      prev.map(sub =>
+        sub.submissionid === submissionId
+          ? {
+              ...sub,
+              guidancecounsellorapproved: newStatus,
+              guidancecounsellorcomments: newComment
+            }
+          : sub
+      )
+    );
+  };
+
 
   const filteredSubmissions = getFilteredSubmissions();
 
@@ -178,6 +192,8 @@ const CounsellorDashboard = () => {
         <Submission
           isOpen={isSubmissionOpen}
           submissionData={selectedSubmission}
+          counsellorId={user?.userId}
+          onUpdateSubmission={handleUpdateSubmission}
           onClose={() => setIsSubmissionOpen(false)}
         />
       </main>
