@@ -37,6 +37,6 @@ router.put('/student/:studentId/profile', studentController.updateGraduationDate
 
 router.get('/gc/:gcId/profile', guidanceCounsellorController.getProfile);
 router.get('/student/:studentId/guidance-counsellors', guidanceCounsellorController.getCounsellorsAtStudentSchool);
-
+router.get('/counsellor-students', guidanceCounsellorController.getStudentsAtCounsellorSchool);
 
 module.exports = router;

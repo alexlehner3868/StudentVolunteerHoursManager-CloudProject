@@ -61,4 +61,38 @@ const getCounsellorsAtStudentSchool = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, getCounsellorsAtStudentSchool };
+// End point to return all students who belong to the guidance counsellor's school
+const getStudentsAtCounsellorSchool = async (req, res) => {
+  const { counsellorId } = req.query;
+
+  try {
+    const schoolQuery = `
+      SELECT SchoolID
+      FROM GuidanceCounsellor
+      WHERE UserID = $1
+    `;
+    const schoolResult = await pool.query(schoolQuery, [counsellorId]);
+
+    if (schoolResult.rows.length === 0) {
+      return res.status(404).json({ error: "Guidance Counsellor not found" });
+    }
+
+    const schoolID = schoolResult.rows[0].schoolid;
+
+    const studentsQuery = `
+      SELECT UserID, StudentName
+      FROM Student
+      WHERE SchoolID = $1
+      ORDER BY StudentName
+    `;
+    const studentsResult = await pool.query(studentsQuery, [schoolID]);
+
+    res.json({ students: studentsResult.rows });
+  } catch (err) {
+    console.error("Error fetching students:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+module.exports = { getProfile, getCounsellorsAtStudentSchool, getStudentsAtCounsellorSchool};

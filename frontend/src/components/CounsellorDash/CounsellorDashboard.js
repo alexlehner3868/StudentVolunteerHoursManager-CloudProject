@@ -1,157 +1,179 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/CounsellorDashboard.css";
-import SearchBar from "./SearchBar";
 import FilterBar from "./FilterBar";
-import Table from './Table';
-import Submission from './Submission';
+import Table from "./Table";
+import Submission from "./Submission";
 import PopUp from "../../components/PopUp";
+import CounsellorWeeklyChart from "./CounsellorWeeklyChart";
 
 const CounsellorDashboard = () => {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [counsellorProfile, setCounsellorProfile] = useState(null);
+
   const [isSubmissionOpen, setIsSubmissionOpen] = useState(false);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [showPopUp, setShowPopUp] = useState(false);
   const [popUpMessage, setPopUpMessage] = useState("");
-  const [nameSearched, setNameSearched] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
 
+  const [statusFilter, setStatusFilter] = useState("All Statuses");
+  const [students, setStudents] = useState([]);
+  const [selectedStudentId, setSelectedStudentId] = useState("all");
+
+  // Load user
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      setLoading(false);
-      setPopUpMessage('User not found. Please log in again.');
-      setShowPopUp(true);
-    }
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser || null);
   }, []);
 
+  // Get profile info
   useEffect(() => {
-    if (user?.userId) {
-      fetchSubmissions();
-    }
+    if (!user?.userId) return;
+
+    fetch(`/api/gc/${user.userId}/profile`)
+      .then((res) => res.json())
+      .then((data) => setCounsellorProfile(data))
+      .catch(() => {});
   }, [user]);
 
+  // Get submissions
+  useEffect(() => {
+    if (!user?.userId) return;
 
-  const fetchSubmissions = async () => {
-    setLoading(true);
-    // attempt to get the submissions for the counsellor
-    try {
-      const response = await fetch(`/api/submissions?counsellorId=${user.userId}`, {
-        method: "GET",
-        headers: { 'Content-Type': 'application/json' },
-      });
-      // if unsuccesful request then display erro pop up message
-      if (!response.ok) {
-        setPopUpMessage('Unable to load submissions. Please try again later.');
-        setShowPopUp(true);
-      }
-      else{
-        // deseralize response and pass into submission array
-        const data = await response.json();
+    fetch(`/api/submissions?counsellorId=${user.userId}`)
+      .then((res) => res.json())
+      .then((data) => {
         setSubmissions(data.submissions || []);
-      }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching submissions:", err);
+        setLoading(false);
+      });
+  }, [user]);
 
-    } catch (err) {
-      console.error('Error fetching submissions:', err);
-      setPopUpMessage('Unable to load submissions. Please try again later.');
-      setShowPopUp(true);
-    } finally {
-      setLoading(false);
+  // Get student list
+  useEffect(() => {
+    if (!user?.userId) return;
+
+    fetch(`/api/counsellor-students?counsellorId=${user.userId}`)
+      .then((res) => res.json())
+      .then((data) => setStudents(data.students || []))
+      .catch((err) => {
+        console.error("Error fetching students:", err);
+      });
+  }, [user]);
+
+  const normalizeStatus = (sub) => {
+    if (sub.externsupstatus === "Pending") {
+      return "Waiting on Supervisor";
     }
+
+    if (sub.externsupstatus === "Rejected") {
+      return "Rejected";
+    }
+
+    if (sub.externsupstatus === "Approved") {
+      const gc = sub.guidancecounsellorapproved;
+
+      if (gc === "Approved") return "Approved";
+      if (gc === "Rejected" || gc === "Denied") return "Rejected";
+      if (gc === "Flagged") return "Flagged";
+
+      return "Pending";
+    }
+
+    return "Pending";
   };
 
   const getFilteredSubmissions = () => {
-    let result = [...submissions];
+    let result = submissions.map((sub) => ({
+      ...sub,
+      unifiedStatus: normalizeStatus(sub),
+    }));
 
-    // filter by student name
-    if (nameSearched.trim()) {
-      const search = nameSearched.toLowerCase();
-      result = result.filter(sub => 
-        sub.studentname?.toLowerCase().includes(search)
+
+    if (selectedStudentId !== "all") {
+      const selectedStudent = students.find(
+        (s) => Number(s.userid) === Number(selectedStudentId)
       );
+
+      if (selectedStudent && selectedStudent.studentname) {
+        result = result.filter(
+          (sub) => sub.studentname === selectedStudent.studentname
+        );
+      }
     }
 
-    // filter by status
-    if (statusFilter !== 'all') {
-      result = result.filter(sub => {
-        const status = sub.guidancecounsellorapproved;
-        if (statusFilter === 'Pending') return status === 'Pending';
-        if (statusFilter === 'Approved') return status === 'Approved';
-        if (statusFilter === 'Denied') return status === 'Denied';
-        if (statusFilter === 'Flagged') return status === 'Flagged';
-        return true;
-      });
+    // Filter by status
+    if (statusFilter !== "All Statuses") {
+      result = result.filter(
+        (sub) => sub.unifiedStatus === statusFilter
+      );
     }
 
     return result;
   };
 
-  
   const filteredSubmissions = getFilteredSubmissions();
-
-  // when Submission is closed clear out submission
-  const handleCloseSubmission = () => {
-    setIsSubmissionOpen(false);
-    setSelectedSubmission(null);
-  };
-
-  // update the submission status in the table after action taken
-  const handleUpdateSubmission = (submissionId, newStatus, newComment) => {
-    setSubmissions(prevSubmissions =>
-      prevSubmissions.map(sub =>
-        sub.submissionid === submissionId
-          ? { ...sub, guidancecounsellorapproved: newStatus, guidancecounsellorcomments: newComment }
-          : sub
-      )
-    );
-    handleCloseSubmission();
-  };
 
   return (
     <div className="cd-container">
       <main className="cd-content">
-        <div className="cd-header">
-          <h2>Student Submissions</h2>
-          <p>Review and manage volunteer hour submissions from your students</p>
-        </div>
-        {loading ? (
-          <div className="cd-loading">Loading submissions...</div>
-        ) : (
-          <>
-            <div className="cd-filter">
-              <SearchBar 
-                nameSearched={nameSearched}
-                onSearchChange={setNameSearched}
-              />
-              
-              <FilterBar
-                status={statusFilter}
-                onStatusChange={setStatusFilter}
-              />
-            </div>
+        <h2 className="cd-title">
+          Welcome, {counsellorProfile?.name || "Guidance Counsellor"}
+        </h2>
 
-            <Table
-              submissions={filteredSubmissions}
-              onRowClick={(submission) => {
-                setSelectedSubmission(submission);
-                setIsSubmissionOpen(true);
-              }}
-            />
-          </>
-        )}
+        <div className="cd-filter">
+          <div className="fb-button">
+            <label className="fb-label">Filter by Student:</label>
+            <select
+              value={selectedStudentId}
+              onChange={(e) => setSelectedStudentId(e.target.value)}
+              className="fb-select"
+            >
+              <option value="all">All Students</option>
+              {students.map((s) => (
+                <option key={s.userid} value={s.userid}>
+                  {s.studentname}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <FilterBar
+            status={statusFilter}
+            onStatusChange={setStatusFilter}
+          />
+        </div>
+
+        <div className="cd-split">
+          <div className="cd-left-panel">
+            {/* Reserved for future stats / info */}
+          </div>
+
+          <div className="cd-right-panel">
+            <h3 className="cd-chart-title">Weekly Status Overview</h3>
+            <CounsellorWeeklyChart submissions={filteredSubmissions} />
+          </div>
+        </div>
+
+        <Table
+          submissions={filteredSubmissions}
+          onRowClick={(s) => {
+            setSelectedSubmission(s);
+            setIsSubmissionOpen(true);
+          }}
+        />
+
+        <Submission
+          isOpen={isSubmissionOpen}
+          submissionData={selectedSubmission}
+          onClose={() => setIsSubmissionOpen(false)}
+        />
       </main>
-      
-      <Submission
-        isOpen={isSubmissionOpen}
-        onClose={handleCloseSubmission}
-        submissionData={selectedSubmission}
-        onUpdateSubmission={handleUpdateSubmission}
-        counsellorId={user?.userId}
-      />
-      
+
       <PopUp
         isVisible={showPopUp}
         message={popUpMessage}

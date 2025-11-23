@@ -5,27 +5,19 @@ const FilterBar = ({ status, onStatusChange }) => {
   return (
     <div className="fb-button">
       <label className="fb-label">Filter by Status:</label>
+
       <select
         value={status}
         onChange={(e) => onStatusChange(e.target.value)}
         className="fb-select"
       >
-        <option value="All">All Statuses</option>
+        <option value="All Statuses">All Statuses</option>
         <option value="Pending">Pending</option>
         <option value="Approved">Approved</option>
-        <option value="Denied">Denied</option>
+        <option value="Rejected">Rejected</option>
         <option value="Flagged">Flagged</option>
+        <option value="Waiting on Supervisor">Waiting on Supervisor</option>
       </select>
-
-      {status !== 'All' && (
-        <button
-          onClick={() => onStatusChange('All')}
-          className="fb-clear"
-          aria-label="Clear status filter"
-        >
-          Clear
-        </button>
-      )}
     </div>
   );
 };
