@@ -46,13 +46,12 @@ const Table = ({ submissions, onRowClick }) => {
               <td>{formatDate(submission.datevolunteered)}</td>
 
               <td>
-                {submission.guidancecounsellorflag && (
-                  <span className="tb-flag-icon">🚩</span>
-                )}
-
                 <span className={`tb-status-badge tb-status-${submission.guidancecounsellorapproved}`}>
                   {submission.guidancecounsellorapproved}
                 </span>
+                {submission.guidancecounsellorflag && (
+                  <span className="tb-flag-icon">🚩</span>
+                )}
               </td>
 
             </tr>

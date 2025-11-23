@@ -15,7 +15,6 @@ const FilterBar = ({ status, onStatusChange }) => {
         <option value="Pending">Pending</option>
         <option value="Approved">Approved</option>
         <option value="Rejected">Rejected</option>
-        <option value="Flagged">Flagged</option>
       </select>
     </div>
   );

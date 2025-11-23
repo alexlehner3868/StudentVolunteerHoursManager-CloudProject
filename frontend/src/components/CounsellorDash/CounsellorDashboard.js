@@ -20,6 +20,8 @@ const CounsellorDashboard = () => {
   const [statusFilter, setStatusFilter] = useState("All Statuses");
   const [students, setStudents] = useState([]);
   const [selectedStudentId, setSelectedStudentId] = useState("all");
+  const [flagFilter, setFlagFilter] = useState("all"); 
+
 
   // Load user
   useEffect(() => {
@@ -120,6 +122,13 @@ const CounsellorDashboard = () => {
       );
     }
 
+    // Filter by flag
+    if (flagFilter === "flagged") {
+      result = result.filter((sub) => sub.guidancecounsellorflag === true);
+    } else if (flagFilter === "not_flagged") {
+      result = result.filter((sub) => sub.guidancecounsellorflag !== true);
+    }
+
     return result;
   };
 
@@ -171,6 +180,18 @@ const CounsellorDashboard = () => {
             status={statusFilter}
             onStatusChange={setStatusFilter}
           />
+          <div className="fb-button">
+            <label className="fb-label">Flag Status:</label>
+            <select
+              value={flagFilter}
+              onChange={(e) => setFlagFilter(e.target.value)}
+              className="fb-select"
+            >
+              <option value="all">All</option>
+              <option value="flagged">Flagged</option>
+              <option value="not_flagged">Not Flagged</option>
+            </select>
+          </div>
         </div>
 
         <div className="cd-split">
