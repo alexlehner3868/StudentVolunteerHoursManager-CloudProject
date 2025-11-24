@@ -86,6 +86,13 @@ const login = async(req,res)=>{
                 schoolId: counsellor.schoolid,
                 schoolName: counsellor.schoolname
             };
+        } else if (user.type === "Admin") {
+            userDetails = {
+                ...userDetails,
+                name: "Admin",
+                schoolId: null,
+                schoolName: null
+            };
         }
         // return valid response with user details
         return res.status(200).json({

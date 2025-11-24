@@ -22,18 +22,26 @@ function Profile() {
     }
   }, [user, navigate]);
 
-   if (!user) {
-    return null; 
+  if (!user) {
+    return null;
   }
-
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         console.log("Fetching profile for userId:", userId);
 
-        const res = await fetch(`/api/${userType}/${userId}/profile`);
-        if (!res.ok) throw new Error(`Failed to fetch profile for userId ${userId}`);
+        let profileUrl = "";
+        if (userType === "Student") {
+          profileUrl = `/api/student/${userId}/profile`;
+        } else if (userType === "GuidanceCounsellor") {
+          profileUrl = `/api/gc/${userId}/profile`;
+        }
+
+        const res = await fetch(profileUrl);
+        if (!res.ok)
+          throw new Error(`Failed to fetch profile for userId ${userId}`);
+
         const data = await res.json();
         console.log("Profile data fetched:", data);
         setProfileData(data);
@@ -43,10 +51,13 @@ function Profile() {
         }
 
         if (userType === "Student") {
-          const gcRes = await fetch(`/api/student/${userId}/guidance-counsellors`);
-          if (!gcRes.ok) throw new Error("Failed to fetch guidance counsellors");
+          const gcRes = await fetch(
+            `/api/student/${userId}/guidance-counsellors`
+          );
+          if (!gcRes.ok)
+            throw new Error("Failed to fetch guidance counsellors");
+
           const gcData = await gcRes.json();
-          console.log("Guidance counsellors fetched:", gcData);
           setCounsellors(gcData);
         }
       } catch (err) {
@@ -67,12 +78,14 @@ function Profile() {
         body: JSON.stringify({ GraduationDate: graduationDate }),
       });
 
-      if (!res.ok) throw new Error(`Failed to update graduation date for userId ${userId}`);
+      if (!res.ok)
+        throw new Error(
+          `Failed to update graduation date for userId ${userId}`
+        );
       const updatedData = await res.json();
       console.log("Updated profile data:", updatedData);
       setProfileData(updatedData);
       setIsEditing(false);
-
     } catch (err) {
       console.error("Error updating graduation date:", err);
     }
@@ -85,21 +98,25 @@ function Profile() {
       <Navbar userType={userType} />
 
       <div className="form-card">
-        <h2>{userType === "Student" ? "Student Profile" : "Guidance Counsellor Profile"}</h2>
+        <h2>
+          {userType === "Student"
+            ? "Student Profile"
+            : "Guidance Counsellor Profile"}
+        </h2>
 
         <div className="form-section">
           <label>Name:</label>
-          <div>{profileData.name || profileData.CounsellorName || "N/A"}</div>
+          <div>{profileData.name || profileData.counsellorname || "N/A"}</div>
         </div>
 
         <div className="form-section">
           <label>Email:</label>
-          <div>{profileData.email || profileData.Email || "N/A"}</div>
+          <div>{profileData.email || "N/A"}</div>
         </div>
 
         <div className="form-section">
           <label>School:</label>
-          <div>{profileData.SchoolName || "N/A"}</div>
+          <div>{profileData.schoolname || "N/A"}</div>
         </div>
 
         {userType === "Student" && (
@@ -142,14 +159,17 @@ function Profile() {
 
         {userType === "Student" && (
           <div className="form-section">
-            <h3>Guidance Counsellors at {profileData.SchoolName || "N/A"}</h3>
+            <h3>
+              Guidance Counsellors at {profileData.schoolname || "N/A"}
+            </h3>
+
             {counsellors.length === 0 ? (
               <p>No guidance counsellors found.</p>
             ) : (
               <ul>
                 {counsellors.map((gc) => (
                   <li key={gc.userid || gc.UserID}>
-                    {gc.name || gc.CounsellorName} - {gc.email || gc.Email}
+                    {gc.name || gc.counsellorname} — {gc.email}
                   </li>
                 ))}
               </ul>

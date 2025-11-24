@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from './NavBar';
 import StudentDashboard from './StudentDashboard';
 import CounsellorDashboard from '../components/CounsellorDash/CounsellorDashboard'
+import UserManagement from "./UserManagement";
+
 function Dashboard() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
@@ -27,10 +29,14 @@ function Dashboard() {
       <NavBar userType={userType} />
 
       <div style={{ padding: '20px' }}>
-        {isStudent ? (
-          <StudentDashboard studentId={userId} />
-        ) : (
-          <CounsellorDashboard />
+        {userType === 'Student' ? (
+            <StudentDashboard studentId={userId} />
+          ) : userType === 'GuidanceCounsellor' ? (
+            <CounsellorDashboard />
+          ) : userType === 'Admin' ? (
+            <UserManagement /> 
+          ) : (
+            <p>Invalid user type</p>
         )}
       </div>
     </div>

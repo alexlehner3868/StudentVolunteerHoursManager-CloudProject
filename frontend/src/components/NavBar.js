@@ -1,29 +1,43 @@
 import React from 'react';
-import { Link, useNavigate  } from 'react-router-dom';
-import '../styles/NavBar.css'; 
+import { Link, useNavigate } from 'react-router-dom';
+import '../styles/NavBar.css';
 
 function NavBar({ userType }) {
-  const isStudent = userType.toLowerCase() === 'student';
   const navigate = useNavigate();
-
-  const leftLinks = isStudent
-    ? [
-        { label: 'Home', path: '/dashboard' },
-        { label: 'Submit Hours', path: '/submit-hours' },
-      ]
-    : [
-        { label: 'Home', path: '/dashboard' },
-        { label: 'Review', path: '/review' },
-      ];
-
-  const rightLinks = [
-    { label: 'Profile', path: `/profile` },
-  ];
+  const normalizedType = userType?.toLowerCase();
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    navigate('/')
+    navigate('/');
   };
+
+
+  let leftLinks = [];
+  let rightLinks = [];
+
+  if (normalizedType === "admin") {
+    leftLinks = [
+      { label: 'Home', path: '/dashboard' }
+    ];
+    rightLinks = []; 
+  } 
+  else if (normalizedType === "student") {
+    leftLinks = [
+      { label: 'Home', path: '/dashboard' },
+      { label: 'Submit Hours', path: '/submit-hours' }
+    ];
+    rightLinks = [
+      { label: 'Profile', path: '/profile' }
+    ];
+  } 
+  else if (normalizedType === "guidancecounsellor") {
+    leftLinks = [
+      { label: 'Home', path: '/dashboard' }
+    ];
+    rightLinks = [
+      { label: 'Profile', path: '/profile' }
+    ];
+  }
 
   return (
     <nav className="navbar">
@@ -41,6 +55,7 @@ function NavBar({ userType }) {
             {link.label}
           </Link>
         ))}
+
         <button onClick={handleLogout} className="nav-link logout-button">
           Logout
         </button>

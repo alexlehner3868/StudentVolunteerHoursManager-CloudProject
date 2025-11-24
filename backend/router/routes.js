@@ -10,6 +10,7 @@ const { getSystemMetrics } = require("../controllers/metricsController");
 const volunteerHourSubmissionController = require('../controllers/volunteerHourSubmissionController');
 const studentController = require('../controllers/studentInfoController');
 const guidanceCounsellorController = require('../controllers/guidanceCounsellorController');
+const adminController = require('../controllers/adminController');
 
 router.post('/login', loginController.login);
 router.post('/forgot-password', loginController.forgotPassword);
@@ -38,5 +39,7 @@ router.put('/student/:studentId/profile', studentController.updateGraduationDate
 router.get('/gc/:gcId/profile', guidanceCounsellorController.getProfile);
 router.get('/student/:studentId/guidance-counsellors', guidanceCounsellorController.getCounsellorsAtStudentSchool);
 router.get('/counsellor-students', guidanceCounsellorController.getStudentsAtCounsellorSchool);
+
+router.post('/admin/create-user', adminController.createUser);
 
 module.exports = router;

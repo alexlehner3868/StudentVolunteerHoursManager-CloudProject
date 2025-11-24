@@ -1,41 +1,36 @@
 const pool = require('../config/database');
 
 const getProfile = async (req, res) => {
-  const { gcId } = req.params;
-
   try {
+    const { gcId } = req.params;
+
     const query = `
       SELECT 
-        g.CounsellorName AS name,
-        g.SchoolName,
-        g.SchoolID,
-        u.Email
-      FROM GuidanceCounsellor g
-      JOIN Users u ON g.UserID = u.UserID
-      WHERE g.UserID = $1;
+        u.userid,
+        u.email,
+        gc.counsellorname AS name,
+        gc.schoolid,
+        gc.schoolname
+      FROM Users u
+      JOIN GuidanceCounsellor gc
+          ON u.userid = gc.userid
+      WHERE u.userid = $1
     `;
+
     const result = await pool.query(query, [gcId]);
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Guidance Counsellor not found' });
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Guidance counsellor not found" });
     }
 
-    const counsellor = result.rows[0];
+    return res.status(200).json(result.rows[0]);
 
-    const studentCountQuery = 'SELECT COUNT(*) AS studentcount FROM Student WHERE SchoolID = $1';
-    const countResult = await pool.query(studentCountQuery, [counsellor.SchoolID]);
-
-    res.json({
-      name: counsellor.name,
-      email: counsellor.email,
-      SchoolName: counsellor.SchoolName,
-      StudentCount: parseInt(countResult.rows[0].studentcount, 10)
-    });
-  } catch (err) {
-    console.error('Error getting GC profile:', err);
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    console.error("Error fetching GC profile:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 
 const getCounsellorsAtStudentSchool = async (req, res) => {
