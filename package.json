@@ -5,6 +5,7 @@
     "tailwindcss": "^4.1.15"
   },
   "dependencies": {
+    "@sendgrid/mail": "^8.1.6",
     "date-fns": "^4.1.0"
   }
 }

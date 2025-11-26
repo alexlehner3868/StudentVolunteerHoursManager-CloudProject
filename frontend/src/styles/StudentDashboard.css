@@ -1,0 +1,196 @@
+.submission-section {
+  margin-top: 40px;
+}
+
+.submission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.submission-card {
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 14px 20px;
+  background: #fff;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.submission-card:hover {
+  background: #eef4ff;
+  border-color: #2563eb;
+}
+
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+}
+
+.modal-card {
+  background: #ffffff;
+  width: 780px;
+  max-width: 92%;
+  border-radius: 14px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.18);
+  position: relative;
+  animation: fadeIn 0.25s ease;
+  overflow: hidden;
+}
+
+.modal-header {
+  position: relative;
+  background: #1e3a8a;
+  color: white;
+  padding: 18px 26px;
+  font-size: 22px;
+  font-weight: 700;
+  border-radius: 14px 14px 0 0;
+}
+
+.modal-close-x {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+  z-index: 10;
+}
+
+
+.modal-close-x:hover {
+  opacity: 0.75;
+}
+
+
+
+.modal-status-top {
+  padding: 18px 26px 8px 26px;
+}
+
+.tb-status-badge {
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.tb-status-Approved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.tb-status-Pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.tb-status-Denied {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+
+.modal-columns {
+  display: flex;
+  gap: 30px;
+  padding: 10px 26px 0 26px;
+  position: relative;
+}
+
+
+.modal-columns::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  bottom: 10px;
+  border-left: 1px dotted #d3d3d3;
+}
+
+.modal-left {
+  flex: 1.15;
+  padding-right: 25px;
+}
+
+.modal-right {
+  flex: 1;
+  padding-left: 25px;
+}
+
+@media (max-width: 700px) {
+  .modal-columns {
+    flex-direction: column;
+  }
+  .modal-columns::after {
+    display: none;
+  }
+}
+
+
+.modal-section-clean {
+  margin-bottom: 26px;
+  line-height: 1.5;
+}
+
+.modal-section-clean p {
+  margin: 5px 0;
+}
+
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 22px 26px 26px 26px;
+}
+
+.modal-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.modal-edit {
+  background: #2563eb;
+  color: white;
+}
+
+.modal-edit:hover {
+  background: #1d4ed8;
+}
+
+.modal-delete {
+  background: #b91c1c;
+  color: white;
+}
+
+.modal-delete:hover {
+  background: #b91c1c;
+  color: white;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

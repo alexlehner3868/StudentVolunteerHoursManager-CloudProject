@@ -27,6 +27,8 @@ router.put('/update-submission', counsellorController.updateSubmission);
 
 
 router.post('/volunteer-hours/submit', volunteerHourSubmissionController.submitHours);
+router.delete('/volunteer-hours/delete', volunteerHourSubmissionController.deleteSubmission);
+router.put("/student/:studentId/submissions/:submissionId", volunteerHourSubmissionController.updateSubmission);
 
 router.get('/volunteer-hours/:studentId', studentController.getMonthlyHours);
 router.get('/student/:studentId/submissions', studentController.getStudentSubmissions);

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import StudentMonthlyView from "./StudentMonthlyView";
 import StudentBarSummary from "./StudentBarSummary";
+import StudentSubmissions from "./StudentSubmissionTable";
+
 
 function StudentDashboard({ studentId }) {
   const [data, setData] = useState([]);
@@ -99,60 +101,7 @@ function StudentDashboard({ studentId }) {
       </div>
 
       <div style={{ marginTop: "40px" }}>
-        <h3>Your Submissions</h3>
-        {submissions.length === 0 ? (
-          <p style={{ color: "#777" }}>No submissions yet.</p>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {submissions.map((submission) => {
-              const org = (submission.organization) || "Organization not provided";
-              const dateStr = submission.datevolunteered
-                ? new Date(submission.datevolunteered).toLocaleDateString()
-                : "Date not provided";
-
-              const toHM = (val) => {
-                const n = Number(val);
-                if (!isFinite(n) || n <= 0) return "0h";
-                const h = Math.trunc(n);
-                let m = Math.round((n - h) * 60);
-                if (m === 60) { m = 0; }
-                return m ? `${h}h ${m}m` : `${h}h`;
-              };
-              const hoursStr = toHM(submission.hours);
-
-              const fmt = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "Pending");
-              const supStatus = fmt(submission.externsupstatus);
-              const gcStatus = fmt(submission.guidancecounsellorapproved);
-
-              return (
-                <button
-                  key={submission.submissionid}
-                  type="button"
-                  style={{
-                    width: "100%",
-                    textAlign: "left",
-                    padding: "15px",
-                    border: "1px solid #ccc",
-                    borderRadius: "8px",
-                    background: "#fafafa",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                  }}
-                >
-                  <div style={{ fontWeight: "bold", fontSize: "16px" }}>{org}</div>
-                  <div style={{ fontSize: "14px", color: "#555" }}>
-                    {dateStr} — {hoursStr}
-                  </div>
-                  <div style={{ marginTop: "8px", fontWeight: 600 }}>
-                    Supervisor: {supStatus}
-                  </div>
-                  <div style={{ fontWeight: 600 }}>
-                    Counsellor: {gcStatus}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        )}
+        <StudentSubmissions submissions={submissions} />
       </div>
     </div>
   );

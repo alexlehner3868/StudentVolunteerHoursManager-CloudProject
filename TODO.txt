@@ -1,5 +1,8 @@
 TODO: 
     - List of student submissions which they can click on to edit and see details and delete and resend sendGrid
+        - Make it so you can edit if not approved
+        - Filter
+    - FIX - add supervisor name to database and then I can add to submission hours and show it or remove from the form 
     - SendGrid for registration 
     - Getting supervisor approval (email template + SendGrid + frontend)
     - SendGrid to notify student that they have final status on their submission

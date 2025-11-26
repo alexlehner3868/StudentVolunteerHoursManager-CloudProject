@@ -116,7 +116,7 @@ function Profile() {
 
         <div className="form-section">
           <label>School:</label>
-          <div>{profileData.schoolname || "N/A"}</div>
+          <div>{profileData.SchoolName || "N/A"}</div>
         </div>
 
         {userType === "Student" && (
@@ -160,7 +160,7 @@ function Profile() {
         {userType === "Student" && (
           <div className="form-section">
             <h3>
-              Guidance Counsellors at {profileData.schoolname || "N/A"}
+              Guidance Counsellors at {profileData.SchoolName || "N/A"}
             </h3>
 
             {counsellors.length === 0 ? (

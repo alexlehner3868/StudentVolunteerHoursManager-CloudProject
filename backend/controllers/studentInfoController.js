@@ -38,7 +38,7 @@ const getSummary = async (req, res) => {
   try {
     const query = `
       SELECT 
-        SUM(CASE WHEN externsupstatus = 'Approved' AND guidancecounsellorapproved = 'Accepted' THEN hours ELSE 0 END) AS approved_hours,
+        SUM(CASE WHEN externsupstatus = 'Approved' AND guidancecounsellorapproved = 'Approved' THEN hours ELSE 0 END) AS approved_hours,
         SUM(hours) AS total_submitted
       FROM volunteerhoursubmission
       WHERE studentid = $1;
@@ -142,11 +142,18 @@ const getStudentSubmissions = async (req, res) => {
     const query = `
       SELECT 
         submissionid,
+        studentid,
         organization,
         datevolunteered,
         hours,
+        description,
+        externsupemail,
         externsupstatus,
-        guidancecounsellorapproved
+        externsupdate,
+        externsupcomments,
+        guidancecounsellorapproved,
+        guidancecounsellorcomments,
+        guidancecounsellorflag
       FROM volunteerhoursubmission
       WHERE studentid = $1
       ORDER BY datevolunteered DESC;
@@ -154,11 +161,13 @@ const getStudentSubmissions = async (req, res) => {
 
     const result = await pool.query(query, [studentId]);
     res.json(result.rows);
+
   } catch (err) {
     console.error("Error getting student submissions:", err);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 
 
