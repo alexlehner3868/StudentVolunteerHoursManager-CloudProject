@@ -1,5 +1,7 @@
 const pool = require('../config/database');
 const bcrypt = require('bcryptjs');
+const {sendEmail} = require('../config/sendGrid');
+const crypto = require('crypto');
 
 // handle user login
 const login = async(req,res)=>{
@@ -135,8 +137,41 @@ const forgotPassword = async(req,res)=>{
         }
 
         const user = userResult.rows[0];
-        // TO DO IMPLEMENT SENDGRID must implement email expiry and email clear later 
-        
+        // create the code to be sent users email
+        const verificationCode = crypto.randomInt(100000,999999).toString();
+        // set expiry to 30 minutes from now
+        const verificationExpiryTime = new Date(Date.now() + 30*60*1000);
+
+        // store verification code to database
+        const verificationQuery ='UPDATE Users SET VerificationCode=$1, VerificationExpiryTime=$2 WHERE UserId=$3';
+        const verificationResult = await pool.query(verificationQuery, [verificationCode, verificationExpiryTime, user.userid]);
+
+        // send email to user
+        try {
+            await sendEmail({
+                to: user.email,
+                subject: 'Volunteer Hour Password Rest',
+                html:`
+                    <h2>Password Resest Request</h2>
+                    <p>Hello,</p>
+                    <br>
+                    <p>You requested to reset your password. Use the verification code below:</p>
+                    <h1 style="background-color: #8aaeeb; padding: 20px; text-align: center; color:#242425">
+                        ${verificationCode}
+                    </h1>
+                    <br>
+                    <p><strong>This code will expire in 30 minutes.</strong></p>
+                    <p>If you didn't request this, please ignore this email.</p>
+                    <p>Best regards,<br>Volunteer Hours Team</p>
+                `
+            });
+        } catch (error) {
+            console.error("Error sending email:",error);
+            return res.status(500).json({
+                success: false,
+                message: 'Failed to send verification email. please try again.'
+            });  
+        }
         // return valid response with user details
         return res.status(200).json({
             success: true,
@@ -164,21 +199,51 @@ const passwordReset = async(req,res)=>{
             });
         }
 
-        // UPDATE TO INCLUDE VERIFICATION CODE
         // get the user from db based on email
-        const userQuery ='SELECT UserID, Type, Email, PasswordHash FROM Users WHERE Email=$1';
+        const userQuery ='SELECT UserID, Type, Email, VerificationCode, VerificationExpiryTime, PasswordHash FROM Users WHERE Email=$1';
         const userResult = await pool.query(userQuery, [email.toLowerCase()]);
 
         // check if user exists
-        if (userResult.rowCount === 0){
+        if (userResult.rowCount === 0 ){
             return res.status(404).json({
                 success: false,
-                message: 'Invalid email or verfication code does not exist.'
+                message: 'Invalid email. Try again.'
             });
 
         }
 
-        const userId = userResult.rows[0].userid;
+        // store user info
+        const user = userResult.rows[0];
+
+        // check if verification code and expiry time exist
+        if (!user.verificationcode || !user.verificationexpirytime){
+            return res.status(404).json({
+                success: false,
+                message: 'Verification code does not exist. Please request a new one.'
+            });
+
+        }
+
+        // check if code expired
+        const now= new Date();
+        const expiry = new Date(user.verificationexpirytime)
+        if (now>expiry){
+            const expiredQuery ='UPDATE Users SET VerificationCode=NULL, VerificationExpiryTime=NULL WHERE UserId=$1';
+            const expiredResult = await pool.query(expiredQuery, [user.userid]);
+            return res.status(400).json({
+                success: false,
+                message: 'Verification code was expired. Please request a new one.'
+            });
+        }
+
+        // check if verification codes match
+        if (user.verificationcode !== verificationCode){
+            return res.status(404).json({
+                success: false,
+                message: 'Verification does not match. Please request a new one.'
+            });
+
+        } 
 
         // hashing password
         const salt = await bcrypt.genSalt(10);
@@ -186,14 +251,35 @@ const passwordReset = async(req,res)=>{
 
         // update password
         // potentially UPDATE VERIFICATION CODE
-        const updateQuery='UPDATE Users SET PasswordHash =$1 WHERE UserId=$2 RETURNING UserID';
-        const updateResult = await pool.query(updateQuery, [hashedPassword,userId]);
+        const updateQuery='UPDATE Users SET PasswordHash =$1, VerificationCode=NULL, VerificationExpiryTime=NULL WHERE UserId=$2 RETURNING UserID';
+        const updateResult = await pool.query(updateQuery, [hashedPassword,user.userid]);
 
+        // Check if query returns a value to ensure update was successful
         if (updateResult.rowCount === 0){
             return res.status(400).json({
                 success: false,
                 message: 'Failed to update password'
             });
+        }
+
+        // send email to user
+        try {
+            await sendEmail({
+                to: user.email,
+                subject: 'Volunteer Hour Password Successfully Rest',
+                html:`
+                    <h2>Password Resest Successful</h2>
+                    <p>You request to reset your password is now complete.</p>
+                    <p>You can now log in with your new password.</p>
+                    <p>Best regards,<br>Volunteer Hours Team</p>
+                `
+            });
+        } catch (error) {
+            console.error("Error sending email:",error);
+            return res.status(500).json({
+                success: false,
+                message: 'Failed to update password. Please request a new verification code.'
+            });  
         }
 
         // return valid response with user details

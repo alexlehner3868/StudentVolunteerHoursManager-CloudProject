@@ -1,4 +1,5 @@
 const pool = require('../config/database');
+const {sendEmail} = require('../config/sendGrid');
 
 const getSubmissions = async(req,res)=>{
     try {
@@ -71,14 +72,14 @@ const updateSubmission = async (req, res) => {
       guidancecounsellorapproved,
       guidancecounsellorflag
     } = req.body;
-
+    // check submission is not empty
     if (!submissionid) {
       return res.status(422).json({
         message: 'submissionid is required.'
       });
     }
 
-    // Check submission exists
+    // send query to db to check submission exists
     const submissionQuery = `
       SELECT SubmissionID
       FROM VolunteerHourSubmission
@@ -86,6 +87,7 @@ const updateSubmission = async (req, res) => {
     `;
     const submissionResult = await pool.query(submissionQuery, [submissionid]);
 
+    // check there is an actual result from the query
     if (submissionResult.rowCount === 0) {
       return res.status(404).json({
         message: 'Submission does not exist.'
@@ -97,6 +99,7 @@ const updateSubmission = async (req, res) => {
     const newFlag = guidancecounsellorflag === true;
     const verdictdate = new Date();
 
+    // send query to upadate submission 
     const updateQuery = `
       UPDATE VolunteerHourSubmission
       SET 
@@ -117,6 +120,42 @@ const updateSubmission = async (req, res) => {
       guidancecounsellorid,
       submissionid
     ]);
+
+    // send email to student if they were approved or denied
+    const submission = updateResult.rows[0];
+    if (newStatus && updateResult.rowCount !== 0){
+      const studentInfoQuery ='SELECT u.Email, s.StudentName FROM Users u JOIN Student s on u.UserID=s.UserID WHERE s.UserID=$1';
+      const studentInfoResult = await pool.query(studentInfoQuery, [submission.studentid]);
+      if (studentInfoResult.rowCount !== 0){
+        const studentInfo = studentInfoResult.rows[0];
+        try {
+            await sendEmail({
+                to: studentInfo.email,
+                subject: `Volunteer Hour Submission ${submission.guidancecounsellorapproved}`,
+                html:`
+                    <p>Hello ${studentInfo.studentname},</p>
+                    <br>
+                    <p><strong> The following submission has been ${submission.guidancecounsellorapproved}</strong></p>
+                    <p>Hours: ${submission.hours}</p>
+                    <p>Date Volunteered: ${submission.datevolunteered}</p>
+                    <p>Description: ${submission.description}</p>
+                    <p>Organization: ${submission.organization}</p>
+                    <p>Supervisor Email: ${submission.externsupemail}</p>
+                    <br>
+                    <p>Comments from your Counsellor: ${submission.guidancecounsellorcomments ||'N/A'}</p>
+                    <p>If you believe there has been a mistake please contact your guidance counsellor.</p>
+                    <p>Best regards,<br>Volunteer Hours Team</p>
+                `
+            });
+        } catch (error) {
+            console.error("Error sending volunteer hour status email:",error);
+        }
+
+      }
+      
+            
+
+    }
 
     return res.status(200).json({
       message: "Submission Update Successful",
