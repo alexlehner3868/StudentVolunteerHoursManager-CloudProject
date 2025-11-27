@@ -14,7 +14,7 @@ function Profile() {
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : {};
   const userId = user.userId || 0;
-  const userType = user?.type || "Student";
+  const userType = user?.type || "Student"; // Default to student type
 
   useEffect(() => {
     if (!user || Object.keys(user).length === 0) {
@@ -33,9 +33,9 @@ function Profile() {
 
         let profileUrl = "";
         if (userType === "Student") {
-          profileUrl = `/api/student/${userId}/profile`;
+          profileUrl = `/api/student/${userId}/profile`; // Get student profile
         } else if (userType === "GuidanceCounsellor") {
-          profileUrl = `/api/gc/${userId}/profile`;
+          profileUrl = `/api/gc/${userId}/profile`; // Get GC profile
         }
 
         const res = await fetch(profileUrl);
@@ -47,12 +47,12 @@ function Profile() {
         setProfileData(data);
 
         if (userType === "Student" && data.GraduationDate) {
-          setGraduationDate(data.GraduationDate.slice(0, 10));
+          setGraduationDate(data.GraduationDate.slice(0, 10)); // Update graduation date
         }
 
         if (userType === "Student") {
           const gcRes = await fetch(
-            `/api/student/${userId}/guidance-counsellors`
+            `/api/student/${userId}/guidance-counsellors` // Get list of GC at school
           );
           if (!gcRes.ok)
             throw new Error("Failed to fetch guidance counsellors");

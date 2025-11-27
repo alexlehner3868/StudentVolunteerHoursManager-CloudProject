@@ -21,7 +21,7 @@ const StudentInfo = () => {
   });
 
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState(null); // ✅ added
+  const [status, setStatus] = useState(null); 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {

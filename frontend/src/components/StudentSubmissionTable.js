@@ -5,6 +5,7 @@ import StudentSubmissionModal from "./StudentSubmissionModal";
 const StudentSubmissionTable = ({ submissions }) => {
   const [selected, setSelected] = useState(null);
 
+  // Date formatting 
   const formatDate = (dateString) => {
     if (!dateString) return "Not provided";
     const d = new Date(dateString);
@@ -22,6 +23,7 @@ const StudentSubmissionTable = ({ submissions }) => {
     return m ? `${intH}h ${m}m` : `${intH}h`;
   };
 
+  // Format Status
   const fmtStatus = (status) => {
     if (!status) return "Pending";
     const s = status.toString().trim();

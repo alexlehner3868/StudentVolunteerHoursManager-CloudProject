@@ -209,7 +209,6 @@ const CounsellorDashboard = () => {
             <CounsellorWeeklyChart submissions={filteredSubmissions} />
           </div>
         </div>
-
         <Table
           submissions={filteredSubmissions}
           onRowClick={(s) => {

@@ -4,6 +4,7 @@ const getProfile = async (req, res) => {
   try {
     const { gcId } = req.params;
 
+    // Query database to get info of the counsellor
     const query = `
       SELECT 
         u.userid,
@@ -17,6 +18,7 @@ const getProfile = async (req, res) => {
       WHERE u.userid = $1
     `;
 
+    // Get resposne from database
     const result = await pool.query(query, [gcId]);
 
     if (result.rowCount === 0) {
@@ -31,17 +33,18 @@ const getProfile = async (req, res) => {
   }
 };
 
-
-
+// Return all counsellors at a student's school
 const getCounsellorsAtStudentSchool = async (req, res) => {
   const { studentId } = req.params;
 
   try {
+    // Get student's school
     const schoolResult = await pool.query('SELECT SchoolID FROM Student WHERE UserID = $1', [studentId]);
     if (schoolResult.rows.length === 0) return res.status(404).json({ error: 'Student not found' });
 
     const schoolID = schoolResult.rows[0].schoolid;
 
+    // Get GC at the school 
     const gcResult = await pool.query(`
       SELECT g.UserID, g.CounsellorName AS name, u.Email
       FROM GuidanceCounsellor g
@@ -61,6 +64,7 @@ const getStudentsAtCounsellorSchool = async (req, res) => {
   const { counsellorId } = req.query;
 
   try {
+    // Get school 
     const schoolQuery = `
       SELECT SchoolID
       FROM GuidanceCounsellor
@@ -74,6 +78,7 @@ const getStudentsAtCounsellorSchool = async (req, res) => {
 
     const schoolID = schoolResult.rows[0].schoolid;
 
+    // Get students at the school
     const studentsQuery = `
       SELECT UserID, StudentName
       FROM Student

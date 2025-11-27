@@ -1,8 +1,4 @@
 TODO: 
-      - SendGrid for registration 
-    - Getting supervisor approval (email template + SendGrid + frontend)
-    - SendGrid to notify student that they have final status on their submission
-    - SendGrid Forgot Password
     - Comment code
     - Password protect monitoring webpage (system admin only)
     - Figure out HTTPS (or tokens) whichever is easier

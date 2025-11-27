@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/NavBar.css';
 
+// Object to represent Navigation Bar
 function NavBar({ userType }) {
   const navigate = useNavigate();
   const normalizedType = userType?.toLowerCase();
@@ -15,6 +16,7 @@ function NavBar({ userType }) {
   let leftLinks = [];
   let rightLinks = [];
 
+  // Set the left and right links based on the user type
   if (normalizedType === "admin") {
     leftLinks = [
       { label: 'Home', path: '/dashboard' }

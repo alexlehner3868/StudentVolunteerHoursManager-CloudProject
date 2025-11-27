@@ -24,6 +24,7 @@ const submitHours = async (req, res) => {
       });
     }
 
+    // Insert new submission into the table
     const query = `
       INSERT INTO volunteerhoursubmission
       (StudentID, Organization, Hours, DateVolunteered, ExternSupEmail, ExternSupStatus, Description, GuidanceCounsellorFlag, GuidanceCounsellorID)
@@ -31,15 +32,7 @@ const submitHours = async (req, res) => {
       RETURNING *;
     `;
 
-    const result = await pool.query(query, [
-      studentId,
-      organization,
-      totalTime,
-      date_volunteered,
-      extern_sup_email,
-      description,
-
-    ]);
+    const result = await pool.query(query, [studentId, organization, totalTime, date_volunteered, extern_sup_email, description]);
 
     console.log('Volunteer submission inserted:', result.rows[0]);
 
@@ -57,6 +50,7 @@ const submitHours = async (req, res) => {
   }
 };
 
+// Remove a submission from the table
 const deleteSubmission = async (req, res) => {
   try {
     const { submissionId, studentId } = req.body;
@@ -97,6 +91,7 @@ const deleteSubmission = async (req, res) => {
   }
 };
 
+// Update the info in a table
 const updateSubmission = async (req, res) => {
   try {
     const { studentId, submissionId } = req.params;
@@ -117,7 +112,7 @@ const updateSubmission = async (req, res) => {
       });
     }
 
-    // ensure student can edit
+    // Get the current status of the submission
     const checkQuery = `
       SELECT externsupstatus 
       FROM volunteerhoursubmission 
@@ -130,6 +125,7 @@ const updateSubmission = async (req, res) => {
       return res.status(404).json({ success: false, message: "Submission not found" });
     }
 
+    // Check if the student can edit it
     if (check.rows[0].externsupstatus !== "Pending") {
       return res.status(403).json({
         success: false,
@@ -137,9 +133,10 @@ const updateSubmission = async (req, res) => {
       });
     }
 
-    // calculate hours
+    // Calculate hours
     const totalHours = parseFloat(hours) + (parseFloat(minutes) || 0) / 60;
 
+    // Query to update the submission
     const updateQuery = `
       UPDATE volunteerhoursubmission
       SET organization = $1,

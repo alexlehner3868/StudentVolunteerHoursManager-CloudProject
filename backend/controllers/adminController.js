@@ -44,7 +44,7 @@ const createUser = async (req, res) => {
       ]);
     }
 
-    // Send registration email
+    // Use SendGrid to send  registration email
     await sendEmail({
       to: email,
       subject: "Welcome to VolunCloud!",

@@ -21,6 +21,7 @@ const VolunteerSubmissionForm = () => {
 
   const user = JSON.parse(localStorage.getItem("user")) || {};
 
+  // Ensure only Students can access this page
   useEffect(() => {
     if (!user || Object.keys(user).length === 0) {
       navigate("/");
@@ -38,6 +39,7 @@ const VolunteerSubmissionForm = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -53,8 +55,10 @@ const VolunteerSubmissionForm = () => {
         return;
       }
 
+      // Compile submission data
       const submissionData = { ...formData, studentId };
 
+      // Send to backend
       const res = await fetch("/api/volunteer-hours/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -14,7 +14,7 @@ function StudentDashboard({ studentId }) {
     async function fetchData() {
       try {
         console.log("Fetching student dashboard for ID:", studentId);
-        const nameRes = await fetch(`/api/student-name/${studentId}`);
+        const nameRes = await fetch(`/api/student-name/${studentId}`); // Get student name
         const nameText = await nameRes.text();
         let nameData;
         try {
@@ -26,10 +26,10 @@ function StudentDashboard({ studentId }) {
 
         setUsername(nameData.name || "");
 
-        const hoursRes = await fetch(`/api/volunteer-hours/${studentId}`);
+        const hoursRes = await fetch(`/api/volunteer-hours/${studentId}`); // Get hours completed
         const hoursData = await hoursRes.json();
 
-        const summaryRes = await fetch(`/api/volunteer-summary/${studentId}`);
+        const summaryRes = await fetch(`/api/volunteer-summary/${studentId}`); //Get summary data
         const summaryData = await summaryRes.json();
 
         setData(hoursData);
@@ -45,7 +45,7 @@ function StudentDashboard({ studentId }) {
     async function fetchSubmissions() {
       try {
         console.log("Fetching student submissions for ID:", studentId);
-        const res = await fetch(`/api/student/${studentId}/submissions`);
+        const res = await fetch(`/api/student/${studentId}/submissions`); // Get list of submissions
         const data = await res.json();
         setSubmissions(data);
       } catch (err) {
@@ -55,6 +55,7 @@ function StudentDashboard({ studentId }) {
     fetchSubmissions();
   }, [studentId]);
 
+  // Calculation percent complete for status bar
   const hoursApproved = summary.approved_hours || 0;
   const percentComplete = (hoursApproved / 40 * 100).toFixed(1);
   const percentCompleteWidth = Math.min((hoursApproved / 40) * 100, 100).toFixed(1);

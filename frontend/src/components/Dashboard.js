@@ -22,8 +22,7 @@ function Dashboard() {
   const userType = user?.type;
   const userId =user?.userId;
 
-  const isStudent = (userType === 'Student'); 
-
+  // Render different dashboard based on user type
   return (
     <div>
       <NavBar userType={userType} />

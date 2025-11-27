@@ -4,6 +4,7 @@ const getMonthlyHours = async (req, res) => {
   const { studentId } = req.params;
 
   try {
+    // Get volunteer hours completed by month and by status 
     const query = `
       SELECT
         TO_CHAR(datevolunteered, 'YYYY-MM') AS month,
@@ -52,6 +53,7 @@ const getSummary = async (req, res) => {
   }
 };
 
+// Return the student name based on the id 
 const getStudentName = async (req, res) => {
   const { studentId } = req.params;
 
@@ -70,6 +72,7 @@ const getStudentName = async (req, res) => {
   }
 };
 
+// Return profile information for student
 const getProfile = async (req, res) => {
   const { studentId } = req.params;
 
@@ -98,13 +101,13 @@ const getProfile = async (req, res) => {
   }
 };
 
+// Endpoint to update the graduation date in the students table for a particular student
 const updateGraduationDate = async (req, res) => {
   const { studentId } = req.params;
   const { GraduationDate } = req.body;
 
   try {
-    console.log("Updating GraduationDate:", GraduationDate, "for studentId:", studentId);
-
+    // Query to update
     const query = `
       UPDATE Student
       SET graduationdate = $1
@@ -118,8 +121,10 @@ const updateGraduationDate = async (req, res) => {
       return res.status(404).json({ error: 'Student not found' });
     }
 
+    // Get the email from the users table to refresh profile data
     const userResult = await pool.query('SELECT email FROM Users WHERE userid = $1', [studentId]);
 
+    // New profile info to display 
     const profile = {
       name: result.rows[0].studentname,
       SchoolName: result.rows[0].schoolname,

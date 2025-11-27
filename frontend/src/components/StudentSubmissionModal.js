@@ -22,6 +22,7 @@ const fmtStatus = (s) => {
 export default function StudentSubmissionModal({ selected, onClose }) {
   if (!selected) return null;
 
+  // Get status of supervisor and gc
   const sup = fmtStatus(selected.externsupstatus);
   const gc = fmtStatus(selected.guidancecounsellorapproved);
 
@@ -31,6 +32,7 @@ export default function StudentSubmissionModal({ selected, onClose }) {
   let statusText = "";
   let statusClass = "";
 
+  // Determine status class
   if (sup === "Denied") {
     statusText = "Supervisor Denied";
     statusClass = "tb-status-Denied";
@@ -62,7 +64,7 @@ export default function StudentSubmissionModal({ selected, onClose }) {
   const [editHours, setEditHours] = useState(defaultHours);
   const [editMinutes, setEditMinutes] = useState(defaultMinutes);
 
-
+  // Update submission form
   const saveChanges = async () => {
     try {
         const res = await fetch(`/api/student/${selected.studentid}/submissions/${selected.submissionid}`,
@@ -95,6 +97,7 @@ export default function StudentSubmissionModal({ selected, onClose }) {
     }
   };
 
+  // Remove the submission
   const deleteSubmission = async () => {
     if (!selected) return;
 

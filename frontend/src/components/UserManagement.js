@@ -5,6 +5,7 @@ export default function UserManagement() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user")) || {};
 
+  // Ensure that only admins can access this page
   useEffect(() => {
     if (!user || user.type !== "Admin") {
       navigate("/dashboard");
@@ -22,10 +23,10 @@ export default function UserManagement() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Call create-user backend end point
     const res = await fetch("/api/admin/create-user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
