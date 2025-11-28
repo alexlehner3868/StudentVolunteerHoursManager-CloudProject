@@ -11,6 +11,7 @@ import StudentInfo from "./components/StudentInfo";
 import GuidanceInfo from "./components/GuidanceInfo";
 import SystemMetrics from "./components/SystemMetrics";
 import Profile from './components/Profile';
+import SupervisorApprovalPage from './components/SupervisorApprovalPage';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/guidance-info" element={<GuidanceInfo />} />
         <Route path="/system-metrics" element={<SystemMetrics />} />
         <Route path="/profile" element={<Profile/>} />
+        <Route path="/approve/:submissionId/:token" element={<SupervisorApprovalPage/>} />
       </Routes>
     </Router>
   );
