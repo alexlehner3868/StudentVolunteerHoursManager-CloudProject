@@ -33,11 +33,18 @@ router.put('/update-submission', counsellorController.updateSubmission);
 // Student - Volunteer Hour Submissions
 router.post('/volunteer-hours/submit', volunteerHourSubmissionController.submitHours);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 router.delete('/volunteer-hours/delete', volunteerHourSubmissionController.deleteSubmission);
 router.put("/student/:studentId/submissions/:submissionId", volunteerHourSubmissionController.updateSubmission);
 =======
 router.get('/volunteer-hours/get/:submissionid/:token', volunteerHourSubmissionController.getSubmissionDetails );
 router.post('/volunteer-hours/sup-update', volunteerHourSubmissionController.supUpdatesHours);
+=======
+router.get('/volunteer-hours/get/:submissionid/:token', volunteerHourSubmissionController.getSubmissionDetails );
+router.post('/volunteer-hours/sup-update', volunteerHourSubmissionController.supUpdatesHours);
+
+
+>>>>>>> Stashed changes
 
 
 >>>>>>> Stashed changes

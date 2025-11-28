@@ -27,12 +27,18 @@ const submitHours = async (req, res) => {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // Insert new submission into the table
 =======
+=======
+>>>>>>> Stashed changes
     // create token to be used by superviosr to approve or deny submission
     const supToken = crypto.randomBytes(32).toString('hex');
     const tokenExpiry = new Date(Date.now() + 7*24*60*60*1000);
     // Update database with values
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     const query = `
       INSERT INTO volunteerhoursubmission
@@ -62,6 +68,9 @@ const submitHours = async (req, res) => {
           message: 'Failed to update submission.'
       });
     }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     const submission = result.rows[0];
@@ -120,6 +129,7 @@ const submitHours = async (req, res) => {
   }
 };
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 // Remove a submission from the table
 const deleteSubmission = async (req, res) => {
@@ -244,6 +254,8 @@ const updateSubmission = async (req, res) => {
 module.exports = { submitHours, deleteSubmission, updateSubmission };
 
 =======
+=======
+>>>>>>> Stashed changes
 // get the submission data for the review page
 const getSubmissionDetails = async(req, res) =>{
   const {submissionid, token} =req.params;
@@ -350,4 +362,7 @@ const supUpdatesHours = async(req, res) =>{
 
 
 module.exports = { submitHours, getSubmissionDetails, supUpdatesHours};
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
