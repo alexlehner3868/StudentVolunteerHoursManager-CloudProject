@@ -26,20 +26,10 @@ const submitHours = async (req, res) => {
       });
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    // Insert new submission into the table
-=======
-=======
->>>>>>> Stashed changes
     // create token to be used by superviosr to approve or deny submission
     const supToken = crypto.randomBytes(32).toString('hex');
     const tokenExpiry = new Date(Date.now() + 7*24*60*60*1000);
     // Update database with values
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     const query = `
       INSERT INTO volunteerhoursubmission
       (StudentID, Organization, Hours, DateVolunteered, ExternSupEmail, ExternSupStatus, Description, GuidanceCounsellorFlag, GuidanceCounsellorID, supervisor_token, supervisor_token_expiry)
@@ -47,9 +37,6 @@ const submitHours = async (req, res) => {
       RETURNING *;
     `;
 
-<<<<<<< Updated upstream
-    const result = await pool.query(query, [studentId, organization, totalTime, date_volunteered, extern_sup_email, description]);
-=======
     const result = await pool.query(query, [
       studentId,
       organization,
@@ -68,10 +55,6 @@ const submitHours = async (req, res) => {
           message: 'Failed to update submission.'
       });
     }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
     const submission = result.rows[0];
     console.log('Volunteer submission inserted:', submission);
@@ -129,8 +112,6 @@ const submitHours = async (req, res) => {
   }
 };
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 // Remove a submission from the table
 const deleteSubmission = async (req, res) => {
   try {
@@ -251,11 +232,7 @@ const updateSubmission = async (req, res) => {
   }
 };
 
-module.exports = { submitHours, deleteSubmission, updateSubmission };
 
-=======
-=======
->>>>>>> Stashed changes
 // get the submission data for the review page
 const getSubmissionDetails = async(req, res) =>{
   const {submissionid, token} =req.params;
@@ -360,9 +337,5 @@ const supUpdatesHours = async(req, res) =>{
   }
 }
 
+module.exports = { submitHours, deleteSubmission, updateSubmission, getSubmissionDetails, supUpdatesHours};
 
-module.exports = { submitHours, getSubmissionDetails, supUpdatesHours};
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
