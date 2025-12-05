@@ -1,10 +1,9 @@
-version: '3.9'
+version: "3.8"
 
 services:
   app:
-    image: malkahil/student-volunteer-app:latest
-    ports:
-      - "80:3000"
+    image: malkahil/student-volunteer-app:final
+
     environment:
       DB_HOST: db
       DB_PORT: 5432
@@ -13,18 +12,40 @@ services:
       DB_PASSWORD_FILE: /run/secrets/db_password
       DO_API_TOKEN_FILE: /run/secrets/do_api_token
       DROPLET_ID_FILE: /run/secrets/droplet_id
-    depends_on:
-      - db
+      SENDGRID_API_KEY_FILE: /run/secrets/sendgrid_api_key
+
+    networks:
+      - app-network
+      - traefik_proxy
+
     secrets:
       - db_password
       - do_api_token
       - droplet_id
-    networks:
-      - app-network
+      - sendgrid_api_key
+
     deploy:
       replicas: 2
       restart_policy:
         condition: on-failure
+      labels:
+        - "traefik.enable=true"
+
+        # BACKEND API ROUTER
+        - "traefik.http.routers.student_api.rule=PathPrefix(`/api`)"
+        - "traefik.http.routers.student_api.entrypoints=websecure"
+        - "traefik.http.routers.student_api.tls=true"
+        - "traefik.http.routers.student_api.service=student_api"
+        - "traefik.http.routers.student_api.priority=1000"
+        - "traefik.http.services.student_api.loadbalancer.server.port=3000"
+
+        # FRONTEND ROUTER
+        - "traefik.http.routers.student_front.rule=PathPrefix(`/`)"
+        - "traefik.http.routers.student_front.entrypoints=websecure"
+        - "traefik.http.routers.student_front.tls=true"
+        - "traefik.http.routers.student_front.service=student_front"
+        - "traefik.http.routers.student_front.priority=1"
+        - "traefik.http.services.student_front.loadbalancer.server.port=3000"
 
   db:
     image: postgres:15-alpine
@@ -35,10 +56,11 @@ services:
     secrets:
       - db_password
     volumes:
-      - /mnt/volume_tor1_01/postgres_data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
+      - cloudflared-network
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -48,6 +70,20 @@ services:
 networks:
   app-network:
     driver: overlay
+  cloudflared-network:
+    name: cloudflared-network
+  traefik_proxy:
+    external: true
+    name: traefik_traefik_proxy
+
+
+volumes:
+  db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/volume_tor1_01/postgres-data
 
 secrets:
   db_password:
@@ -55,4 +91,6 @@ secrets:
   do_api_token:
     external: true
   droplet_id:
+    external: true
+  sendgrid_api_key:
     external: true
