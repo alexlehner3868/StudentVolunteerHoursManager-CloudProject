@@ -11,7 +11,7 @@ const getProfile = async (req, res) => {
         u.email,
         gc.counsellorname AS name,
         gc.schoolid,
-        gc.schoolname
+        gc.schoolname AS "SchoolName"
       FROM Users u
       JOIN GuidanceCounsellor gc
           ON u.userid = gc.userid
@@ -79,8 +79,13 @@ const getStudentsAtCounsellorSchool = async (req, res) => {
     const schoolID = schoolResult.rows[0].schoolid;
 
     // Get students at the school
-    const studentsQuery = `
-      SELECT UserID, StudentName
+   const studentsQuery = `
+      SELECT 
+        UserID, 
+        StudentName, 
+        SchoolID, 
+        SchoolName, 
+        GraduationDate
       FROM Student
       WHERE SchoolID = $1
       ORDER BY StudentName

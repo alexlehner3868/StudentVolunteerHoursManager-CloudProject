@@ -1,6 +1,5 @@
 images/
 secrets/
-deploy_to_droplet.sh
 frontend/build/
 frontend/node_modules/
 persistent.md
