@@ -1,3 +1,11 @@
+### Prerequiste
+Install/set up the following locally:
++ Docker Desktop
++ Git
++ VS Code (Remote SSH extension installed)
++ DigitalOcean Account (Metrics API key generated)
+
+__Note:__ Credentials have been emailed to the TA by __EMAIL OF PERSON__
 ### 1. Configure Droplets and Volume
 #### 1.1 Manager Droplet
 1. From the DigitalOcean dashboard, click Droplets in the left sidebar
