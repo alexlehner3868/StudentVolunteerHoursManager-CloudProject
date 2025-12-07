@@ -1,13 +1,13 @@
 
 
-Clone the Repository
+### 2. Clone the Repository
 ```
 git clone https://github.com/alexlehner3868/StudentVolunteerHoursManager-CloudProject
 ```
-3. Build and Push Docker Image
-Note:
-Ensure Docker Desktop is running on local machine
-Replace [your_dockerhub_username] with your actual Docker Hub username.
+### 3. Build and Push Docker Image
+__Note:__
++ Ensure Docker Desktop is running on local machine
++ Replace [your_dockerhub_username] with your actual Docker Hub username.
 ```
 # Access the root directory of the project
 cd StudentVolunteerHoursManager-CloudProject
@@ -21,23 +21,23 @@ docker build -t [your_dockerhub_username]/student-volunteer-app:latest .
 #push image to your dockerhub
 docker push [your_dockerhub_username]/student-volunteer-app:latest
 ```
-4. Connect to DigitalOcean Manager Node via SSH
+### 4. Connect to DigitalOcean Manager Node via SSH
 
-4.1 Set Up SSH Connection in VS Code
-Press Ctrl+Shift+P
-Search for and select: Remote-SSH: Connect to Host
-Click Add New SSH Host
-Enter the ip address for manager node
-Select the SSH config file 
+#### 4.1 Set Up SSH Connection in VS Code
+1. Press Ctrl+Shift+P
+2. Search for and select: Remote-SSH: Connect to Host
+3. Click Add New SSH Host
+4. Enter the ip address for manager node
+5. Select the SSH config file 
 
-4.2 Connect to the Droplet
-Press Ctrl+Shift+P
-Select: Remote-SSH: Connect to Host
-Choose the manager node IP address
-Once connected, click Open Folder from the left bar
-Once open, select ‘/root/’ and click ok
+### 4.2 Connect to the Droplet
+1. Press Ctrl+Shift+P
+2. Select: Remote-SSH: Connect to Host
+3. Choose the manager node IP address
+4. Once connected, click Open Folder from the left bar
+5. Once open, select ‘/root/’ and click ok
 
-5. Set up Deployment Files on Manager Node
+### 5. Set up Deployment Files on Manager Node
 
 5.1 Create Project Directory
 Open terminal 
