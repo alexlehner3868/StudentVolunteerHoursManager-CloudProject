@@ -482,7 +482,7 @@ docker node ls
 
 check load balancing
 ```
-for i in {1..20}; do curl -s http://178.128.232.57/api/whoami; echo; done
+for i in {1..20}; do curl -s http://[manager_ip_address]/api/whoami; echo; done
 docker ps
 ```
 
