@@ -1,0 +1,413 @@
+
+
+Clone the Repository
+```
+git clone https://github.com/alexlehner3868/StudentVolunteerHoursManager-CloudProject
+```
+3. Build and Push Docker Image
+Note:
+Ensure Docker Desktop is running on local machine
+Replace [your_dockerhub_username] with your actual Docker Hub username.
+```
+# Access the root directory of the project
+cd StudentVolunteerHoursManager-CloudProject
+
+#Log in to Docker Hub
+docker login
+
+#Build Docker image
+docker build -t [your_dockerhub_username]/student-volunteer-app:latest .
+
+#push image to your dockerhub
+docker push [your_dockerhub_username]/student-volunteer-app:latest
+```
+4. Connect to DigitalOcean Manager Node via SSH
+
+4.1 Set Up SSH Connection in VS Code
+Press Ctrl+Shift+P
+Search for and select: Remote-SSH: Connect to Host
+Click Add New SSH Host
+Enter the ip address for manager node
+Select the SSH config file 
+
+4.2 Connect to the Droplet
+Press Ctrl+Shift+P
+Select: Remote-SSH: Connect to Host
+Choose the manager node IP address
+Once connected, click Open Folder from the left bar
+Once open, select ‘/root/’ and click ok
+
+5. Set up Deployment Files on Manager Node
+
+5.1 Create Project Directory
+Open terminal 
+```
+#create the folder
+mkdir student-volunteer-deploy
+cd student-volunteer-deploy
+```
+
+5.2 Docker Hub Login
+```
+#Log in to Docker Hub
+docker login
+```
+5.3 Create Docker Stack Configuration for Docker Swarm
+```
+Nano docker-stack.yaml
+```
+Copy the following into docker-stack.yaml
+Note: Replace [your_dockerhub_username] with your actual Docker Hub username.
+```
+version: "3.8"
+
+services:
+  app:
+    image: [your_dockerhub_username]/student-volunteer-app:final
+
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: student_volunteer
+      DB_USER: admin
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      DO_API_TOKEN_FILE: /run/secrets/do_api_token
+      DROPLET_ID_FILE: /run/secrets/droplet_id
+      SENDGRID_API_KEY_FILE: /run/secrets/sendgrid_api_key
+
+    networks:
+      - app-network
+      - traefik_proxy
+
+    secrets:
+      - db_password
+      - do_api_token
+      - droplet_id
+      - sendgrid_api_key
+
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+
+        # BACKEND API ROUTER
+        - "traefik.http.routers.student_api.rule=PathPrefix(`/api`)"
+        - "traefik.http.routers.student_api.entrypoints=websecure"
+        - "traefik.http.routers.student_api.tls=true"
+        - "traefik.http.routers.student_api.service=student_api"
+        - "traefik.http.routers.student_api.priority=1000"
+        - "traefik.http.services.student_api.loadbalancer.server.port=3000"
+
+        # FRONTEND ROUTER
+        - "traefik.http.routers.student_front.rule=PathPrefix(`/`)"
+        - "traefik.http.routers.student_front.entrypoints=websecure"
+        - "traefik.http.routers.student_front.tls=true"
+        - "traefik.http.routers.student_front.service=student_front"
+        - "traefik.http.routers.student_front.priority=1"
+        - "traefik.http.services.student_front.loadbalancer.server.port=3000"
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: student_volunteer
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+      - cloudflared-network
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+
+networks:
+  app-network:
+    driver: overlay
+  cloudflared-network:
+    name: cloudflared-network
+  traefik_proxy:
+    external: true
+    name: traefik_traefik_proxy
+
+
+volumes:
+  db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/volume_tor1_01/postgres-data
+
+secrets:
+  db_password:
+    external: true
+  do_api_token:
+    external: true
+  droplet_id:
+    external: true
+  sendgrid_api_key:
+    external: true
+```
+
+5.4 Set Up Secrets Files
+```
+#Create secrets folder
+mkdir secrets
+
+#Create secret files and add credentials that were sent to TA by email
+nano secrets/db_password.txt
+nano secrets/do_api_token.txt
+nano secrets/droplet_id.txt
+nano secrets/sendgrid_api_key.txt
+```
+
+5.5 Set Up Database
+```
+#Create database folder
+mkdir database
+
+#Create init.sql file
+nano database/init.sql
+```
+
+Copy the following into init.sql
+```
+-- =========================================
+-- USERS TABLE
+-- =========================================
+CREATE TABLE IF NOT EXISTS Users (
+    UserID SERIAL PRIMARY KEY,
+    Type VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    VerificationCode VARCHAR(6),
+    VerificationExpiryTime TIMESTAMP
+);
+
+-- =========================================
+-- STUDENT TABLE
+-- =========================================
+CREATE TABLE IF NOT EXISTS Student (
+    UserID INT PRIMARY KEY REFERENCES Users(UserID),
+    StudentName VARCHAR(100),
+    SchoolID VARCHAR(50),
+    SchoolName VARCHAR(100),
+    GraduationDate DATE
+);
+
+-- =========================================
+-- GUIDANCE COUNSELLOR TABLE
+-- =========================================
+CREATE TABLE IF NOT EXISTS GuidanceCounsellor (
+    UserID INT PRIMARY KEY REFERENCES Users(UserID),
+    CounsellorName VARCHAR(100),
+    SchoolID VARCHAR(50),
+    SchoolName VARCHAR(100)
+);
+
+-- =========================================
+-- VOLUNTEER HOUR SUBMISSION TABLE
+-- =========================================
+CREATE TABLE IF NOT EXISTS VolunteerHourSubmission (
+    SubmissionID SERIAL PRIMARY KEY,
+    StudentID INT REFERENCES Student(UserID) ON DELETE CASCADE,
+    Hours DECIMAL(5,2),
+    DateVolunteered DATE,
+    Description TEXT,
+    Organization TEXT,
+    ExternSupEmail VARCHAR(100),
+    ExternSupStatus VARCHAR(20),
+    ExternSupDate DATE,
+    ExternSupComments TEXT,
+    supervisor_token VARCHAR(64) UNIQUE,
+    supervisor_token_expiry TIMESTAMP,
+    GuidanceCounsellorFlag BOOLEAN,
+    GuidanceCounsellorApproved VARCHAR(20),
+    GuidanceCounsellorComments TEXT,
+    GuidanceCounsellorID INT REFERENCES GuidanceCounsellor(UserID) ON DELETE SET NULL,
+    VerdictDate DATE
+);
+
+-- =========================================
+-- DEFAULT ADMIN USER (only if missing)
+-- =========================================
+INSERT INTO Users (Type, Email, PasswordHash)
+SELECT 'Admin', 'admin@test.com',
+       '$2a$10$e0MYzXyjpJS7Pd0RVvHwHeFX5H2b8qZt1c6NVoyk4I5hPDe3T1H0W'  -- bcrypt("Password123!")
+WHERE NOT EXISTS (
+    SELECT 1 FROM Users WHERE Email = 'admin@test.com'
+);
+
+```
+
+
+6. Create Docker secrets
+```
+cat secrets/db_password.txt | docker secret create db_password -
+cat secrets/do_api_token.txt | docker secret create do_api_token -
+cat secrets/droplet_id.txt | docker secret create droplet_id -
+cat secrets/sendgrid_api_key.txt | docker secret create sendgrid_api_key -
+
+#Verify secrets were created
+docker secret ls
+```
+
+7. Verify DigitalOcean Volume setup
+```
+# Check if volume is mounted
+df -h | grep volume
+```
+If the volume is not mounted, go to the DigitalOcean dashboard and mount a volume.	
+
+8. Set up Traefik Stack Configuration
+8.1 Traefik Stack file
+```
+Nano traefik-stack.yml
+```
+
+Copy the following into traefik-stack.yml
+```
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik:v3.4
+
+    networks:
+      - traefik_proxy
+
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/certs:ro
+      - ./dynamic:/dynamic:ro
+
+    command:
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls=true"
+
+      - "--providers.file.filename=/dynamic/tls.yaml"
+      - "--providers.swarm.endpoint=unix:///var/run/docker.sock"
+      - "--providers.swarm.watch=true"
+      - "--providers.swarm.exposedbydefault=false"
+      - "--providers.swarm.network=traefik_traefik_proxy"
+
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+      - "--log.level=INFO"
+      - "--accesslog=true"
+      - "--metrics.prometheus=true"
+
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+        - "traefik.http.routers.dashboard.rule=Host(`dashboard.swarm.localhost`)"
+        - "traefik.http.routers.dashboard.entrypoints=websecure"
+        - "traefik.http.routers.dashboard.service=api@internal"
+        - "traefik.http.routers.dashboard.tls=true"
+
+networks:
+  traefik_proxy:
+    external: true
+    name: traefik_traefik_proxy
+```
+
+8.2 Deploy Traefik
+```
+docker stack deploy -c traefik-stack.yaml traefik
+
+# Verify Traefik is running
+docker service ls | grep traefik
+
+# Check Traefik logs
+docker service logs traefik_traefik -f
+```
+
+9. Initialize Docker Swarm on Manager Node
+Note: Copy the resulting command after running swarm init, it shold look like docker swarm join --token
+```
+docker swarm init --advertise-addr [manager_ip_address]
+```
+
+10. Deploy application stack
+
+```
+docker stack deploy -c docker-stack.yaml studentvolunteer
+```
+
+Verify the deployment
+```
+# List all services
+docker stack services studentvolunteer
+
+# Check service logs
+docker service logs studentvolunteer_app -f
+
+# View running containers
+docker ps
+```
+
+11. Join Worker Node to Swarm
+11.1 SSH into Worker Node
+Open new VS Code window and repeat step 3 but for your worker droplet
+
+11.2 Join the swarm
+In the worker terminal run the docker swarm join command you got from the manager
+```
+docker swarm join --token 
+```
+
+Verify the deployment
+```
+# List all services
+docker stack services studentvolunteer
+
+# Check service logs
+docker service logs studentvolunteer_app -f
+
+# View running containers
+docker ps
+```
+
+
+11.3 Verify Worker Node Joined
+On the manager node verify the nodes in the system
+```
+docker node ls
+```
+
+
+12. Access the Application
+Open a web browser and head to the web address
+Note: Replace [manager_ip-address] with the actual manager node ip address
+```
+http://[manager_ip-address]
+```
