@@ -480,6 +480,12 @@ On the manager node verify the nodes in the system
 docker node ls
 ```
 
+check load balancing
+```
+for i in {1..20}; do curl -s http://178.128.232.57/api/whoami; echo; done
+docker ps
+```
+
 
 ### 13. Access the Application
 Open a web browser and head to the web address
