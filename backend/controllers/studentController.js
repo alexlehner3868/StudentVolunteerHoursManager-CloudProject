@@ -3,7 +3,7 @@ const pool = require("../config/database");
 const addStudentInfo = async (req, res) => {
   const { email, studentname, graduationdate } = req.body;
   console.log("Incoming request /api/student-info:", req.body);
-
+  // Validate required fields
   if (!email || !studentname) {
     console.warn("Missing email or studentname");
     return res.status(400).json({ error: "Missing required fields." });
@@ -17,7 +17,7 @@ const addStudentInfo = async (req, res) => {
         "Invalid name. Student name must contain only letters, spaces, hyphens, or apostrophes.",
     });
   }
-
+  // Further validation for graduationdate 
   try {
     // Verify DB connection
     await pool.query("SELECT 1");
@@ -47,7 +47,7 @@ const addStudentInfo = async (req, res) => {
     const type = (user.type || "");
 
     console.log("User found:", { userId, type, email });
-
+    // Ensure user is a Student
     if (type !== "Student") {
       console.warn("Non-student type attempted student-info:", type);
       return res

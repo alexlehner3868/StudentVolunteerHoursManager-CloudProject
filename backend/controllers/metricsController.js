@@ -4,12 +4,12 @@ const { execSync } = require("child_process");
 
 exports.getSystemMetrics = async (req, res) => {
   try {
-    // --- Secrets ---
+    // Secrets 
     const DO_API_TOKEN = fs.readFileSync("/run/secrets/do_api_token", "utf8").trim();
     const DROPLET_ID = fs.readFileSync("/run/secrets/droplet_id", "utf8").trim();
     const headers = { Authorization: `Bearer ${DO_API_TOKEN}` };
 
-    // --- Time Window (last 5 minutes) ---
+    // Time Window (last 5 minutes)
     const now = new Date();
     const start = new Date(now - 5 * 60 * 1000).toISOString();
     const end = now.toISOString();

@@ -16,7 +16,7 @@ services:
         published: 443
         protocol: tcp
         mode: host
-
+    # Docker socket and configuration volumes
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./certs:/certs:ro
@@ -42,7 +42,7 @@ services:
       - "--log.level=INFO"
       - "--accesslog=true"
       - "--metrics.prometheus=true"
-
+    # Traefik service deployment settings
     deploy:
       mode: replicated
       replicas: 1

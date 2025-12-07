@@ -6,7 +6,7 @@ const SystemMetrics = () => {
   const [metrics, setMetrics] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  // Fetch system metrics from the backend API
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
@@ -23,7 +23,7 @@ const SystemMetrics = () => {
     const interval = setInterval(fetchMetrics, 10000); // update every 10s
     return () => clearInterval(interval);
   }, []);
-
+  // Render the system metrics dashboard
   return (
     <div className="page">
       <header className="pageHeader">
@@ -56,14 +56,7 @@ const SystemMetrics = () => {
                 </p>
               </div>
 
-              <div className="metric-card">
-                <h3>Disk (Volume)</h3>
-                <p>
-                  {metrics.disk_volume
-                    ? `${metrics.disk_volume}% used`
-                    : "N/A"}
-                </p>
-              </div>
+              
 
               <div className="metric-card">
                 <h3>Network In</h3>

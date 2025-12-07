@@ -2,11 +2,11 @@ const pool = require("../config/database");
 
 const addGuidanceInfo = async (req, res) => {
   const { email, counsellorname, schoolid, schoolname } = req.body;
-
+  // Validate required fields
   if (!email || !counsellorname) {
     return res.status(400).json({ error: "Missing required fields." });
   }
-
+ // Validate counsellor name (only letters and spaces)
   const nameRegex = /^[A-Za-z\s'-]+$/;
   if (!nameRegex.test(counsellorname)) {
     return res.status(400).json({
@@ -31,7 +31,7 @@ const addGuidanceInfo = async (req, res) => {
 
     
     
-
+    // Ensure the user is of type Guidance Counsellor
     const dbType = user.type;
     if (dbType !== "GuidanceCounsellor") {
       return res.status(403).json({
@@ -43,7 +43,7 @@ const addGuidanceInfo = async (req, res) => {
       "SELECT * FROM guidancecounsellor WHERE userid = $1",
       [userId]
     );
-
+    // Insert or update guidance counsellor info
     if (existing.rowCount === 0) {
       await pool.query(
         "INSERT INTO guidancecounsellor (userid, counsellorname, schoolid, schoolname) VALUES ($1, $2, $3, $4)",
@@ -57,7 +57,7 @@ const addGuidanceInfo = async (req, res) => {
       );
       console.log(`Updated counsellor info for ${email}`);
     }
-
+    // Success response
     return res
       .status(200)
       .json({ message: "Guidance counsellor information saved successfully." });
