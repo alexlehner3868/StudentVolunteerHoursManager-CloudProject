@@ -427,8 +427,28 @@ networks:
     external: true
     name: traefik_traefik_proxy
 ```
+### 10.2 Create Self signed Certificate
+```
+mkdir -p certs
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout certs/selfsigned.key -out certs/selfsigned.crt \
+  -subj "/CN=*.swarm.localhost"
+```
 
-#### 10.2 Deploy Traefik
+### 10.3 Create Dynamic TLS Configuration
+```
+mkdir -p dynamic
+nano dynamic/tls.yaml
+```
+
+Copy the follwing into tls.yaml
+```
+  certificates:
+    - certFile: /certs/local.crt
+      keyFile:  /certs/local.key
+```
+
+#### 10.4 Deploy Traefik
 ```
 docker stack deploy -c traefik-stack.yaml traefik
 
