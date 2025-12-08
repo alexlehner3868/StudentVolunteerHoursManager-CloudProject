@@ -169,7 +169,7 @@ To experience the student submission process, log in using the sample student ac
 
 To test the workflow from the perspective of setting up a new school, log in using the provided admin account: admin@test.com with the password Password123!. Once logged in, you can create a new school, add student and counselor accounts, and assign them the same school ID and school name. After the users are created, you may proceed to submit volunteer hours as the newly created student and follow the end-to-end approval process for a newly configured school.
 
-Development Guide: 
+# Development Guide: 
 ### Prerequiste
 Install/set up the following locally:
 + Docker Desktop
@@ -706,37 +706,37 @@ Another takeaway was the level of grit and creative problem-solving required to 
 In conclusion, we had a great time this semester and have thoroughly enjoyed the opportunity to apply course concepts to solve a real-world problem. This project strengthened our understanding of cloud infrastructure, web development, and parallel teamwork. We are excited to continue learning more about cloud technology and continuing to create innovative solutions driving real-world impact. 
 
 
-Individual Contributions: 
-Alex:
-Core feature setup (DO droplets, docker swarm, volumes, etc)
-Student volunteer hour submissions functionality 
-Student dashboard graphs, stats, visualizations filtering and list of previous submissions
-Students can edit and delete prior submissions 
-Counsellor dashboard (Graphs, filtering, flag submissions) 
-Profile page that vary by user type and allow editing, where applicable 
-Logout functionality 
-Admin page to add users to backend system and trigger SendGrid for registration 
-SendGrid for user registration 
-Webpage navigation, which is variable by user
-Implemented role based user authentication 
-Mohamad:
-Core feature setup (DO droplets, docker swarm, volumes, etc)
-User Login
-Password reset
-Counsellor Dashboard (viewing associated submissions, filtering submissions, displaying selected submission, approve and deny submissions)
-Pop-up message component
-Supervisor approve and deny submissions
-SendGrid for student submission 
-SendGrid for supervisors to approve and deny submissions
-SendGrid for counsellor decision
-Jasmun:
-Core feature setup (DO droplets, docker swarm, volumes, etc)
-DigitalOcean monitoring and alerts
-HTTPS
-Student Register page
-Guidance counsellor register page
-User validation API
-Round Robin meshing
+# Individual Contributions: 
+  - Alex:
+    - Core feature setup (DO droplets, docker swarm, volumes, etc)
+    - Student volunteer hour submissions functionality 
+    - Student dashboard graphs, stats, visualizations filtering and list of previous submissions
+    - Students can edit and delete prior submissions 
+    - Counsellor dashboard (Graphs, filtering, flag submissions) 
+    - Profile page that vary by user type and allow editing, where applicable 
+    - Logout functionality 
+    - Admin page to add users to backend system and trigger SendGrid for registration 
+    - SendGrid for user registration 
+    - Webpage navigation, which is variable by user
+    - Implemented role based user authentication 
+  - Mohamad:
+    - Core feature setup (DO droplets, docker swarm, volumes, etc)
+    - User Login
+    - Password reset
+    - Counsellor Dashboard (viewing associated submissions, filtering submissions, displaying selected submission, approve and deny submissions)
+    - Pop-up message component
+    - Supervisor approve and deny submissions
+    - SendGrid for student submission 
+    - SendGrid for supervisors to approve and deny submissions
+    - SendGrid for counsellor decision
+  - Jasmun:
+    - Core feature setup (DO droplets, docker swarm, volumes, etc)
+    - DigitalOcean monitoring and alerts
+    - HTTPS
+    - Student Register page
+    - Guidance counsellor register page
+    - User validation API
+    - Round Robin meshing
 
 
 
