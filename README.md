@@ -167,7 +167,7 @@ To assist with evaluation of the system, sample user accounts have been provided
  
 To experience the student submission process, log in using the sample student account: alexlehner314@gmail.com with the password Password1! at the following URL: https://178.128.232.57/ After logging in, you will see a pre-populated student dashboard where you can create a new volunteer hour submission. For easier visualization during testing, it is recommended that you select a volunteer date one day before the current date, as this will cause the submission to immediately appear at the top of the submission list for both the student and guidance counsellor dashboard.  When entering supervisor information, you can put your own email address which the system will send an email through the SendGrid service, and the message will likely appear in your junk or spam folder. Once received, you may approve or deny the submission using the link provided in the email. If the submission is approved, you may log in as the guidance counselor to continue the review process using the account elizahamilton@test.com with the password Password1!. If the supervisor denies the submission, the denial will be reflected on the student dashboard. Within the guidance counselor dashboard, you may also test the filtering, flagging, and overall review interface designed to help counselors manage student submissions effectively.
 
-To test the workflow from the perspective of setting up a new school, log in using the provided admin account: admin@test.com with the password Password123!. Once logged in, you can create a new school, add student and counselor accounts, and assign them the same school ID and school name. After the users are created, you may proceed to submit volunteer hours as the newly created student and follow the end-to-end approval process for a newly configured school.
+To test the workflow from the perspective of setting up a new school, log in using the provided admin account: admin@test.com with the password being emailed to the TA. Once logged in, you can create a new school, add student and counselor accounts, and assign them the same school ID and school name. After the users are created, you may proceed to submit volunteer hours as the newly created student and follow the end-to-end approval process for a newly configured school.
 
 ## Development Guide: 
 ### Prerequiste
@@ -177,7 +177,7 @@ Install/set up the following locally:
 + VS Code (Remote SSH extension installed)
 + DigitalOcean Account (Metrics API key generated)
 
-__Note:__ Credentials have been emailed to the TA by __EMAIL OF PERSON__
+__Note:__ Credentials have been emailed to the TA by m.alkahil@mail.utoronto.ca
 ### 1. Configure Droplets and Volume
 #### 1.1 Manager Droplet
 1. From the DigitalOcean dashboard, click Droplets in the left sidebar
@@ -446,6 +446,7 @@ nano database/init.sql
 ```
 
 Copy the following into init.sql
+__Note:__ Admin password emailed to TA by m.alkahil@mail.utoronto.ca
 ```
 -- =========================================
 -- USERS TABLE
@@ -508,7 +509,7 @@ CREATE TABLE IF NOT EXISTS VolunteerHourSubmission (
 -- =========================================
 INSERT INTO Users (Type, Email, PasswordHash)
 SELECT 'Admin', 'admin@test.com',
-       '$2a$10$e0MYzXyjpJS7Pd0RVvHwHeFX5H2b8qZt1c6NVoyk4I5hPDe3T1H0W'  -- bcrypt("Password123!")
+       '$2a$10$e0MYzXyjpJS7Pd0RVvHwHeFX5H2b8qZt1c6NVoyk4I5hPDe3T1H0W' 
 WHERE NOT EXISTS (
     SELECT 1 FROM Users WHERE Email = 'admin@test.com'
 );
