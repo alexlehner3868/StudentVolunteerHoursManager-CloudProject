@@ -695,7 +695,8 @@ Note: Replace [manager_ip-address] with the actual manager node ip address
 http://[manager_ip-address]
 ```
 
-Lessons Learned and Concluding Thoughts:
+## Lessons Learned and Concluding Thoughts:
+
 We all really enjoyed ECE1779 and learning about cloud technologies. In addition to deepening our knowledge of the cloud, through this project we also learned valuable lessons about working in a team to ship a real-world product - skills that will benefit us professionally going forward.
 
 A key lesson we learned was the importance of keeping the project objective front of mind and iteratively revisiting and validating key system components. We designed our database schema early in the project and didn’t review it as the system requirements evolved. As a result, the schema became misaligned with the functionality of the application, which led to rework, complex patches, and a database schema not fully optimized for the final system. In hindsight, we realized that staying too focused on the implementation details caused us to disregard broader objectives and that devoting time on a regular cadence to ensure that our roadmap for the project is still aligned to the overall objective would have saved several downstream issues before they became laborious to correct. 
