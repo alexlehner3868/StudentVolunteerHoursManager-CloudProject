@@ -1,4 +1,4 @@
-### Student Volunteer Hour Manager: A Stateful Cloud-Native Application – Final Report
+# Student Volunteer Hour Manager: A Stateful Cloud-Native Application – Final Report
 ## Team Information:
   - Alex Lehner (alex.lehner@mail.utoronto.ca) - 1004947506 
   - Jasmun Banwait (jasmun.banwait@mail.utoronto.ca) - 1007050780 
@@ -41,7 +41,7 @@ Figure X.X - A depiction of the application deployment.
 Figure X.X shows that the system is deployed using DigitalOcean. The application was built using a React.js frontend and Node.js backend. The application is containerized through Docker, and the image is registered through Docker Hub. The system uses Docker Swarm for orchestration, where a cluster of two nodes is used. The nodes consist of two DigitalOcean droplets: a manager (178.128.232.57) and a worker (68.183.193.49). The manager controls the swarm cluster; it also has an application replica and a PostgreSQL database container running. A DigitalOcean Volume is mounted to the manager node to ensure data persistence even if the database container were to restart. The worker node runs the second application container replica for load balancing. Load balancing is achieved through the Docker Swarm Routing Mesh. Traefik is used to handle HTTPS traffic. Docker secrets contain the API credentials related to the database, retrieving DigitalOcean metrics, and SendGrid. SendGrid is used as one of the external services to send out emails. Finally, DigitalOcean metrics track system resources and send admin emails if thresholds are reached.
 
 ## Features:
-# User Features:
+### User Features:
   - Secure user registration and authentication
     - Users registered using verified email and password (passwords are encrypted before being stored in the database) 
     - All communication occurs over HTTPS for secure communication
@@ -68,7 +68,7 @@ Figure X.X shows that the system is deployed using DigitalOcean. The application
     - Students see a dashboard with their progress towards the 40-hour requirement, summary graphs by status, and their submission with statuses 
     - Counsellors see a dashboard with hours completed by student, pending requests and aggregated school-wide progress metrics
 
-# Features Stemming from Core and Advanced Requirements 
+### Features Stemming from Core and Advanced Requirements 
 | Feature                                               | Implementation                                                                                                                                                                                                 |
 |-------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Web application is deployed and accessible to users   | The application is deployed via deployment provider, DigitalOcean to ensure reliable and public access to the web application.                                                             |
