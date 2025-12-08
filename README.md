@@ -31,7 +31,9 @@ The technical objectives ensure that the system is secure, scalable, and maintai
 | **Orchestration** | Docker Swarm | Container orchestration across Manager node: 178.128.232.57 and Worker node: 68.183.194.4 |
 | **Cloud provider** | DigitalOcean | Hosts Droplets and Volume |
 | **Containerization** | Docker Engine + Docker Hub | Image building and registry |
-| **Security** | + Docker Secrets + Traefik +Bycrpt
+| **Security** | Docker Secrets 
+Traefik
+Bycrpt
 | Securing credentials |
 | **Monitoring** | DigitalOcean Metrics API | Resource monitoring and threshold alerts |
 | **Automated Emails**| SendGrid API | Emails to be sent to Admin, Students, Counsellors, and Supervisors |
