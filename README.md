@@ -22,6 +22,12 @@ The functional objectives focus on improving the experience and efficiency of th
 The technical objectives ensure that the system is secure, scalable, and maintainable as a cloud-deployed service. To achieve this we used DigitalOcean as the cloud provider for virtual machines, persistent volumes, and monitoring tools, and Docker Swarm for orchestrating a containerized deployment. For data persistence, PostgreSQL is utilized with a mounted DigitalOcean volume. Security is achieved through role-based access control, hashing user passwords, protecting sensitive API keys using Docker secrets, and utilizing HTTPS for secure client–server communication. We also used SendGrid, an external service, to handle automated email notifications between the system, students, supervisors, and counselors to further facilitate process improvements by reducing friction for supervisors in reviewing students’ submissions and also increasing visibility into submission status for students. 
 
 ## Technical Stack:
+![Figure 1 – Application Deployment](report/images/Tech_stack.drawio.png)
+
+Figure 1 - A depiction of the application deployment. 
+
+Figure 1 shows that the system is deployed using DigitalOcean. The application was built using a React.js frontend and Node.js backend. The application is containerized through Docker, and the image is registered through Docker Hub. The system uses Docker Swarm for orchestration, where a cluster of two nodes is used. The nodes consist of two DigitalOcean droplets: a manager (178.128.232.57) and a worker (68.183.193.49). The manager controls the swarm cluster; it also has an application replica and a PostgreSQL database container running. A DigitalOcean Volume is mounted to the manager node to ensure data persistence even if the database container were to restart. The worker node runs the second application container replica for load balancing. Load balancing is achieved through the Docker Swarm Routing Mesh. Traefik is used to handle HTTPS traffic. Docker secrets contain the API credentials related to the database, retrieving DigitalOcean metrics, and SendGrid. SendGrid is used as one of the external services to send out emails. Finally, DigitalOcean metrics track system resources and send admin emails if thresholds are reached.
+
 | Feature | Technology | Description |
 |----------|-----------|---------|
 | **Frontend** | React.js with CSS | User interface |
@@ -31,16 +37,9 @@ The technical objectives ensure that the system is secure, scalable, and maintai
 | **Orchestration** | Docker Swarm | Container orchestration across Manager node: 178.128.232.57 and Worker node: 68.183.194.4 |
 | **Cloud provider** | DigitalOcean | Hosts Droplets and Volume |
 | **Containerization** | Docker Engine + Docker Hub | Image building and registry |
-| **Security** | Docker Secrets, Traefik, Bycrpt
-| Securing credentials, HTTPS, and hashing |
+| **Security** | Docker Secrets, Traefik, Bycrpt | Securing credentials, HTTPS, and Hashing |
 | **Monitoring** | DigitalOcean Metrics API | Resource monitoring and threshold alerts |
 | **Automated Emails**| SendGrid API | Emails to be sent to Admin, Students, Counsellors, and Supervisors |
-
-![Figure 1 – Application Deployment](report/images/Tech_stack.drawio.png)
-
-Figure 1 - A depiction of the application deployment. 
-
-Figure 1 shows that the system is deployed using DigitalOcean. The application was built using a React.js frontend and Node.js backend. The application is containerized through Docker, and the image is registered through Docker Hub. The system uses Docker Swarm for orchestration, where a cluster of two nodes is used. The nodes consist of two DigitalOcean droplets: a manager (178.128.232.57) and a worker (68.183.193.49). The manager controls the swarm cluster; it also has an application replica and a PostgreSQL database container running. A DigitalOcean Volume is mounted to the manager node to ensure data persistence even if the database container were to restart. The worker node runs the second application container replica for load balancing. Load balancing is achieved through the Docker Swarm Routing Mesh. Traefik is used to handle HTTPS traffic. Docker secrets contain the API credentials related to the database, retrieving DigitalOcean metrics, and SendGrid. SendGrid is used as one of the external services to send out emails. Finally, DigitalOcean metrics track system resources and send admin emails if thresholds are reached.
 
 ## Features:
 ### User Features:
