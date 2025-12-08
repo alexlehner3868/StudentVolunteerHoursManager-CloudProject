@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS VolunteerHourSubmission (
 -- =========================================
 INSERT INTO Users (Type, Email, PasswordHash)
 SELECT 'Admin', 'admin@test.com',
-       '$2a$10$e0MYzXyjpJS7Pd0RVvHwHeFX5H2b8qZt1c6NVoyk4I5hPDe3T1H0W'  -- bcrypt("Password123!")
+       '$2a$10$e0MYzXyjpJS7Pd0RVvHwHeFX5H2b8qZt1c6NVoyk4I5hPDe3T1H0W'
 WHERE NOT EXISTS (
     SELECT 1 FROM Users WHERE Email = 'admin@test.com'
 );
