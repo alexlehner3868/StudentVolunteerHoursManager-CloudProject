@@ -85,14 +85,14 @@ https://youtu.be/YI18Yg-UEIo
 
 ## User Guide:
 The application is divided into three user roles. These roles are student, guidance counselor, and Admin. The following instructions outline the complete workflow from system setup to regular usage. The first required step is to populate the user database, which is performed by an Admin. In a deployment scenario, the school contacts the application integration team and provides a list of all students and guidance counselors who require access to the system. The integration team then assigns one or more Admins, who are responsible for creating all user accounts and assigning the correct roles. This process ensures proper security and enforces role-based authentication, as only Admin users can add accounts or modify privileged information.
-Once the Admin receives the user lists, they use the Web User Interface to create entries in the USERS database. For each student and guidance counselor, the Admin inputs the user’s full name, email address, school ID, and school name, and then assigns the appropriate role. A sample of the user-creation interface is shown in Figure 1. 
+Once the Admin receives the user lists, they use the Web User Interface to create entries in the *users* database. For each student and guidance counselor, the Admin inputs the user’s full name, email address, school ID, and school name, and then assigns the appropriate role. A sample of the user-creation interface is shown in Figure 2. 
 ![Figure 1 – Admin User Creation Page](report/images/Admin.png)
 
-**Figure 1.** Admin User Creation Page.
-After the Admin creates the user accounts, each user receives an automated email generated through SendGrid. This email may show up in the junk/spam mail refer to Figure 2. To access the link you must press “Looks Safe” as indicated in Figure 2 to enter the link from your inbox.  This email provides a link to the registration portal, where the user completes their initial account setup. During registration, the user verifies their email address and then enters their password, full name, and graduation date. The registration interface is shown in Figure 3.
+**Figure 2.** Admin User Creation Page.
+After the Admin creates the user accounts, each user receives an automated email generated through SendGrid. This email may show up in the junk/spam mail refer to Figure 3. To access the link you must press “Looks Safe” as indicated in Figure 3 to enter the link from your inbox.  This email provides a link to the registration portal, where the user completes their initial account setup. During registration, the user verifies their email address and then enters their password, full name, and graduation date. The registration interface is shown in Figure 4.
 ![Figure 2 – Spam Email Notification](report/images/Spam_email.png)
 
-**Figure 2.** Spam Email Notification.
+**Figure 3.** Spam Email Notification.
 ![Figure 3 – Student Registration Page](report/images/student_regestration.png)
 
 **Figure 3.** Student Registration Page.
