@@ -84,56 +84,89 @@ Figure 1 shows that the system is deployed using DigitalOcean. The application w
 https://youtu.be/YI18Yg-UEIo
 
 ## User Guide:
-The application is divided into three user roles. These roles are student, guidance counselor, and Admin. The following instructions outline the complete workflow from system setup to regular usage. The first required step is to populate the user database, which is performed by an Admin. In a deployment scenario, the school contacts the application integration team and provides a list of all students and guidance counselors who require access to the system. The integration team then assigns one or more Admins, who are responsible for creating all user accounts and assigning the correct roles. This process ensures proper security and enforces role-based authentication, as only Admin users can add accounts or modify privileged information.
-Once the Admin receives the user lists, they use the Web User Interface to create entries in the *users* database. For each student and guidance counselor, the Admin inputs the user’s full name, email address, school ID, and school name, and then assigns the appropriate role. A sample of the user-creation interface is shown in Figure 2. 
-![Figure 1 – Admin User Creation Page](report/images/Admin.png)
+The application is divided into three user roles. These roles are student, guidance counselor, external supervisor, and admin. The following instructions outline the complete workflow from system setup to regular usage. 
+### Admin Workflow 
+The first required step is to populate the user database, which is performed by an admin. In a deployment scenario, the school contacts the application integration team and provides a list of all students and guidance counselors who require access to the system. The integration team then assigns one or more admins, who are responsible for creating all user accounts and assigning the correct roles. This process ensures only admin users can add accounts or modify privileged information.
+
+Once the admin receives the user lists, they use the Web User Interface to create entries in the *users* database (see figure 2). For each student and guidance counselor, the admin inputs the user’s full name, email address, school ID, and school name, and then assigns the appropriate role. After the admin creates the user accounts, each user receives an automated email generated through SendGrid.
+![Figure 2 – Admin User Creation Page](report/images/Admin.png)
 
 **Figure 2.** Admin User Creation Page.
-After the Admin creates the user accounts, each user receives an automated email generated through SendGrid. This email may show up in the junk/spam mail refer to Figure 3. To access the link you must press “Looks Safe” as indicated in Figure 3 to enter the link from your inbox.  This email provides a link to the registration portal, where the user completes their initial account setup. During registration, the user verifies their email address and then enters their password, full name, and graduation date. The registration interface is shown in Figure 4.
-![Figure 2 – Spam Email Notification](report/images/Spam_email.png)
 
-**Figure 3.** Spam Email Notification.
-![Figure 3 – Student Registration Page](report/images/student_regestration.png)
+### User Registration Workflow
 
-**Figure 3.** Student Registration Page.
-After completing the account setup, the system directs each user to a dashboard that corresponds to their assigned role. students and guidance counselors do not share the same interface and so each role has a distinct dashboard designed for its responsibilities. The student dashboard is the most used and is described first. The user must head to the login page at https://178.128.232.57/. At this page the students are directed to log in using their registered credentials and are then directed to the main dashboard. The login page can be seen in Figure 4. The dashboard presents three key visual components. On the left, students see a cumulative graph displaying all volunteer hour submissions categorized by status (Approved, Pending–Guidance Counselor, Pending–Supervisor, and Rejected). On the right, submissions are grouped by month and status to provide a chronological breakdown through a bar chart. At the bottom of the dashboard, students can view a detailed table listing all of their submissions along with their current review state such as Approved, Rejected, or Pending review by either the external supervisor or the guidance counselor. The full user interface can be visualized in Figure 5.
-![Figure 4 – Login Page](report/images/Login.png)
+ After the admin creates the new user, the email may be sent to the new users junk/spam mail. For a visual refer to Figure 3. To access the link you must press “Looks Safe” as indicated in Figure 3 to enter the link from your inbox. This email provides a link to the registration portal, where the user completes their initial account setup. During registration, the user verifies their email address and then enters their password, full name, and graduation date. The registration interface is shown in Figure 4. After completing the account setup, the system directs each user to a dashboard that corresponds to their assigned role. Students and guidance counselors do not share the same interface and so each role has a distinct dashboard designed for its responsibilities. Additionaly, students or guidance counsellors can use the forget password function on the login page to set a new password - a verification code will be sent to the user's email (may appear in Spam/Junk).
 
-**Figure 4.** Login Page.
-![Figure 5 – Student Dashboard](report/images/student_dashboard.png)
+![Figure 3 – Email Notification](report/images/Spam_email.png)
 
-**Figure 5.** Student Dashboard.
-The primary function of the student dashboard is to allow students to submit their volunteer hours online instead of using paper forms. To create a new submission, the student selects the Submit Hours option from the top navigation bar. This opens the submission form, where the student enters the required information, including the date of volunteering, organization name, number of hours and minutes, a brief description of the activity, and the supervisor’s contact details. To see a visual of the Submit Hours user interface refer to Figure 6.  After the form is submitted, an automated email is sent to the specified supervisor requesting a review of the student's submission. The submitted entry also appears immediately on the student’s dashboard for tracking purposes. If the supervisor has not yet approved or rejected the submission, the student is permitted to update the submitted information, as shown in Figure 7.
-![Figure 6 – Submit Hours Page](report/images/Submit_hours.png)
+**Figure 3.** Email Notification.
 
-**Figure 6.** Submit Hours Page.
-![Figure 7 – Student Review Page](report/images/student_review.png)
+![Figure 4 – Student Registration Page](report/images/student_regestration.png)
 
-**Figure 7.** Student Review Page.
-Once the supervisor receives the email notification (note: the email may appear in the spam or junk folder; the supervisor must select “Looks Safe” to move the message to the inbox and enable the review link, as shown in Figure 8), they can access the submission review page. This page provides a detailed summary of the student’s submission and allows the supervisor to enter optional comments and either approve or deny the request as seen in Figure 9. If the supervisor approves the submission, the guidance counselor is then notified and can review the record through their dashboard, add comments, and finalize the approval. If the supervisor denies the submission, the guidance counselor does not receive a notification, and the student will see the denial reflected on their dashboard. 
-![Figure 8 – Supervisor Spam Email Example](report/images/sup_spam_email.png)
+**Figure 4.** Student Registration Page.
 
-**Figure 8.** Supervisor Spam Email Example.
-![Figure 9 – Supervisor Review Page](report/images/sup_review.png)
+### Student Workflow
 
-**Figure 9.** Supervisor Review Page.
-The second user type is the guidance counselor, who logs into the system using the same registration and authentication process as students. After completing registration through their email link, the guidance counselor gains access to their dedicated dashboard. This dashboard displays all student submissions that have been assigned to them. Once an external supervisor approves a student’s submission, the guidance counselor can view it on their dashboard for final review.
-The guidance counselor dashboard contains five main sections. On the left, is the school summary which provides an overview that includes the total number of students, total approved hours, total pending hours, and the number of students who have completed their required 40 hours. On the right, a graphical summary displaying the monthly distribution of submissions that were approved by external supervisors, separated into categories showcasing the submissions that have been approved, are pending, or have been rejected by the guidance counselor. At the bottom of the dashboard, all submissions per student are listed along with their status. Refer to Figure 10 for a visual of this dashboard layout.
-![Figure 10 – Guidance Counselor Dashboard](report/images/guidance_counselor_dashboard.png)
+After registration the user needs to login. To login, the student must head to the login page at https://178.128.232.57/. At this page the students are directed to log in using their registered credentials and are then directed to the main dashboard. The login page can be seen in Figure 5. The dashboard presents three key visual components. On the left, students see a cumulative graph displaying all volunteer hour submissions categorized by status (Approved, Pending–Guidance Counselor, Pending–Supervisor, and Rejected). On the right, submissions are grouped by month and status to provide a chronological breakdown through a bar chart. At the bottom of the dashboard, students can view a detailed editable table listing all of their submissions along with their current review state such as Approved, Rejected, or Pending review by either the external supervisor or the guidance counselor. The full user interface can be visualized in Figure 6.
+![Figure 5 – Login Page](report/images/Login.png)
 
-**Figure 10.** Guidance Counselor Dashboard.
-Selecting a submission from the bottom panel opens a detailed pop-up window. This window displays student information, supervisor verification details and comments, and the available guidance Counselor actions. The counselor may flag a submission for later review, approve or deny the submission, and add comments. The layout of this submission review interface is shown in Figure 11. The dashboard also includes filtering options that allow the guidance Counselor to sort submissions by student, status, and whether the submission has been flagged. This functionality is illustrated in Figure 12.
-![Figure 11 – Guidance Counselor Review Page](report/images/guidance_review.png)
+**Figure 5.** Login Page.
 
-**Figure 11.** Guidance Counselor Review Page.
-![Figure 12 – Guidance Counselor Filtering Options](report/images/filtering.png)
+![Figure 6 – Student Dashboard](report/images/student_dashboard.png)
 
-**Figure 12.** Guidance Counselor Filtering Options.
-In addition, both students and guidance counselors have access to a Profile page, which displays their general account information, including their name, email, school, and graduation date. Users may update this information if changes occur, such as early or delayed graduation. The profile page also displays the guidance counselor assigned to each student. A standard Logout option is provided to allow users to securely exit the system when their session is complete.
-To assist with evaluation of the system, sample user accounts have been provided for the Admin, Student, and Guidance Counselor roles. These accounts allow you to test the complete submission and approval workflow.
+**Figure 6.** Student Dashboard.
+
+The primary function of the student dashboard is to allow students to submit their volunteer hours online instead of using paper forms. To create a new submission, the student selects the Submit Hours option from the top navigation bar. This opens the submission form, where the student enters the required information, including the date of volunteering, organization name, number of hours and minutes, a description of the activity, and the supervisor’s contact details. To see a visual of the Submit Hours user interface refer to Figure 7.  After the form is submitted, an automated email is sent to the specified supervisor requesting a review of the student's submission. The submitted entry also appears immediately on the student’s dashboard for tracking purposes. If the supervisor has not yet approved or rejected the submission, the student is permitted to update the submitted information via the editable table, as shown in Figure 8. At any point students are able to delete submissions.
+
+![Figure 7 – Submit Hours Page](report/images/Submit_hours.png)
+
+**Figure 7.** Submit Hours Page.
+
+![Figure 8 – Student Review Page](report/images/student_review.png)
+
+**Figure 8.** Student Review Page.
+
+### Supervisors
+
+After the student submits their volunteer hour submission an automatic email is sent to the supervisor. The received email notification may appear in the spam or junk folder; the supervisor must select “Looks Safe” to move the message to the inbox and enable the review link, as shown in Figure 9. The automated email link leads to a supervisor approval page, this page provides a detailed summary of the student’s submission and allows the supervisor to enter optional comments and either approve or deny the request as seen in Figure 10. If the supervisor approves the submission, the guidance counselor can then review the record through their dashboard, add comments, and finalize the approval. If the supervisor denies the submission, the guidance counselor will not be able to review the submission and the student will see the denial reflected on their dashboard.
+
+![Figure 9 – Supervisor Spam Email Example](report/images/sup_spam_email.png)
+
+**Figure 9.** Supervisor Email Example.
+
+![Figure 10 – Supervisor Review Page](report/images/sup_review.png)
+
+**Figure 10.** Supervisor Review Page.
+
+### Guidance Counselor
+
+The guidance counselor logs into the system using the same registration and authentication process as students. Their dashboard displays all student submissions for students at their school. Once an external supervisor approves a student’s submission, the guidance counselor can view it on their dashboard for final review.
+The guidance counselor dashboard contains five main sections. On the left, is the school summary which provides an overview that includes the total number of students, total approved hours, total pending hours, and the number of students who have completed their required 40 hours. On the right, a graphical summary displaying the monthly distribution of submissions that were approved by external supervisors, separated into categories showcasing the submissions that have been approved, are pending, or have been rejected by the guidance counselor. At the bottom of the dashboard, all submissions per student are listed along with their status. Refer to Figure 11 for a visual of this dashboard layout.
+![Figure 11 – Guidance Counselor Dashboard](report/images/guidance_counselor_dashboard.png)
+
+**Figure 11.** Guidance Counselor Dashboard.
+
+Selecting a submission from the bottom panel opens a detailed pop-up window. This window displays student information, supervisor verification details and comments, and the available guidance Counselor actions. The counselor may flag a submission for later review, approve or deny the submission, and add comments. The layout of this submission review interface is shown in Figure 12. The dashboard also includes filtering options that allow the guidance Counselor to sort submissions by student, status, and whether the submission has been flagged. This functionality is illistrated with arrows pointed to the filters in Figure 13.
+
+![Figure 12 – Guidance Counselor Review Page](report/images/guidance_review.png)
+
+**Figure 12.** Guidance Counselor Review Page.
+
+![Figure 13 – Guidance Counselor Filtering Options](report/images/filtering.png)
+
+**Figure 13.** Guidance Counselor Filtering Options.
+
+### Profile Management
+
+In addition, both students and guidance counselors have access to a Profile page, which displays their general account information, such as their name, email, school, and graduation date. Users may update this information if changes occur, such as early or delayed graduation. The profile page also displays the guidance counselor assigned to each student. A standard Logout option is provided to allow users to securely exit the system when their session is complete.
+
+### Sample Users (Test Cases)
+
+To assist with evaluation of the system, sample user accounts have been provided for the admin, student, and guidance counselor roles. These accounts allow you to test the complete submission and approval workflow.
  
-To experience the Student submission process, log in using the sample student account: alexlehner314@gmail.com with the password Password1! at the following URL: https://178.128.232.57/ After logging in, you will see a pre-populated student dashboard where you can create a new volunteer hour submission. For easier visualization during testing, it is recommended that you select a volunteer date one day before the current date, as this will cause the submission to immediately appear at the top of the submission list for both the student and guidance counsellor dashboard.  When entering supervisor information, you can put your own email address which the system will send an email through the SendGrid service, and the message will likely appear in your junk or spam folder. Once received, you may approve or deny the submission using the link provided in the email. If the submission is approved, you may log in as the guidance counselor to continue the review process using the account elizahamilton@test.com with the password Password1!. If the supervisor denies the submission, the denial will be reflected on the student dashboard. Within the Guidance Counselor dashboard, you may also test the filtering, flagging, and overall review interface designed to help counselors manage student submissions effectively.
-To test the workflow from the perspective of setting up a new school, log in using the provided Admin account: admin@test.com with the password Password123!. Once logged in, you can create a new school, add student and counselor accounts, and assign them the same school ID and school name. After the users are created, you may proceed to submit volunteer hours as the newly created student and follow the end-to-end approval process for a newly configured school.
+To experience the student submission process, log in using the sample student account: alexlehner314@gmail.com with the password Password1! at the following URL: https://178.128.232.57/ After logging in, you will see a pre-populated student dashboard where you can create a new volunteer hour submission. For easier visualization during testing, it is recommended that you select a volunteer date one day before the current date, as this will cause the submission to immediately appear at the top of the submission list for both the student and guidance counsellor dashboard.  When entering supervisor information, you can put your own email address which the system will send an email through the SendGrid service, and the message will likely appear in your junk or spam folder. Once received, you may approve or deny the submission using the link provided in the email. If the submission is approved, you may log in as the guidance counselor to continue the review process using the account elizahamilton@test.com with the password Password1!. If the supervisor denies the submission, the denial will be reflected on the student dashboard. Within the guidance counselor dashboard, you may also test the filtering, flagging, and overall review interface designed to help counselors manage student submissions effectively.
+
+To test the workflow from the perspective of setting up a new school, log in using the provided admin account: admin@test.com with the password Password123!. Once logged in, you can create a new school, add student and counselor accounts, and assign them the same school ID and school name. After the users are created, you may proceed to submit volunteer hours as the newly created student and follow the end-to-end approval process for a newly configured school.
 
 
 
@@ -155,7 +188,7 @@ To test the workflow from the perspective of setting up a new school, log in usi
 
 
 
-Development Guide: (M) 
+Development Guide: 
 Set up:
 Install and open Docker Desktop
 Git
