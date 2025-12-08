@@ -108,6 +108,7 @@ Once the admin receives the user lists, they use the Web User Interface to creat
 ### Student Workflow
 
 After registration the user needs to login. To login, the student must head to the login page at https://178.128.232.57/. At this page the students are directed to log in using their registered credentials and are then directed to the main dashboard. The login page can be seen in Figure 5. The dashboard presents three key visual components. On the left, students see a cumulative graph displaying all volunteer hour submissions categorized by status (Approved, Pending–Guidance Counselor, Pending–Supervisor, and Rejected). On the right, submissions are grouped by month and status to provide a chronological breakdown through a bar chart. At the bottom of the dashboard, students can view a detailed editable table listing all of their submissions along with their current review state such as Approved, Rejected, or Pending review by either the external supervisor or the guidance counselor. The full user interface can be visualized in Figure 6.
+
 ![Figure 5 – Login Page](report/images/Login.png)
 
 **Figure 5.** Login Page.
