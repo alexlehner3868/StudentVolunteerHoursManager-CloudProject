@@ -36,7 +36,7 @@ The technical objectives ensure that the system is secure, scalable, and maintai
 | **External Service 1** | SendGrid API | Email notifications |
 | **External Service 2** | Traefik | HTTPS/SSL certificate management |
 
-![Figure 1 – Application Deployment] (report/images/Tech_stack.drawio.png)
+![Figure 1 – Application Deployment](report/images/Tech_stack.drawio.png)
 Figure 1 - A depiction of the application deployment. 
 
 Figure 1 shows that the system is deployed using DigitalOcean. The application was built using a React.js frontend and Node.js backend. The application is containerized through Docker, and the image is registered through Docker Hub. The system uses Docker Swarm for orchestration, where a cluster of two nodes is used. The nodes consist of two DigitalOcean droplets: a manager (178.128.232.57) and a worker (68.183.193.49). The manager controls the swarm cluster; it also has an application replica and a PostgreSQL database container running. A DigitalOcean Volume is mounted to the manager node to ensure data persistence even if the database container were to restart. The worker node runs the second application container replica for load balancing. Load balancing is achieved through the Docker Swarm Routing Mesh. Traefik is used to handle HTTPS traffic. Docker secrets contain the API credentials related to the database, retrieving DigitalOcean metrics, and SendGrid. SendGrid is used as one of the external services to send out emails. Finally, DigitalOcean metrics track system resources and send admin emails if thresholds are reached.
