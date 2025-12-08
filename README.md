@@ -169,44 +169,55 @@ To experience the student submission process, log in using the sample student ac
 
 To test the workflow from the perspective of setting up a new school, log in using the provided admin account: admin@test.com with the password Password123!. Once logged in, you can create a new school, add student and counselor accounts, and assign them the same school ID and school name. After the users are created, you may proceed to submit volunteer hours as the newly created student and follow the end-to-end approval process for a newly configured school.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Development Guide: 
-Set up:
-Install and open Docker Desktop
-Git
-VS Code (Remote SSH extension installed)
-DigitalOcean Account (Metrics API key generated)
+### Prerequiste
+Install/set up the following locally:
++ Docker Desktop
++ Git
++ VS Code (Remote SSH extension installed)
++ DigitalOcean Account (Metrics API key generated)
 
-Note: Credentials have been emailed to the TA by EMAIL OF PERSON
+__Note:__ Credentials have been emailed to the TA by __EMAIL OF PERSON__
+### 1. Configure Droplets and Volume
+#### 1.1 Manager Droplet
+1. From the DigitalOcean dashboard, click Droplets in the left sidebar
+2. Click create droplet
+3. Create new Droplet with the following specifications:
++ Region: Toronto
++ OS: Ubuntu 24.04 (LTS)
++ Plan: Basic ($6/month, 1 CPU, 1 GB RAM, 25 GB SSD)
++ Authentication: SSH key
+4. Click create droplet
 
+#### 1.2 Worker Droplet
+1. From the DigitalOcean dashboard, click Droplets in the left sidebar
+2. Click create droplet
+3. Create new Droplet with the following specifications:
++ Region: Toronto
++ OS: Ubuntu 24.04 (LTS)
++ Plan: Basic ($6/month, 1 CPU, 1 GB RAM, 25 GB SSD)
++ Authentication: SSH key
+4. Click create droplet
 
-Clone the Repository
+#### 1.3 Attach Volume
+1. From the DigitalOcean dashboard, click Volumes Block Storage in the left sidebar
+2. Click create volume
+3. Create new volume with the following specifications:
++ Volume size: 2 GB
++ Select Droplet to attach to: The manager droplet you created in step 1.1
++ Name volume: volume_tor1_01
++ Choose configuration options: Automatically Format & Mount
++ Choose a filesystem: Ext4
+4. Click create volume
+  
+### 2. Clone the Repository
 ```
 git clone https://github.com/alexlehner3868/StudentVolunteerHoursManager-CloudProject
 ```
-3. Build and Push Docker Image
-Note:
-Ensure Docker Desktop is running on local machine
-Replace [your_dockerhub_username] with your actual Docker Hub username.
+### 3. Build and Push Docker Image
+__Note:__
++ Ensure Docker Desktop is running on local machine
++ Replace [your_dockerhub_username] with your actual Docker Hub username.
 ```
 # Access the root directory of the project
 cd StudentVolunteerHoursManager-CloudProject
@@ -220,25 +231,82 @@ docker build -t [your_dockerhub_username]/student-volunteer-app:latest .
 #push image to your dockerhub
 docker push [your_dockerhub_username]/student-volunteer-app:latest
 ```
-4. Connect to DigitalOcean Manager Node via SSH
+### 4. Connect to DigitalOcean Manager Node via SSH
+__Note:__ You could skip this step if you wish to interact with droplet using DigitalOcean droplet console
 
-4.1 Set Up SSH Connection in VS Code
-Press Ctrl+Shift+P
-Search for and select: Remote-SSH: Connect to Host
-Click Add New SSH Host
-Enter the ip address for manager node
-Select the SSH config file 
+#### 4.1 Set Up SSH Connection in VS Code
+1. Press Ctrl+Shift+P
+2. Search for and select: Remote-SSH: Connect to Host
+3. Click Add New SSH Host
+4. Enter the ip address for manager node
+5. Select the SSH config file
+6. Update the SSH config file to set  User root and IdentityFile to where the ssh key is stored
 
-4.2 Connect to the Droplet
-Press Ctrl+Shift+P
-Select: Remote-SSH: Connect to Host
-Choose the manager node IP address
-Once connected, click Open Folder from the left bar
-Once open, select ‘/root/’ and click ok
+#### 4.2 Connect to the Droplet
+1. Press Ctrl+Shift+P
+2. Select: Remote-SSH: Connect to Host
+3. Choose the manager node IP address
+4. Select Linux as the platform
+5. Once connected, click Open Folder from the left bar
+6. Once open, select ‘/root/’ and click ok
 
-5. Set up Deployment Files on Manager Node
+### 5. Install Docker on Manager (From DigitalOcean Tutorial)
+```
+# Update your package list
+sudo apt update
 
-5.1 Create Project Directory
+# Install the necessary packages
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+
+# Add the Docker GPG key
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+#Add the Docker repository
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Update your package list again
+sudo apt update
+
+# Install Docker
+sudo apt install docker-ce
+
+# Verify Docker is running
+sudo systemctl status docker
+
+# Verify installation
+docker --version
+```
+__Note:__ you may have to Ctrl + C
+
+### 6. Verify DigitalOcean Volume Mount
+```
+# Check if volume is mounted
+df -h | grep volume
+
+# Create PostgreSQL data directory
+mkdir -p /mnt/volume_tor1_01/postgres-data
+```
+__Note:__ Figure shows volume_tor1_02 due to having multiple volumes on my account but ensure yours says volume_tor1_01 for future steps
+
+### 7. Initialize Docker Swarm on Manager Node
+__Note:__ 
++ Copy the resulting command after running swarm init, it shold look like docker swarm join --token
++ Replace [manager_ip_address] with the managers actual address.
+```
+docker swarm init --advertise-addr [manager_ip_address]
+```
+
+### 8. Create Traefik Network
+```
+docker network create --driver=overlay traefik_traefik_proxy
+
+# Verify network was created
+docker network ls | grep traefik
+```
+
+### 9. Set up Deployment Files on Manager Node
+
+#### 9.1 Create Project Directory
 Open terminal 
 ```
 #create the folder
@@ -246,14 +314,14 @@ mkdir student-volunteer-deploy
 cd student-volunteer-deploy
 ```
 
-5.2 Docker Hub Login
+#### 9.2 Docker Hub Login
 ```
 #Log in to Docker Hub
 docker login
 ```
-5.3 Create Docker Stack Configuration for Docker Swarm
+#### 9.3 Create Docker Stack Configuration for Docker Swarm
 ```
-Nano docker-stack.yaml
+nano docker-stack.yaml
 ```
 Copy the following into docker-stack.yaml
 Note: Replace [your_dockerhub_username] with your actual Docker Hub username.
@@ -262,7 +330,7 @@ version: "3.8"
 
 services:
   app:
-    image: [your_dockerhub_username]/student-volunteer-app:final
+    image: [your_dockerhub_username]/student-volunteer-app:latest
 
     environment:
       DB_HOST: db
@@ -356,7 +424,7 @@ secrets:
     external: true
 ```
 
-5.4 Set Up Secrets Files
+#### 9.4 Set Up Secrets Files
 ```
 #Create secrets folder
 mkdir secrets
@@ -368,7 +436,7 @@ nano secrets/droplet_id.txt
 nano secrets/sendgrid_api_key.txt
 ```
 
-5.5 Set Up Database
+#### 9.5 Set Up Database
 ```
 #Create database folder
 mkdir database
@@ -448,7 +516,7 @@ WHERE NOT EXISTS (
 ```
 
 
-6. Create Docker secrets
+##### 9.6. Create Docker secrets
 ```
 cat secrets/db_password.txt | docker secret create db_password -
 cat secrets/do_api_token.txt | docker secret create do_api_token -
@@ -459,20 +527,13 @@ cat secrets/sendgrid_api_key.txt | docker secret create sendgrid_api_key -
 docker secret ls
 ```
 
-7. Verify DigitalOcean Volume setup
+### 10. Set up Traefik Stack Configuration
+#### 10.1 Traefik Stack file
 ```
-# Check if volume is mounted
-df -h | grep volume
-```
-If the volume is not mounted, go to the DigitalOcean dashboard and mount a volume.	
-
-8. Set up Traefik Stack Configuration
-8.1 Traefik Stack file
-```
-Nano traefik-stack.yml
+Nano traefik-stack.yaml
 ```
 
-Copy the following into traefik-stack.yml
+Copy the following into traefik-stack.yaml
 ```
 version: "3.8"
 
@@ -538,8 +599,28 @@ networks:
     external: true
     name: traefik_traefik_proxy
 ```
+### 10.2 Create Self signed Certificate
+```
+mkdir -p certs
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout certs/selfsigned.key -out certs/selfsigned.crt \
+  -subj "/CN=*.swarm.localhost"
+```
 
-8.2 Deploy Traefik
+### 10.3 Create Dynamic TLS Configuration
+```
+mkdir -p dynamic
+nano dynamic/tls.yaml
+```
+
+Copy the follwing into tls.yaml
+```
+  certificates:
+    - certFile: /certs/selfsigned.crt
+      keyFile:  /certs/selfsigned.key
+```
+
+#### 10.4 Deploy Traefik
 ```
 docker stack deploy -c traefik-stack.yaml traefik
 
@@ -549,14 +630,9 @@ docker service ls | grep traefik
 # Check Traefik logs
 docker service logs traefik_traefik -f
 ```
+__Note:__ use Ctrl+C to exit logs
 
-9. Initialize Docker Swarm on Manager Node
-Note: Copy the resulting command after running swarm init, it shold look like docker swarm join --token
-```
-docker swarm init --advertise-addr [manager_ip_address]
-```
-
-10. Deploy application stack
+### 11. Deploy application stack
 
 ```
 docker stack deploy -c docker-stack.yaml studentvolunteer
@@ -574,17 +650,20 @@ docker service logs studentvolunteer_app -f
 docker ps
 ```
 
-11. Join Worker Node to Swarm
-11.1 SSH into Worker Node
-Open new VS Code window and repeat step 3 but for your worker droplet
+### 12. Join Worker Node to Swarm
+#### 12.1 SSH into Worker Node
+Open new VS Code window and repeat step 4 
 
-11.2 Join the swarm
+#### 12.2 Install Docker on Worker Node
+repeat step 5
+
+#### 12.3 Join the swarm
 In the worker terminal run the docker swarm join command you got from the manager
 ```
 docker swarm join --token 
 ```
 
-Verify the deployment
+#### 12.4 Verify the deployment
 ```
 # List all services
 docker stack services studentvolunteer
@@ -596,24 +675,24 @@ docker service logs studentvolunteer_app -f
 docker ps
 ```
 
-
-11.3 Verify Worker Node Joined
 On the manager node verify the nodes in the system
 ```
 docker node ls
 ```
 
+check load balancing
+```
+for i in {1..20}; do curl -s http://[manager_ip_address]/api/whoami; echo; done
+docker ps
+```
 
-12. Access the Application
+
+### 13. Access the Application
 Open a web browser and head to the web address
 Note: Replace [manager_ip-address] with the actual manager node ip address
 ```
 http://[manager_ip-address]
 ```
-fro
-Remember for swarm, we had to add secrets to env 
-We should also push our scripts to get the image to the website and then how to get it onto swarm 
-Email API keys (HTTPS credentials) and database credentials and anything else protected to TA quincy.zhang@mail.utoronto.ca and state “Credentials sent to TA” in the development guide 
 
 Lessons Learned and Concluding Thoughts:
 We all really enjoyed ECE1779 and learning about cloud technologies. In addition to deepening our knowledge of the cloud, through this project we also learned valuable lessons about working in a team to ship a real-world product - skills that will benefit us professionally going forward.
