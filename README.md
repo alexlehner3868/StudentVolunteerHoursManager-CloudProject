@@ -84,19 +84,6 @@ Figure 1 shows that the system is deployed using DigitalOcean. The application w
 https://youtu.be/YI18Yg-UEIo
 
 ## User Guide:
-Accounts that they can test with :
-Admin: admin@test.com Password123!
-Can create their own students and guidance counsellor
-Student: alexlehner314@gmail.com Password1!
-Guidance Counsellor: elizahamilton@test.com Password1!
-
-
-USER guide into different workflows, 
-HEre are 3 environments, 
-populated already setup and see
-Create your own student (
-Add a user from admin (
-
 The application is divided into three user roles. These roles are student, guidance counselor, and Admin. The following instructions outline the complete workflow from system setup to regular usage. The first required step is to populate the user database, which is performed by an Admin. In a deployment scenario, the school contacts the application integration team and provides a list of all students and guidance counselors who require access to the system. The integration team then assigns one or more Admins, who are responsible for creating all user accounts and assigning the correct roles. This process ensures proper security and enforces role-based authentication, as only Admin users can add accounts or modify privileged information.
 Once the Admin receives the user lists, they use the Web User Interface to create entries in the USERS database. For each student and guidance counselor, the Admin inputs the user’s full name, email address, school ID, and school name, and then assigns the appropriate role. A sample of the user-creation interface is shown in Figure 1. 
 ![Figure 1 – Admin User Creation Page](report/images/Admin.png)
