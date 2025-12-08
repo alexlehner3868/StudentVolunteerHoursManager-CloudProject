@@ -11,6 +11,7 @@ When accessing the webpage, the browser may display a safety warning since the s
 
 ## Motivation:
 As graduates of Ontario high schools, our team was motivated to pursue this project after recognizing the degree of archaism and inefficiency in Ontario’s current volunteer hour tracking system. In order to graduate, students are required to complete 40 volunteer hours. Schools across Ontario rely on paper forms that must be filled out, signed, submitted, and manually transcribed to manage this process. This is laborious, error-prone, and administratively onerous for guidance counselors, who already face increased workloads due to educational cutbacks. 
+
 We identified an opportunity to meaningfully improve this system by implementing a cloud-native platform that digitalizes the submission, review and approval of volunteer hours. In addition to reducing manual labor associated with this process for all parties involved, we are also providing increased visibility for students and guidance counselors into their progress towards the 40-hour requirement. The motivation behind this project is to leverage cloud technology to modernize an outdated process, enabling guidance counselors to spend more time supporting students instead of performing clerical tasks. 
 
 ## Objectives: 
