@@ -169,7 +169,7 @@ To experience the student submission process, log in using the sample student ac
 
 To test the workflow from the perspective of setting up a new school, log in using the provided admin account: admin@test.com with the password Password123!. Once logged in, you can create a new school, add student and counselor accounts, and assign them the same school ID and school name. After the users are created, you may proceed to submit volunteer hours as the newly created student and follow the end-to-end approval process for a newly configured school.
 
-# Development Guide: 
+## Development Guide: 
 ### Prerequiste
 Install/set up the following locally:
 + Docker Desktop
@@ -706,7 +706,7 @@ Another takeaway was the level of grit and creative problem-solving required to 
 In conclusion, we had a great time this semester and have thoroughly enjoyed the opportunity to apply course concepts to solve a real-world problem. This project strengthened our understanding of cloud infrastructure, web development, and parallel teamwork. We are excited to continue learning more about cloud technology and continuing to create innovative solutions driving real-world impact. 
 
 
-# Individual Contributions: 
+## Individual Contributions: 
   - Alex:
     - Core feature setup (DO droplets, docker swarm, volumes, etc)
     - Student volunteer hour submissions functionality 
